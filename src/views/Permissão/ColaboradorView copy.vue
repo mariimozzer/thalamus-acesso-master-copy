@@ -138,15 +138,10 @@
                     </div>
                     <div class="modal-body">
 
-                        <div class="camera">
-                             <qrcode-stream v-if="cameraAberta && !qrcodeWebcam"  @decode="onDecode" @init="onInit" />
-                        </div>
+                        <qrcode-stream v-if="cameraAberta && !qrcodeWebcam" @decode="onDecode" @init="onInit" style="height: 470px;" />
+                        <!-- <qrcode-stream v-if="cameraAberta && !qrcodeWebcam" @detect="onDetect" style="height: 470px;" /> -->
 
-                        <div>
-
-                            <span v-if="this.mostraAlerta" style="color: green; font-weight: 600;">QR Code lido</span>
-
-                        </div>
+                        <p v-if="this.mostraAlerta" style="color: green; font-weight: 600;">QR Code lido com sucesso</p>
 
                     </div>
                     <div class="modal-footer" data-bs-dismiss="modal">
@@ -595,9 +590,11 @@ export default {
 
             this.qrCodeCartao = result;
             console.log('lido na webcam:', this.qrCodeCartao);
+
+            this.mostraAlerta = true;
             this.cameraAberta = false;
 
-          this.fechaModal();
+           this.fechaModal();
            
            toaster.show(`Qr code capturado`, { type: "success" });
         },
@@ -651,15 +648,46 @@ export default {
 </script>
 
 <style>
-.camera {
-        overflow: hidden;
-        position: relative;
-        height: 400px;
-    }
+.camera-preview {
+    border: 1px solid #ccc;
+    overflow: hidden;
+    position: relative;
+    height: 600px;
+}
 
 .titulo {
     font-size: 25px;
     font-weight: 500;
     margin-top: 10px
+}
+
+.camera-box .camera-shutter .flash {
+    opacity: 0;
+    width: 450px;
+    height: 337.5px;
+    background-color: #fff;
+    position: absolute;
+    opacity: 1;
+}
+
+.camera-shoot button img {
+    margin: 1rem 0;
+    height: 60px;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    height: 35px;
+    object-fit: cover;
+}
+
+.camera-loading {
+    overflow: hidden;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    min-height: 150px;
+    margin: 3rem 0 0 -1.2rem;
 }
 </style>

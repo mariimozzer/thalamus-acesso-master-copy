@@ -49,7 +49,7 @@
             <div class="col-6 col-md-6 col-sm12">
 
                 <div class="mt-2">
-                    <h5>Foto do visitante</h5>
+                    <label class="mr-3">Foto do visitante</label>
                     <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
                         Abrir câmera
                     </button>
@@ -74,7 +74,7 @@
                 <!-- avatar / mostra se = fotoPessoa é vazia E não tem foto tirada E a camera esta fechada-->
                 <div class="mt-3" v-if="!fotoPessoa && !isPhotoTaken && !isCameraOpen">
                     <img src="../../../public/img/user-avatar.png" alt="Imagem em Base64"
-                        style="border-radius: 10px; max-width: 500px; max-height: 400px; border: solid; border-color: lightgrey; border-width: 1px;">
+                        style="border-radius: 10px; max-width: 400px; max-height: 500px; border: solid; border-color: lightgrey; border-width: 1px;">
                 </div>
 
                 <!-- camera -->
@@ -198,7 +198,10 @@ export default {
             this.$nextTick(() => {
                 this.video = this.$refs.video;
                 // Solicita acesso à webcam
-                navigator.mediaDevices.getUserMedia({ video: true })
+                navigator.mediaDevices
+                .getUserMedia({ 
+                    video: { width:500, height:400}
+                 })
                     .then((stream) => {
                         this.video.srcObject = stream;
                     })

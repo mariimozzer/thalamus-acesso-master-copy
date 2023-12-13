@@ -162,7 +162,7 @@ export default {
     align-content: center;
     align-items: center;
     flex-direction: column;
-    margin-left: -150px;
+    margin-left: -50px;
 }
 
 @media (max-width: 768px) {

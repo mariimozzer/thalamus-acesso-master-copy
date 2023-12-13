@@ -7,12 +7,14 @@
                     <h2 class="titulo">Visitante</h2>
                 </div>
             </div>
-            <div class="row d-flex mb-4 justify-content-between flex-wrap">
-                <div class="col-lg-6 col-md-12">
+            <div class="mb-3">
+                <div class="col-lg-3 col-md-12">
                     <div class=" mt-3">
-                        <button type="button" class="btn b-button" @click="adicionarPessoa" style="width: 190px;">
-                            Cadastrar Visitante&nbsp;&nbsp;<i class="fa-solid fa-user"></i></button>
+                        <button type="button" class="btn b-button" @click="adicionarPessoa">
+                            <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
                     </div>
+                </div>
+                <div class="col-lg-6 col-md-12">
                     <div class="input-group mt-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
@@ -215,14 +217,19 @@
         <!-- fim modal excluir -->
 
         <!-- modal visitante -->
-         <VisitanteModal :open="isOpen" @close="fecharModal" :pessoaIDModal="pessoaIDModal || 0" />        
+         <VisitanteModal :open="isOpen" @close="fecharModal" 
+         :pessoaIDModal="pessoaIDModal || 0"
+         :pessoaNomeModal="pessoaNomeModal || '' " 
+         :pessoaCPFModal="pessoaCPFModal || '' "
+         :pessoaEmail="pessoaEmail || '' "
+         />        
         <!-- fim modal visitante -->
 
     </div>
 </template>
 
 <script>
-import Setores from '../../models/setor.model'
+import Setores from '../../models/Setor'
 import setorService from '../../services/setor-service';
 import WebSocketService from '../../services/websocketservice';
 import { createToaster } from "@meforma/vue-toaster";
@@ -251,8 +258,6 @@ export default {
 
         const openModal = () => {
             isOpen.value = true
-            //HERE OTHER CHANGES
-
             return isOpen.value
         }
 
@@ -425,7 +430,7 @@ export default {
             this.pessoaCPFModal = pessoa.CPF;
             this.pessoaEmail = pessoa.email;
             this.mostraAlerta = false;
-            console.log('modal :', this.localSelecionado, this.pessoaIDModal, this.pessoaNomeModal, this.pessoaCPFModal, this.pessoaEmail);
+            //console.log('modal :', this.localSelecionado, this.pessoaIDModal, this.pessoaNomeModal, this.pessoaCPFModal, this.pessoaEmail);
             this.isOpen = true;
         },
 
@@ -467,7 +472,7 @@ export default {
             try {
                 const response = await api.get(`/local`);
                 this.localData = response.data;
-                console.log(this.localData)
+                //console.log('local visitantes', this.localData)
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -477,8 +482,8 @@ export default {
             if (this.localSelecionado !== null) {
                 try {
                     const response = await api.get(`/local/${this.localSelecionado}/acessos`);
-                    this.acessos = response.data || [];
-                    console.log(this.acessos)
+                    this.localData = response.data || [];
+                    console.log(this.localData)
                 } catch (error) {
                     console.error('Error', error);
                 }
