@@ -6,9 +6,7 @@
                 <h2 class="titulo">{{ modoCadastro ? "Cadastrar" : "Editar" }} Visitante</h2>
             </div>
         </div>
-
         <div class="d-flex row flex-wrap">
-
             <!-- FORNMULÁRIO DE CADASTRO DE PESSOA -->
             <div class="col-6 col-md-6 col-sm-12">
                 <div style="margin: 10px 0 10px 0;">
@@ -44,10 +42,8 @@
                     <input type="text" id="celular" v-model="celular" class="form-control">
                 </div>
             </div>
-
             <!-- FOTO -->
             <div class="col-6 col-md-6 col-sm12">
-
                 <div class="mt-2">
                     <label class="mr-3">Foto do visitante</label>
                     <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
@@ -68,15 +64,12 @@
                         v-if="isCameraOpen">
                         Descartar foto
                     </button>
-
                 </div>
-
                 <!-- avatar / mostra se = fotoPessoa é vazia E não tem foto tirada E a camera esta fechada-->
                 <div class="mt-3" v-if="!fotoPessoa && !isPhotoTaken && !isCameraOpen">
                     <img src="../../../public/img/user-avatar.png" alt="Imagem em Base64"
                         style="border-radius: 10px; max-width: 400px; max-height: 500px; border: solid; border-color: lightgrey; border-width: 1px;">
                 </div>
-
                 <!-- camera -->
                 <div>
                     <div class="mt-3">
@@ -85,7 +78,6 @@
 
                     </div>
                 </div>
-
                 <!-- mostra a foto salva -->
                 <div v-if="fotoPessoa && !isCameraOpen && !isPhotoTaken" class="mt-3 mb-3">
                     <img :src="fotoPessoa" alt="foto visitante"
@@ -93,11 +85,11 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex col-12 justify-content-end mt-3">
-            <div>
-                <button @click="cancelarAcao" class="btn btn-primary mr-3">Cancelar</button>
+        <div class="d-flex justify-content-end">
+            
                 <button @click="salvarVisitante" class=" btn btn-primary">Salvar</button>
-            </div>
+                <button @click="cancelarAcao" class="btn button-cancel">Cancelar</button>               
+            
         </div>
     </div>
 </template>
@@ -112,7 +104,6 @@ import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 const toaster = createToaster({
     position: "top-right",
 });
-
 
 export default {
 
@@ -129,9 +120,6 @@ export default {
             imageBase64: '',
             isCameraOpen: false,
             isPhotoTaken: false,
-            isShotPhoto: false,
-            isLoading: false,
-            link: '#',
             video: null,
             image: null,
             nomeCompleto: '',
@@ -143,14 +131,10 @@ export default {
             fotoPessoa: '',
             mostraFoto: false,
             imagePath: '',
-            isEditing: false,
-            replacePhoto: false,
             showToast: false,
-
             fotoAtualizada: null,
         }
     },
-
 
     created() {
         let id = this.$route.params.id;
@@ -162,25 +146,7 @@ export default {
         }
     },
 
-
-    mounted() {
-
-        /*  let id = this.$route.params.id;
-          if (!id) {
-              this.modoCadastro = true; // Se não houver um ID, é um cadastro
-          } else {
-              this.modoCadastro = false; // Se houver um ID, é uma edição
-              console.log("Fetching data for person with ID:", id);
-              this.obterPessoaId(id);
-              this.isEditing = true;
-          } */
-
-        this.replacePhoto = false;
-    },
-
     methods: {
-
-
 
         toggleCamera() {
             if (this.isCameraOpen) {
@@ -190,11 +156,8 @@ export default {
             }
         },
 
-
-
         openCamera() {
             this.isCameraOpen = true;
-
             this.$nextTick(() => {
                 this.video = this.$refs.video;
                 // Solicita acesso à webcam
@@ -207,14 +170,10 @@ export default {
                     })
                     .catch((error) => {
                         console.error('Erro ao acessar a webcam:', error);
-
                         toaster.show(`Acesso à webcam bloqueado. Permita o acesso à webcam`, { type: "error" });
-
                     });
             });
         },
-
-
 
         closeCamera() {
             this.isCameraOpen = false;
@@ -225,16 +184,11 @@ export default {
             }
         },
 
-
-
         discardImage() {
-            // this.isCameraOpen = true;
             this.isPhotoTaken = false;
             this.imageBase64 = '';
             this.openCamera();
         },
-
-
 
         captureImage() {
             const canvas = document.createElement('canvas');
@@ -246,36 +200,22 @@ export default {
             canvas.toBlob((blob) => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    this.imageBase64 = reader.result; // imageBase64 recebe a string
-                    this.isPhotoTaken = true; // foto foi tirada
+                    this.imageBase64 = reader.result;
+                    this.isPhotoTaken = true;
                     this.fotoAtualizada = true;
 
-                    // Se for uma edição e houver uma foto existente, atualiza fotoPessoa
-                    /* if (!this.modoCadastro && this.fotoPessoa) {
-                        this.fotoPessoa = this.imageBase64;
-                    } */
-
-                    // Se não for uma edição ou não houver foto existente, mostra a foto tirada
                     if (this.modoCadastro || !this.fotoPessoa) {
-                        this.imagePath = null; // Limpe a imagePath
+                        this.imagePath = null;
                     }
-
-
                 };
-
                 reader.readAsDataURL(blob);
             }, 'image/png');
-
         },
 
-
         obterPessoaId(id) {
-
-            //axios.get(`http://192.168.0.6:8000/api/visitante/${id}`)
             axios.get(`${api.defaults.baseURL}/visitante/${id}`)
                 .then(response => {
                     const pessoaData = response.data;
-                    /*  this.pessoa = new Pessoa(response.data); */
                     this.imagePath = response.data.path_image;
                     this.nomeCompleto = pessoaData.nomeCompleto;
                     this.CPF = pessoaData.CPF;
@@ -290,21 +230,14 @@ export default {
 
         },
 
-
-
         cancelarAcao() {
-
             this.visitante = new Visitante();
             this.imageBase64 = null;
             this.$router.push({ name: "VisitanteView" })
 
         },
 
-
-
-
         cadastrarVisitante() {
-
             let requestData = {
                 nomeCompleto: this.nomeCompleto,
                 sexo: this.sexo,
@@ -312,12 +245,9 @@ export default {
                 email: this.email,
                 celular: this.celular,
             };
-
             if (this.imageBase64) {
                 requestData.base64 = this.imageBase64;
             }
-
-            //axios.post('http://192.168.0.6:8000/api/visitante', requestData)
             axios.post(`${api.defaults.baseURL}/visitante`, requestData)
                 .then(response => {
                     console.log('Visitante cadastrado', response);
@@ -325,21 +255,14 @@ export default {
                 })
                 .catch(error => {
                     console.error('Erro ao cadastrar visitante:', error);
-
-
                     toaster.show(`Erro ao cadastrar visitante`, { type: "error" });
                 });
 
-
             toaster.show(`Visitante cadastrado`, { type: "success" });
-
         },
-
-
 
         atualizarVisitante() {
             const id = this.$route.params.id;
-
             if (this.imageBase64) {
                 // se houver nova foto, atualiza foto
                 axios.put(`${api.defaults.baseURL}/visitante/${id}`, {
@@ -380,43 +303,29 @@ export default {
             }
         },
 
-
-
-
-
         salvarVisitante() {
 
             if (!this.nomeCompleto) {
-
                 toaster.show(`Nome não pode ser vazio`, { type: "error" });
-                return; // Retorna se o nome não estiver preenchido               
+                return;           
             }
-
             if (!this.sexo) {
-
                 toaster.show(`Gênero não pode ser vazio`, { type: "error" });
-                return; // Retorna se o nome não estiver preenchido
+                return; 
             }
-
             if (this.modoCadastro) {
                 this.cadastrarVisitante();
-
             } else {
                 this.atualizarVisitante();
             }
         },
 
-
-
-
         mostraFotoPessoa() {
-
             try {
                 if (this.imagePath) {
-                    //const urlfoto = `${api.defaults.caminhoFoto}`;
+            
                     const urlfoto = 'http://192.168.0.6:8000/storage/';
                     this.fotoPessoa = urlfoto + this.imagePath;
-                    // console.log(this.fotoPessoa);
                     this.mostraFoto = true;
                 } else {
                     console.error('Cadastro sem foto');
@@ -424,59 +333,17 @@ export default {
                 }
             } catch (error) {
                 console.error(error);
-
             }
         },
-
-
-
-
     }
 }
 
 </script>
 
 <style>
-.camera-preview {
-    border: 1px solid #ccc;
-    overflow: hidden;
-    position: relative;
-    height: 600px;
-}
-
 .titulo {
     font-size: 25px;
     font-weight: 500;
     margin-top: 10px
-}
-
-.camera-box .camera-shutter .flash {
-    opacity: 0;
-    width: 450px;
-    height: 337.5px;
-    background-color: #fff;
-    position: absolute;
-    opacity: 1;
-}
-
-.camera-shoot button img {
-    margin: 1rem 0;
-    height: 60px;
-    width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 100%;
-    height: 35px;
-    object-fit: cover;
-}
-
-.camera-loading {
-    overflow: hidden;
-    height: 100%;
-    position: absolute;
-    width: 100%;
-    min-height: 150px;
-    margin: 3rem 0 0 -1.2rem;
 }
 </style>

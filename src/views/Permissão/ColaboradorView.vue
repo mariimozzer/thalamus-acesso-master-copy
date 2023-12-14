@@ -1,11 +1,9 @@
 <template>
     <MenuLSGP></MenuLSGP>
     <div class="container">
-        <br>
-
         <div class="row">
-            <div class="col-sm-12" style="text-align: center; margin: 20px 0px 20px 0px;">
-                <h3>{{ modoCadastro ? "Cadastrar" : "Editar" }} Colaborador</h3>
+            <div class="col-sm-12" style="text-align: center;">
+                <h2 class="titulo">{{ modoCadastro ? "Cadastrar" : "Editar" }} Colaborador</h2>
                 <hr>
             </div>
         </div>
@@ -96,14 +94,11 @@
 
             </div>
         </div>
-        <div class="d-flex col-12 justify-content-end">
-            <div>
-
-                <span class="mr-5">QR Code lido: {{ qrCodeCartao }}</span>
-                
+        <div class="d-flex">
+            <div class="d-flex justify-content-start" style="width: 50%;">               
                 <button @click="iniciaLeitor" 
-                class="btn btn-primary mr-3" 
-                style="width: 160px;" 
+                class="btn btn-primary" 
+                style="width: 180px;" 
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop" 
                 data-bs-placement="top" 
@@ -111,22 +106,19 @@
                 Vincular cartão&nbsp;
                 <i class="fa-regular fa-address-card"></i>
                 </button>
+                <span class="ml-5">QR Code lido: {{ qrCodeCartao }}</span>
+            </div>
+            <div class="d-flex justify-content-end" style="width: 50%;">
+                <button @click="cancelar" class="btn button-cancel" >Cancelar</button>
 
-                <!-- <button @click="vincularCartao" class="btn btn-primary" style="width: 160px;">Vincular cartão&nbsp;<i class="fa-regular fa-address-card"></i>
-                                                            </button>&nbsp;&nbsp; -->
-
-                <button @click="cancelar" class="btn btn-default float-right">Cancelar</button>
-
-                <button @click="cadastrarPessoa" aria-hidden="true" class="btn btn-primary float-right mr-2">
+                <button @click="cadastrarPessoa" aria-hidden="true" class="btn btn-primary">
                     <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                     <span v-if="!loading">Salvar</span>
                     <span v-if="loading">&nbsp; Salvando...</span>
                 </button>
             </div>
-        </div>
-       
+        </div> 
         <br><br><br>
-
         <!-- Modal qrcode3 -->
         <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel"
             aria-hidden="true">
@@ -137,17 +129,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-
                         <div class="camera">
                              <qrcode-stream v-if="cameraAberta && !qrcodeWebcam"  @decode="onDecode" @init="onInit" />
                         </div>
-
                         <div>
-
                             <span v-if="this.mostraAlerta" style="color: green; font-weight: 600;">QR Code lido</span>
-
                         </div>
-
                     </div>
                     <div class="modal-footer" data-bs-dismiss="modal">
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="">Ok</button>
@@ -533,21 +520,23 @@ export default {
             this.$router.push({ name: "ControleDeColaborador" })
         },
 
+        //inicia a leitura do cartão chamando primeiro o websocket, caso não tenha resposta, chama a webcam
         iniciaLeitor() {
             this.wsService.addListener(this.handleMessage);
-            const chamaLeitorQrcode = JSON.stringify({ //para iniciar leitor, o websocket precisa do local e da mensagem
+            const chamaLeitorQrcode = JSON.stringify({ 
                 mensagem: 'iniciar_leitor',
                 local_id: this.localSelecionado
             });
-            this.wsService.send(chamaLeitorQrcode); //primeiro chama o tablet pelo websocket
+            this.wsService.send(chamaLeitorQrcode); 
             console.log('chamando websocket...');
+            console.log('chamando', chamaLeitorQrcode);
 
             const timeout = 2000;
             const timeoutId = setTimeout(() => {
-                //this.wsService.removeListener(() => { });
-                console.log('tablet não respondeu, chamando webcam...') //tablet nao respondeu
+               
+                console.log('tablet não respondeu, chamando webcam...') 
                 this.wsService.removeListener(this.handleMessage);
-                this.iniciarLeituraWebcam(); // então chama a webcam
+                this.iniciarLeituraWebcam(); 
             }, timeout);
             this.wsService.addListener(() => {
                 clearTimeout(timeoutId);
@@ -580,17 +569,17 @@ export default {
             }
         },
 
-        iniciarLeituraWebcam() { //se chama webcam, mostra a camera aberta
+        iniciarLeituraWebcam() { 
             this.cameraAberta = true;
         },
 
-        vincularCartaoWebcam() { // com a câmera aberta, procura o qrcode
+        vincularCartaoWebcam() { 
             this.onDetect()
         },
 
         onDecode(result) { 
             this.qrCodeCartao = '';
-            this.mostraAlerta = false; // limpa alerta e qrcodecartao para receber o qr code lido
+            this.mostraAlerta = false; 
             console.log('tem qr code?', this.qrCodeCartao);
 
             this.qrCodeCartao = result;

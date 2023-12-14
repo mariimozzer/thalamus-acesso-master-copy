@@ -32,7 +32,7 @@
 
             <br>
             <div class="col-sm-12 text-center">
-                <button class="botaoLogin" value="Entrar">
+                <button class="button-default" value="Entrar">
                                               <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
                                               <span v-if="!loading">Entrar</span>
                                               <span v-if="loading">Processando...</span>

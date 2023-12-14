@@ -1,13 +1,11 @@
 <template>
     <MenuLSGP></MenuLSGP>
-
     <div class="container">
-        <br>
-        <div style="text-align: center; margin: 20px 0px 0px 0px;">
-            <h2 class="titulo">Acessos recentes</h2>
+        <div style="text-align: center;">
+            <h2 class="titulo">Acessos Recentes</h2>
+            <hr>
         </div>
         <div class="d-flex row flex-wrap">
-
             <!-- COLUNA 1 -->
             <div class="col-lg-6 col-md-12">
 
@@ -60,14 +58,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <!-- <div class="d-flex justify-content-end">
-                            <div class="col-md-2 mr-3">
-                                <button type="button" class="btn btn-primary" @click="alteraPag('prev')">Anterior</button>
-                            </div>
-                            <div class="col-md-2 ml-3">
-                                <button type="button" class="btn btn-primary" @click="alteraPag('next')">Próxima</button>
-                            </div>
-                        </div> -->
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" :class="{ disabled: currentPage === 1 }">
@@ -89,7 +79,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- COLUNA 2 -->
             <div class="col-lg-5 col-md-12">
                 <div class="d-flex row"
@@ -106,23 +95,16 @@
                         style="object-fit:contain" />
 
                 </div>
-
                 <div class="d-flex justify-content-center" v-if="this.mostraFoto">
-
                     <p style="color: green;">Acesso permitido</p>
-
                 </div>
-
             </div>
-
         </div>
-
         <br><br><br>
     </div>
 </template>
 
 <script>
-
 import moment from 'moment-timezone';
 import api, { urlFoto } from '../../services/api';
 import WebSocketService from '../../services/websocketservice'
@@ -168,7 +150,6 @@ export default {
             this.localSelecionado = JSON.parse(localSelecionadoStorage);
             this.alterarLocal();
         }
-
         this.wsService.addListener(this.handleMessage);
     },
 
@@ -312,12 +293,11 @@ export default {
                 console.error('Mensagem não reconhecida no Acesso', error);
             }
         },
-
     },
 };
 </script>
 
-<style scoped> 
+<style> 
 .card-foto {
      min-height: 500px;
  }

@@ -1,15 +1,16 @@
 <template>
-    <header>
-        <div class="menu">
-            <NovoMenu v-if="!$route.meta.hideMenu"></NovoMenu>
+    <div class="estilos">
+        <header>
+            <div class="menu">
+                <NovoMenu v-if="!$route.meta.hideMenu"></NovoMenu>
+            </div>
+        </header>
+        <div class="router">
+            <br><br><br>
+            <router-view />
         </div>
-    </header>
-    <div class="router">
-        <br><br><br>
-        <router-view />
-    
+        <Footer></Footer>
     </div>
-    <Footer></Footer>
 </template>
 
 <script>
@@ -26,13 +27,33 @@ export default ({
     components: {
         NovoMenu: NovoMenu,
         Footer:Footer
-
     }
 })
 </script>
 
 
 <style>
+:root {
+    --dark-color: #292A2A;
+    --botao: #F89E31;
+    --botao-hover: #FBBF77;
+    --botao-secondary: #AAAAAA;
+    --botao-secondary-hover: #C2BFBF;
+    --menu-lateral-background:#333;
+    --menu-lateral-botao: #444;
+    --menu-lateral-borda: #555;
+}
+
+.titulo {
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 10px
+}
+
+.estilos {
+    font-family: 'montserrat', sans-serif;
+}
+
 .router {
     margin-left: 300px;
     margin-bottom: 100px;
@@ -42,71 +63,89 @@ export default ({
     position: absolute;
 }
 
-:root {
-    --first-color: #343537;
-    --second-color: #F89E31;
-}
-
-
-.b-button {
+.button-default {
     width: 100%;
-    background-color: var(--second-color) !important;
+    background-color: var(--botao) !important;
     color: rgb(255, 255, 255) !important;
     padding: 10px !important;
     margin: 6px 0 !important;
     border: none !important;
-    border-radius: 4px !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+}
+.button-default:hover {
+    background-color: var(--botao-hover) !important;
+}
+
+.button-cancel {
+    background-color: #fff !important;
+    color: var(--dark-color) !important;
+    margin: 6px 0 !important;
+    border: solid !important;
+    border-color: var(--botao) !important;
+    border-width: 1px !important;
+    border-radius: 6px !important;
     cursor: pointer;
 }
 
-.b-button:hover {
-    background-color: #FBBF77 !important;
+.button-cancel:hover {
+    background-color: var(--botao-hover) !important;
 }
 
-.table {
-    text-align: center;
+.btn-primary{
+    background-color: var(--botao) !important;
+    margin: 6px 0 !important;
+    border: none !important;
 }
 
-.btn-primary {
-    background-color: var(--second-color) !important;
-    border: var(--second-color) !important;
+.btn-primary:hover{
+    background-color: var(--botao-hover) !important;
+  
 }
 
-.btn-primary:hover {
-    background-color: #FBBF77 !important;
+.button-cadastrar{
+    background-color: var(--botao) !important;
+    margin: 6px 0 !important;
+    border: none !important;
+    width: 150px;
+    height: 40px;
+    border: none !important;
+    border-radius: 6px !important;
+    color: white;
 }
 
-.btn-default {
-    border: #343537 !important;
+.button-cadastrar:hover{
+    background-color: var(--botao-hover) !important;
+
 }
 
-.btn-default:hover {
-    border: #343537 !important;
+.button-cancelar{
+    color: white !important;
+    background-color: var( --botao-secondary) !important;
+
 }
 
-.titulo {
-    text-align: center;
-    color: var(--first-color);
-    box-shadow: none;
+.button-cancelar:hover{
+    background-color: var(--botao-secondary-hover) !important;
+
 }
 
-/* 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-} */
+.button-visita{
+    background-color: var(--botao);
+    color: white;
+    border: none;
+    border-radius: 2px !important;
 
-body {
-    font-family: 'montserrat', sans-serif;
-    /* background-color:  #343537 !important; */
-    
+}
+
+.button-visita:hover{
+    background-color: var(--botao-hover) !important;
 }
 
 header {
     width: 100vw;
     margin-top: 0;
-    background-color: var(--first-color);
+    background-color: var( --dark-color);
     padding: 0px;
 }
 
@@ -119,10 +158,4 @@ thead {
     z-index: 1;
     width: 100%;
 }
-
-/* .router {
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-} */
 </style>
