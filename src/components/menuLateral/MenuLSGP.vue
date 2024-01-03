@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 import Menu from '@/models/Menu.js'
 import api from '../../services/api'
 
@@ -67,8 +67,8 @@ export default {
     methods: {
 
         getAllSidebar() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/7
-            `)
+            //axios.get(`http://192.168.0.6:8000/api/menu/estrutura/7`)
+            api.get(`/menu/estrutura/7`)
                 .then(response => {
                     this.sgp = response.data.data.map((p) => new Menu(p));
                    // console.log(this.sgp)
