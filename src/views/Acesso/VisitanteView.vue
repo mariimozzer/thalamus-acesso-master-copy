@@ -201,8 +201,9 @@ export default {
         },
 
         paginatedData() {
-            const startIndex = this.currentPage * this.itemsPerPage;
-            const endIndex = startIndex + this.itemsPerPage;
+            const itemsPerPage = '';
+            const startIndex = this.currentPage * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
             return this.visitantes.slice(startIndex, endIndex);
         },
     },

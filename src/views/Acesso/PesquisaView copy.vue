@@ -99,13 +99,23 @@
 
             </div>
 
-        </div>
+            <div v-if="filtroVazio" style="text-align: center;">
+                <p style="font-size: 20px; color: brown;">Não há dados</p>
+            </div>
 
-         <div class="d-flex align-items-baseline justify-content-end mt-4">
-             <button @click="irParaPagina(pagina - 1)" :disabled="pagina === 1" class="btn btn-primary">Página Anterior</button>
-             <span class="mr-2 ml-2">{{ pagina }} de {{ totalPaginas }}</span>
-             <button @click="irParaPagina(pagina + 1)" :disabled="pagina === totalPaginas" class="btn btn-primary">Próxima Página</button>
-         </div>
+            <div class="d-flex align-items-baseline justify-content-end mt-4">
+
+                <button @click="irParaPagina(pagina - 1)" :disabled="pagina === 1" class="btn btn-primary">Página
+                    Anterior</button>
+
+                <span class="mr-2 ml-2">{{ pagina }} de {{ totalPaginas }}</span>
+
+                <button @click="irParaPagina(pagina + 1)" :disabled="pagina === totalPaginas"
+                    class="btn btn-primary">Próxima Página</button>
+            
+            </div>
+
+        </div>
 
         <br><br><br><br>
 
@@ -138,8 +148,8 @@ export default {
                 setor: null,
                 local: null,
             },
-            dadosFiltro: [],
-            listaSetores: [],
+            dadosFiltro: [], 
+            listaSetores: [], 
             setorSelecionado: null,
             localLista: [],
             localSelecionado: null,
@@ -178,10 +188,10 @@ export default {
             this.filtro.final = dataFormatada;
         },
 
-       irParaPagina(pagina) {
+        irParaPagina(pagina) {
             if (pagina >= 1 && pagina <= this.totalPaginas) {
                 this.pagina = pagina;
-                //this.pesquisar();
+                this.pesquisar();
             }
         },
 
@@ -202,8 +212,10 @@ export default {
 
             api.get(`/acesso/filtro?page=${this.pagina}`, params)
                 .then(response => {
+
                     this.dadosFiltro = response.data.data;
                     this.totalPaginas = response.data.last_page;
+
                     if (this.dadosFiltro == undefined) {
                         this.filtroVazio = true
                     }
@@ -212,7 +224,7 @@ export default {
                     console.error("Erro ao buscar dados:", error);
                 });
         },
-        
+
         carregarSetores() {
             api.get('/setor')
                 .then(response => {
@@ -244,7 +256,7 @@ export default {
                 visitante: null,
             };
 
-           this.dadosFiltro = [];
+            this.dadosFiltro = [];
 
             this.setorSelecionado = null;
 
