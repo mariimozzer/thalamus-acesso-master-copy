@@ -114,9 +114,11 @@
 
 <script>
 
-import api from '../../services/api';
+import axios from 'axios';
 import moment from 'moment-timezone';
+//import html2pdf from 'html2pdf.js';
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
+
 
 export default {
 
@@ -138,9 +140,9 @@ export default {
                 setor: null,
                 local: null,
             },
-            dadosFiltro: [],
-            listaSetores: [],
-            setorSelecionado: null,
+            dadosFiltro: [], // retorno do filtro
+            listaSetores: [], // traz todos os setores
+            setorSelecionado: null, //id do setor escolhido na lista
             localLista: [],
             localSelecionado: null,
             pagina: 1,
@@ -156,6 +158,17 @@ export default {
     },
 
     methods: {
+
+        /* generatePDF() {
+            const element = document.getElementById('tabela-acessos');
+            html2pdf(element, {
+                margin: 10,
+                filename: 'acessos_pesquisa.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            });
+        }, */
 
         formatarDataHora(valor) {
             if (valor) {
@@ -178,17 +191,22 @@ export default {
             this.filtro.final = dataFormatada;
         },
 
-       irParaPagina(pagina) {
+        irParaPagina(pagina) {
             if (pagina >= 1 && pagina <= this.totalPaginas) {
                 this.pagina = pagina;
-                //this.pesquisar();
+                this.pesquisar();
             }
         },
+
 
         pesquisar() {
 
             // Converte o valor de visitante para 1 ou 0
+            //this.filtro.visitante = this.filtro.visitante === "1" ? 1 : this.filtro.visitante === "0" ? 0 : null;
+
             this.filtro.visitante = this.filtro.visitante === "Sim" ? "1" : this.filtro.visitante === "Não" ? "0" : null;
+
+            /* this.filtro.visitante = this.filtro.visitante === "Sim" ? 1 : "0"; */
 
             // Verifica se localSelecionado é null ou undefined, se undefined define como null
             this.filtro.local = this.localSelecionado;
@@ -200,21 +218,40 @@ export default {
                 params: this.filtro, page: this.pagina
             };
 
-            api.get(`/acesso/filtro?page=${this.pagina}`, params)
+            /* const params = {
+                params: {
+                    visitante: 1                    
+                },
+                page: this.pagina,
+            };
+ */
+            axios.get(`http://192.168.0.6:8000/api/acesso/filtro?page=${this.pagina}`, params)
                 .then(response => {
+
+                    console.log('API Response', response);
+
                     this.dadosFiltro = response.data.data;
                     this.totalPaginas = response.data.last_page;
+
+                    console.log('API response.data.data', this.dadosFiltro);
+
                     if (this.dadosFiltro == undefined) {
                         this.filtroVazio = true
                     }
+
+                    console.log(`API Request URL: http://192.168.0.6:8000/api/acesso/filtro?page=${this.pagina}`, params);
+
+                    console.log('é visita?', this.filtro.visitante);
                 })
                 .catch(error => {
                     console.error("Erro ao buscar dados:", error);
                 });
+
+
         },
-        
+
         carregarSetores() {
-            api.get('/setor')
+            axios.get('http://192.168.0.6:8000/api/setor')
                 .then(response => {
                     this.listaSetores = response.data.data;
                 })
@@ -223,15 +260,13 @@ export default {
                 });
         },
 
-        carregarLocais() {
-             api.get('/local')
-                .then(response => {
-                    this.localLista = response.data
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-            
+        async carregarLocais() {
+            try {
+                const response = await fetch("http://192.168.0.6:8000/api/local");
+                this.localLista = await response.json();
+            } catch (error) {
+                console.error("Erro ao buscar locais", error);
+            }
         },
 
         limparCampos() {
@@ -244,7 +279,7 @@ export default {
                 visitante: null,
             };
 
-           this.dadosFiltro = [];
+            this.dadosFiltro = [];
 
             this.setorSelecionado = null;
 

@@ -150,6 +150,7 @@ export default {
             this.localSelecionado = JSON.parse(localSelecionadoStorage);
             this.alterarLocal();
         }
+
         this.wsService.addListener(this.handleMessage);
     },
 
@@ -170,6 +171,7 @@ export default {
             const endIndex = startIndex + this.itemsPerPage;
             return this.visitantes.slice(startIndex, endIndex);
         },
+        
     },
 
     methods: {
