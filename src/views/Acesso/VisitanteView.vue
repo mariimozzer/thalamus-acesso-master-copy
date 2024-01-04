@@ -149,6 +149,7 @@ export default {
         const isOpen = ref(false)
         const openModal = () => {
             isOpen.value = true
+            this.setoresVisitante = [];
             return isOpen.value
         }
         return {
@@ -290,8 +291,9 @@ export default {
             this.isOpen = true;
         },
 
-        fecharModal() {
+        fecharModal() {            
             this.isOpen = false;
+            
         },
     },
 }

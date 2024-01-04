@@ -23,20 +23,29 @@
             <br>
     
             <div class="form-check ">
-                <input class="form-check-input" type="radio" id="roboflex" value="roboflex" v-model="local">
+                <!-- <input class="form-check-input" type="radio" id="roboflex" value="roboflex" v-model="local">
                 <label class="form-check-label" for="roboflex"> Roboflex </label>
                 <br>
                 <input class="form-check-input" type="radio" id="zontec" value="zontec" v-model="local">
                 <label class="form-check-label" for="zontec"> Zontec </label>
+ -->
+                <label v-for="local in localData" :key="local.local_nome">
+                    <input type="radio" :value="local.id" v-model="localSelecionado" @change="salvarLocalSelecionado" />
+                    <span>{{ local.local_nome }}</span>
+                </label>
+
+                <!-- <select v-model="localSelecionado" @change="alterarLocal" class="select" style="border: solid; border-radius: 5px; border-width: 1px; border-color: lightgrey; padding:5px 10px 5px 10px;">
+                    <option v-for="local in localData" :key="local.id" :value="local.id">{{ local.local_nome }}</option>
+                </select> -->
             </div>
 
             <br>
             <div class="col-sm-12 text-center">
                 <button class="button-default" value="Entrar">
-                                              <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
-                                              <span v-if="!loading">Entrar</span>
-                                              <span v-if="loading">Processando...</span>
-                                            </button>
+                    <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
+                    <span v-if="!loading">Entrar</span>
+                    <span v-if="loading">Processando...</span>
+                </button>
             </div>
     
             <div class="col-sm-12" style="text-align: center; font-size: 15px;">
@@ -49,6 +58,7 @@
 <script>
 import axios from 'axios';
 import { createToaster } from "@meforma/vue-toaster";
+import api from '../../services/api';
 
 const toaster = createToaster({
     position: "top-right",
@@ -62,7 +72,6 @@ export default {
         
     },
 
-
     data() {
         return {
             local: '',
@@ -72,16 +81,19 @@ export default {
             id: '',
             loading: false,
             user: null,
+            localData: [],
+            localSelecionado: null,
+            apiUrl: api.defaults.baseURL,
         }
     },
 
+   
     mounted() {
+        this.buscaLocal();
+
         if (localStorage.local) {
             this.local = localStorage.local
         }
-
-
-
     },
 
     watch: {
@@ -91,7 +103,6 @@ export default {
     },
 
     methods: {
-
 
         login() {
 
@@ -117,15 +128,28 @@ export default {
                 }
             ).catch(
                 err => {
-
                     this.email = ''
                     this.password = ''
                     console.log(err)
                     toaster.show(`E-mail e/ou senha estão incorretos!`, { type: "error" });
-
-
                 }
             )
+        },
+
+       
+
+        async buscaLocal() {
+            try {
+                const response = await fetch(`${this.apiUrl}/local`);
+                this.localData = await response.json();
+            } catch (error) {
+                console.error('Error ao buscar empresas', error);
+                toaster.show(`Erro buscar empresa`, { type: "error" });
+            }
+        },
+
+        salvarLocalSelecionado() {
+            localStorage.setItem('localSelecionado', this.localSelecionado);
         },
 
     }

@@ -179,9 +179,9 @@ export default {
     mounted() {
         this.getAllHome()
         this.getAllEstrutura()
-        this.getAllAdm()
-        this.getAllFab()
-        this.getAllGestao()
+        //this.getAllAdm()
+       // this.getAllFab()
+       // this.getAllGestao()
     }
 }
 </script>

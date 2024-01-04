@@ -4,6 +4,7 @@
             <div class="d-flex justify-content-between">
                 <span>Cadastrar visita para 
                     <span style="color: var(--second-color); font-weight: 600;">{{ pessoaNomeModal }}</span> 
+                   
                 </span>
                 <button type="button" class="btn-close" aria-label="Close" @click="$emit('close')"></button>
             </div>
@@ -57,7 +58,7 @@
                             <table class="table-responsive">
                                 <tr v-for="item in setoresFiltrados" :key="item.id">
                                     <td>
-                                        <input v-model="setoresVisitante" type="checkbox" :value="item.id">
+                                        <input v-model="setoresVisitante" type="checkbox" :value="item.id" class="check2">
                                     </td>
                                     <td style="max-height: 40px; overflow-y: auto;">
                                         &nbsp;&nbsp;{{ item.nome }}
@@ -77,7 +78,11 @@
                     </div>
                 </div>
                 <div style="display: flex; flex-flow: row; justify-content: center; margin-top: 10px;">
-                    <button type="button" class="btn btn-primary float-end" @click="salvarVisita">&nbsp;&nbsp;Salvar&nbsp;&nbsp;</button>
+                    <button type="button" class="btn btn-primary float-end" @click="salvarVisita">
+                        <i v-if="loading" class="fas fa-spinner fa-spin"></i> 
+                        <span v-if="!loading">Salvar</span>
+                        <span v-if="loading">Salvando...</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -129,7 +134,6 @@ export default {
         setup(props, { emit }) {
             const closeModal = () => {
                 this.qrodeCartao = '';
-                this.setoresVisitante = [];      
                 emit('close', false)
             }
             return {
@@ -159,11 +163,15 @@ export default {
             cameraAberta: false,      
             dadosVisitaModal: {},
             qrCodeEmail: '',
+            loading: false,
         }
 
     },
 
     created() {
+
+        
+
         const localSelecionado = localStorage.getItem('localSelecionado');
         if (localSelecionado) {
             this.localSelecionado = localSelecionado;
@@ -178,9 +186,9 @@ export default {
         
     },
 
-    mounted() {
+    mounted() {  
+       
         this.obterSetores();
-
         this.buscaLocal();
         const localSelecionadoStorage = localStorage.getItem('localSelecionado');
         if (localSelecionadoStorage) {
@@ -190,6 +198,7 @@ export default {
     },
 
     beforeUnmount() {
+        
         this.wsService.removeListener(this.handleMessage);
         this.wsService.close();
     },
@@ -290,6 +299,7 @@ export default {
                 console.error(error);
             }
         },
+
         iniciarLeituraWebcam() { 
             this.cameraAberta = true;
         },
@@ -384,40 +394,46 @@ export default {
                 second: '2-digit'
             }).replace(/[^\d]/g, '');
 
-            this.qrCodeEmail = 'VX' + pessoaID + pessoaNome.replace(/\s/g, '') + this.setoresVisitante.toString() + this.localSelecionado + dataFormatada.replace(/\s/g, '');
+            this.qrCodeEmail = 'VX' + pessoaID + pessoaNome.replace(/\s/g, '') + this.setoresVisitante.join('') + this.localSelecionado + dataFormatada.replace(/\s/g, '');
 
             this.dadosVisitaModal = {
                 "pessoa_id": pessoaID,
                 "qrcode": this.qrCodeEmail,
                 "info": document.getElementById('info').value,
-                "setor_id": this.setoresVisitante.toString(),
+                "setor_id": this.setoresVisitante,
                 "val_dias": document.getElementById('dias').value,
                 "val_horas": document.getElementById('horas').value,
                 "local_id": this.localSelecionado,
                 "qrcode_fisico": this.qrCodeCartao,
                 "base64": this.pessoaImgBase64
             };
-            console.log('salvar visita: ', this.dadosVisitaModal);
+
+            console.log('qrcodemail ', this.qrCodeEmail);
 
             api.post(`/visita`, this.dadosVisitaModal)
                 .then(response => {
-                    console.log(response.data);
+                    //console.log(response.data);
                     if (response.data.cod === 1) {
                        toaster.show(`QR Code de visitante inválido. Tente outro QR Code`, { type: "error" });
                         this.qrCodeCartao = '';
                     } else {
                         if (!this.pessoaEmail && this.qrCodeCartao) {
+                             this.loading = false
                             toaster.show(`Visita cadastrada`, { type: "success" });
                         } else if (this.pessoaEmail && this.qrCodeCartao) {
+                             this.loading = false
                             toaster.show(`Visita cadastrada. QR Code enviado para o e-mail cadastrado`, { type: "success" });
                         } else if (this.pessoaEmail && !this.qrCodeCartao) {
+                             this.loading = false
                             toaster.show(`Visita cadastrada. QR Code enviado para o e-mail cadastrado`, { type: "success" });
-                        }
-                        
+                        } 
                     }
-                    this.setoresVisitante = '';
+
+                    this.setoresVisitante = [];
                     this.qrcodeCartao = '';
+                    
                     this.$emit('close');
+                     
                 })
                 .catch(error => {
                     console.error(error);
@@ -425,7 +441,7 @@ export default {
 
                 });     
         },
-  
+
     }
 }
 </script>

@@ -132,7 +132,7 @@ export default {
             filtro: '',
             filtroNome: '',
             pageAcesso: 1,
-            localSelecionado: 1,
+            localSelecionado: null,
             localData: [],
             wsService: new WebSocketService(),
             apiUrl: api.defaults.baseURL,
