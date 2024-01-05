@@ -98,7 +98,6 @@
                         </tr>
                     </tbody>
                 </table>
-
             </div>
 
         </div>
@@ -160,6 +159,10 @@ export default {
     },
 
     methods: {
+
+        ordenarPessoas(a, b) {
+            return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
+        },
 
         /* generatePDF() {
             const element = document.getElementById('tabela-acessos');

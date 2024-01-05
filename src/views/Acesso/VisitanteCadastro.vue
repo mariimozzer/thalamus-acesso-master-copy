@@ -235,6 +235,7 @@ export default {
 
         cancelarAcao() {
             this.visitante = new Visitante();
+            this.isCameraOpen = false;
             this.imageBase64 = null;
             this.$router.push({ name: "VisitanteView" })
 
@@ -262,6 +263,7 @@ export default {
                 });
 
             toaster.show(`Visitante cadastrado`, { type: "success" });
+            this.isCameraOpen = false;
         },
 
         atualizarVisitante() {
@@ -304,6 +306,7 @@ export default {
                         toaster.show(`Erro ao atualizar visitante`, { type: "error" });
                     });
             }
+            this.closeCamera();
         },
 
         salvarVisitante() {

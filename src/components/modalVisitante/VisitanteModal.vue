@@ -451,6 +451,7 @@ export default {
                     this.setoresVisitante = [];
                     this.qrcodeCartao = '';
                      this.loading = false;
+                     this.cameraAberta = false;
                     
                     this.$emit('close');
                      
@@ -465,6 +466,7 @@ export default {
 
         closeModal() {
             this.setoresVisitante = [];
+            this.cameraAberta = false;
             this.$emit('close');
         },
 
