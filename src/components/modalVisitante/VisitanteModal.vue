@@ -197,20 +197,7 @@ export default {
             this.alterarLocal();
         }
 
-       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            // Solicita permissão para usar a webcam
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(() => {
-                    console.log('Permissão para a webcam concedida');
-                })
-                .catch((error) => {
-                    console.error('Erro ao solicitar permissão para a webcam:', error);
-                    toaster.show(`Erro ao acessar a webcam. Por favor, conceda permissão`, { type: "error" });
-                });
-        } else {
-            console.error('Navegador não permite acesso à webcam');
-            toaster.show(`Navegador não permite acesso à webcam`, { type: "error" });
-        }
+       
     },
 
     beforeUnmount() {
