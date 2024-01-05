@@ -1,7 +1,7 @@
 <template>
     <MenuLSGP></MenuLSGP>
     <div class="container">
-    
+
         <div class="row">
             <div class="col-sm-12" style="text-align: center;">
                 <h3 class="titulo">Colaborador</h3>
@@ -9,33 +9,27 @@
             </div>
         </div>
         <div class="row sub-container">
-    
+
             <div class="col-sm-2">
-                <button @click="adicionarColaborador" class="b-button">         
-                    <i class="fa-solid fa-plus"></i>  </button>
-    
+                <button @click="adicionarColaborador" class="button-cadastrar">
+                    <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
+
             </div>
             <br>
             <br>
-    
             <div class="row">
-    
                 <!-- Filtro -->
-    
-                <div class="col-md-4">
+                <div class="col-md-4 mb-3">
                     <!-- Filtro -->
-                    <b-input-group class="mb-2">
+                    <b-input-group class="mb-2 mt-3">
                         <b-input-group-prepend is-text>
                             <i class="fa-solid fa-magnifying-glass"></i> </b-input-group-prepend>
-                        <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtro"></b-form-input>
-    
+                        <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtro">
+                        </b-form-input>
                     </b-input-group>
                 </div>
-    
-    
                 <br>
                 <br>
-    
                 <!-- TABELA DE colaboradores -->
                 <div class="col-sm-12">
                     <table class="table table-hover">
@@ -46,10 +40,10 @@
                                 <th scope="col">Gênero</th>
                                 <th scope="col">Celular</th>
                                 <th scope="col">E-mail</th>
-                                <th scope="col"></th>
+                                <th scope="col">Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="text-align: center;">
                             <tr v-for="item in paginatedData" :key="item.id">
                                 <td>{{ item.nomeCompleto }}</td>
                                 <td>{{ item.CPF }}</td>
@@ -57,44 +51,46 @@
                                 <td>{{ item.celular }}</td>
                                 <td>{{ item.email }}</td>
                                 <td>
-                                    <div class="d-flex justify-content-start">
-                                        <button @click="editarColaborador(item)" class="btn btn-color-grey" style="margin-right: 20px;">
-                                                                        <i class="fa fa-edit icones-tabela" style="font-size: 18px; "></i>
-                                                                    </button>
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @click="excluirPessoa(item.id)" class="btn btn-color-grey">
-                                                                        <i class="fa fa-trash icones-tabela" style="font-size: 18px;"></i>
-                                                                    </button>
+                                    <div>
+                                        <button @click="editarColaborador(item)" class="btn btn-color-grey"
+                                            style="margin-right: 20px;" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="Clique para editar colaborador">
+                                            <i class="fa fa-edit icones-tabela" style="font-size: 18px; color: var(--first-color);"></i>
+                                        </button>
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            @click="excluirPessoa(item.id)" class="btn btn-color-grey" data-bs-placement="top"
+                                            title="Clique para excluir colaborador">
+                                            <i class="fa fa-trash icones-tabela" style="font-size: 18px; color: var(--first-color);"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-    
                     <nav>
                         <ul class="pagination">
                             <li class="page-item" :class="{disabled: currentPage === 0}">
                                 <a class="page-link" href="#" aria-label="Previous" @click="prevPage">
-                                                                                      <span aria-hidden="true">&laquo;</span>
-                                                                                    </a>
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
                             </li>
-                            <li v-for="n in numberOfPages" :key="n" class="page-item" :class="{active: n === currentPage}">
+                            <li v-for="n in numberOfPages" :key="n" class="page-item"
+                                :class="{active: n === currentPage}">
                                 <a class="page-link" href="#" @click="setPage(n)">{{ n + 1 }}</a>
                             </li>
                             <li class="page-item" :class="{disabled: currentPage === numberOfPages - 1}">
                                 <a class="page-link" href="#" aria-label="Next" @click="nextPage">
-                                                                                      <span aria-hidden="true">&raquo;</span>
-                                                                                    </a>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
                             </li>
                         </ul>
                     </nav>
-    
-    
                 </div>
             </div>
         </div>
-    
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -106,7 +102,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-color" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-color" @click="confirmarExclusao" data-bs-dismiss="modal">Confirmar</button>
+                        <button type="button" class="btn btn-color" @click="confirmarExclusao"
+                            data-bs-dismiss="modal">Confirmar</button>
                     </div>
                 </div>
             </div>

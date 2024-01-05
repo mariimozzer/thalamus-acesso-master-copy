@@ -80,8 +80,8 @@
                 <div style="display: flex; flex-flow: row; justify-content: center; margin-top: 10px;">
                     <button type="button" class="btn btn-primary float-end" @click="salvarVisita">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i> 
-                        <span v-if="!loading">Salvar</span>
-                        <span v-if="loading">Salvando...</span>
+                        <span v-if="!loading">&nbsp;Salvar &nbsp;</span>
+                        <span v-if="loading">&nbsp;Salvando... &nbsp;</span>
                     </button>
                 </div>
             </div>
@@ -104,7 +104,7 @@ export default {
 
         open: {
             type: Boolean,
-            required: true
+            required: true,
         },
 
         pessoaIDModal: {
@@ -134,10 +134,14 @@ export default {
         setup(props, { emit }) {
             const closeModal = () => {
                 this.qrodeCartao = '';
+               
+               
                 emit('close', false)
             }
             return {
-                closeModal   
+                
+                closeModal  
+            
             }
         },
 
@@ -169,9 +173,6 @@ export default {
     },
 
     created() {
-
-        
-
         const localSelecionado = localStorage.getItem('localSelecionado');
         if (localSelecionado) {
             this.localSelecionado = localSelecionado;
@@ -183,7 +184,7 @@ export default {
         const pessoaCPF = this.pessoaCPFModal
         const pessoaEmail = this.pessoaEmail
         console.log('modal', 'local id:', local, 'id pessoa:', pessoaID, 'nome pessoa:', pessoaNome, 'cpf pessoa:', pessoaCPF, 'email:', pessoaEmail);
-        
+         
     },
 
     mounted() {  
@@ -195,12 +196,28 @@ export default {
             this.localSelecionado = JSON.parse(localSelecionadoStorage);
             this.alterarLocal();
         }
+
+       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            // Solicita permissão para usar a webcam
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(() => {
+                    console.log('Permissão para a webcam concedida.');
+                })
+                .catch((error) => {
+                    console.error('Erro ao solicitar permissão para a webcam:', error);
+                    toaster.show(`Erro ao acessar a webcam. Por favor, conceda permissão.`, { type: "error" });
+                });
+        } else {
+            console.error('API de mediaDevices não suportada.');
+            toaster.show(`Seu navegador não suporta a API de mediaDevices.`, { type: "error" });
+        }
     },
 
     beforeUnmount() {
         
         this.wsService.removeListener(this.handleMessage);
         this.wsService.close();
+        
     },
 
     computed: {
@@ -300,8 +317,20 @@ export default {
             }
         },
 
-        iniciarLeituraWebcam() { 
-            this.cameraAberta = true;
+       iniciarLeituraWebcam() {
+            // Verifica se a permissão já foi concedida
+            if (this.cameraPermissaoConcedida()) {
+                this.cameraAberta = true;
+            } else {
+                // Se a permissão não foi concedida, você pode exibir uma mensagem ou solicitar novamente
+                console.log('Permissão para a webcam não concedida.');
+                toaster.show(`Por favor, conceda permissão para acessar a webcam.`, { type: "warning" });
+            }
+        },
+
+        cameraPermissaoConcedida() {
+            // Verifica se a permissão para a webcam foi concedida
+            return navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
         },
 
         vincularCartaoWebcam() {
@@ -363,12 +392,15 @@ export default {
 
         salvarVisita() {
 
+            this.loading = true;
+
             const pessoaID = this.pessoaIDModal;
             const pessoaNome = this.pessoaNomeModal;
             const pessoaEmail = this.pessoaEmail;
 
             if (this.setoresVisitante.length === 0) {
                 toaster.show(`Selecione um setor para a visita.`, { type: "error" });
+                this.loading = false;
                 return;
             }
 
@@ -376,11 +408,13 @@ export default {
             const horas = document.getElementById('horas').value;
             if ((!horas || horas <= 0) && (!dias || dias <= 0)) {
                 toaster.show(`Informe a validade da visita`, { type: "error" });
+                this.loading = false;
                 return;
             }
 
             if (!pessoaEmail && !this.qrCodeCartao) {
               toaster.show(`Informe o e-mail ou leia um QR Code para a visita.`, { type: "warning" });
+              this.loading = false;
                 return;
             }
 
@@ -431,11 +465,13 @@ export default {
 
                     this.setoresVisitante = [];
                     this.qrcodeCartao = '';
+                     this.loading = false;
                     
                     this.$emit('close');
                      
                 })
                 .catch(error => {
+                    this.loading = false;
                     console.error(error);
                     toaster.show(`Erro ao cadastrar visita`, { type: "error" });
 

@@ -4,6 +4,7 @@
         <div class="row mb-3" style="text-align: center;">
             <div class="col-sm-12">
                 <h2 class="titulo">{{ modoCadastro ? "Cadastrar" : "Editar" }} Visitante</h2>
+                <hr>
             </div>
         </div>
         <div class="d-flex row flex-wrap">
@@ -86,9 +87,11 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
+
+            <button @click="cancelarAcao" class="btn button-cancel">Cancelar</button>     
             
                 <button @click="salvarVisitante" class=" btn btn-primary">Salvar</button>
-                <button @click="cancelarAcao" class="btn button-cancel">Cancelar</button>               
+                          
             
         </div>
     </div>

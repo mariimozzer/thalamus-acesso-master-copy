@@ -3,16 +3,15 @@
     <div class="container">
         <div>
             <div class="row">
-                <div class="col-12" style="text-align: center;">
+                <div class="col-sm-12" style="text-align: center;">
                     <h2 class="titulo">Visitante</h2>
+                    <hr>
                 </div>
             </div>
             <div class="mb-3">
-                <div class="col-lg-3 col-md-12">
-                    <div class=" mt-3">
+                <div class="col-sm-2">
                         <button type="button" class="button-cadastrar" @click="adicionarPessoa">
                             <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
-                    </div>
                 </div>
                 <div class="col-lg-6 col-md-12">
                     <div class="input-group mt-3">
@@ -21,7 +20,7 @@
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </span>
                         </div>
-                        <input v-model="filtroNome" @input="pesquisaComFiltro" type="text" placeholder="Pesquisar"
+                        <input v-model="filtroNome" @input="pesquisaComFiltro" type="text" placeholder="Pesquisar visitante por nome"
                             class="form-control" />
                     </div>
                 </div>
@@ -69,7 +68,7 @@
                                         data-bs-target="#staticBackdrop" data-bs-placement="top"
                                         title="Clique para excluir visitante" @click="excluirPessoa(item.id)">
                                         <i class="fa fa-trash icones-tabela"
-                                            style="font-size: 18px; color: var(--first-color); "></i>
+                                            style="font-size: 18px; color: var(--first-color);"></i>
                                     </button>
                                 </div>
                             </td>
@@ -149,7 +148,6 @@ export default {
         const isOpen = ref(false)
         const openModal = () => {
             isOpen.value = true
-            this.setoresVisitante = [];
             return isOpen.value
         }
         return {
@@ -185,14 +183,14 @@ export default {
     },
 
     computed: {
-        setoresFiltrados() {
+        /* setoresFiltrados() {
             return this.setores.filter(setor => {
                 const buscaSetor = this.filtroSetor.toLowerCase();
                 return (
                     (setor.nome && setor.nome.toLowerCase().includes(buscaSetor))
                 );
             });
-        },
+        }, */
 
         visitantesFiltrados() {
             const buscaNome = this.filtroNome.toLowerCase();
@@ -293,7 +291,6 @@ export default {
 
         fecharModal() {            
             this.isOpen = false;
-            
         },
     },
 }
