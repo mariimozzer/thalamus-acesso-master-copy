@@ -7,14 +7,14 @@
             </div>
     
     
-            <div class="input-group mb-3">
+            <div class="input-group mb-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
                 </div>
                 <input type="text" class="form-control" v-model="email" placeholder="roboflex@roboflex.com.br">
             </div>
     
-            <div class="input-group mb-3">
+            <div class="input-group mb-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                 </div>
@@ -28,11 +28,15 @@
                 <br>
                 <input class="form-check-input" type="radio" id="zontec" value="zontec" v-model="local">
                 <label class="form-check-label" for="zontec"> Zontec </label>
+                
  -->
-                <label v-for="local in localData" :key="local.local_nome">
-                    <input type="radio" :value="local.id" v-model="localSelecionado" @change="salvarLocalSelecionado" />
-                    <span>{{ local.local_nome }}</span>
-                </label>
+                <ul style="list-style: none;  margin: 0; padding: 0;">
+                    <li v-for="local in localData" :key="local.local_nome">
+                        <input type="radio" :value="local.id" v-model="localSelecionado" @change="salvarLocalSelecionado" style="margin-right: 5px;" />
+                        <span>{{ local.local_nome }}</span>
+                    </li>
+                </ul>
+                
 
                 <!-- <select v-model="localSelecionado" @change="alterarLocal" class="select" style="border: solid; border-radius: 5px; border-width: 1px; border-color: lightgrey; padding:5px 10px 5px 10px;">
                     <option v-for="local in localData" :key="local.id" :value="local.id">{{ local.local_nome }}</option>

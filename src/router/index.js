@@ -12,6 +12,7 @@ import AcessoView from '@/views/Acesso/AcessoView.vue'
 import VisitanteView from '../views/Acesso/VisitanteView.vue'
 import VisitanteCadastro from '../views/Acesso/VisitanteCadastro.vue'
 import PesquisaView from '@/views/Acesso/PesquisaView.vue'
+import AcessoHomeView from '@/views/Acesso/AcessoHomeView.vue'
 //Permissão
 import ColaboradorView from "@/views/Permissão/ColaboradorView"
 import ControleDeColaborador from "@/views/Permissão/ControleDeColaborador"
@@ -64,6 +65,11 @@ const routes = [
     path: '/acesso',
     name: 'AcessoView',
     component: AcessoView
+  },
+  {
+    path: '/acesso/home',
+    name: 'AcessoHomeView',
+    component: AcessoHomeView
   },
   {
     path: '/visitante',

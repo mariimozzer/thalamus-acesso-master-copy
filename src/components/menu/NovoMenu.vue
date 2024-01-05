@@ -19,13 +19,28 @@
 
                     <div class="navbar-nav ml-auto">
                         <b-nav-item-dropdown right style="color: white;">
-                            <template v-slot:button-content><i style="color: white;" class="fa-solid fa-circle-user"></i>
+                            <template v-slot:button-content><i style="color: white;"
+                                    class="fa-solid fa-circle-user"></i>
                                 <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
                             </template>
                             <b-dropdown-item style="color: black" href="/alterarSenha">
                                 <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
                                     Senha</span>
                             </b-dropdown-item>
+
+                            <b-dropdown-divider></b-dropdown-divider>
+
+                            <b-dropdown-item style="color: black" href="/alterarSenha">
+                                <span style="color: black;">Alterar empresa</span>
+                                <ul style="list-style: none;  margin: 0; padding: 0;">
+                                    <li v-for="local in localData" :key="local.local_nome">
+                                        <input type="radio" :value="local.id" v-model="localSelecionado"
+                                            @change="salvarLocalSelecionado" style="margin-right: 5px;" />
+                                        <span>{{ local.local_nome }}</span>
+                                    </li>
+                                </ul>
+                            </b-dropdown-item>
+
                             <b-dropdown-item style="color: black" @click="logout">
                                 <span style="color: black;"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
                                     Logout</span>
@@ -58,7 +73,8 @@
                 <h6 style="color: rgb(0, 0, 0)">{{ submenu.nome }}</h6>
                 <ul style="list-style-type: none;">
                     <li v-for="subsubmenu in submenu.filho" :key="subsubmenu.id">
-                        <a :href="subsubmenu.url" style="text-decoration: none; color: rgb(0, 0, 0); " class="submenu-link">
+                        <a :href="subsubmenu.url" style="text-decoration: none; color: rgb(0, 0, 0); "
+                            class="submenu-link">
                             {{ subsubmenu.nome }}
                         </a>
                     </li>

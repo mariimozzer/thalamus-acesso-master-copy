@@ -4,10 +4,12 @@
     <div class="container">
 
         <br>
+        <div class="col-sm-12" style="text-align: center;">
+            <h2 class="titulo">Pesquisa</h2>
+            <hr>
+        </div>
 
-        <h2 class="titulo">Pesquisa</h2>
-
-        <div>
+        <div class="mt-3">
 
             <div class="d-flex col-lg-12 justify-content-around">
 
