@@ -6,7 +6,7 @@
                     <span style="color: var(--second-color); font-weight: 600;">{{ pessoaNomeModal }}</span> 
                    
                 </span>
-                <button type="button" class="btn-close" aria-label="Close" @click="$emit('close')"></button>
+                <button type="button" class="btn-close" aria-label="Close" @click=closeModal></button>
             </div>
             <div style="margin-bottom: -15px; color: var(--second-color);">
                 <hr>
@@ -476,6 +476,13 @@ export default {
                     toaster.show(`Erro ao cadastrar visita`, { type: "error" });
 
                 });     
+        },
+
+        closeModal() {
+            // Reset the setoresVisitante array when the modal is closed
+            this.setoresVisitante = [];
+            // Emit the close event to close the modal
+            this.$emit('close');
         },
 
     }
