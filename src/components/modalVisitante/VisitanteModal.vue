@@ -201,15 +201,15 @@ export default {
             // Solicita permissão para usar a webcam
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(() => {
-                    console.log('Permissão para a webcam concedida.');
+                    console.log('Permissão para a webcam concedida');
                 })
                 .catch((error) => {
                     console.error('Erro ao solicitar permissão para a webcam:', error);
-                    toaster.show(`Erro ao acessar a webcam. Por favor, conceda permissão.`, { type: "error" });
+                    toaster.show(`Erro ao acessar a webcam. Por favor, conceda permissão`, { type: "error" });
                 });
         } else {
-            console.error('API de mediaDevices não suportada.');
-            toaster.show(`Seu navegador não suporta a API de mediaDevices.`, { type: "error" });
+            console.error('Navegador não permite acesso à webcam');
+            toaster.show(`Navegador não permite acesso à webcam`, { type: "error" });
         }
     },
 
@@ -318,18 +318,16 @@ export default {
         },
 
        iniciarLeituraWebcam() {
-            // Verifica se a permissão já foi concedida
+          
             if (this.cameraPermissaoConcedida()) {
                 this.cameraAberta = true;
             } else {
-                // Se a permissão não foi concedida, você pode exibir uma mensagem ou solicitar novamente
-                console.log('Permissão para a webcam não concedida.');
-                toaster.show(`Por favor, conceda permissão para acessar a webcam.`, { type: "warning" });
+                console.log('Permissão para a webcam não concedida');
+                toaster.show(`Por favor, conceda permissão para acessar a webcam`, { type: "warning" });
             }
         },
 
         cameraPermissaoConcedida() {
-            // Verifica se a permissão para a webcam foi concedida
             return navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
         },
 
@@ -479,9 +477,7 @@ export default {
         },
 
         closeModal() {
-            // Reset the setoresVisitante array when the modal is closed
             this.setoresVisitante = [];
-            // Emit the close event to close the modal
             this.$emit('close');
         },
 
