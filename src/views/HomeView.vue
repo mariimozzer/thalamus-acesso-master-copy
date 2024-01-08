@@ -1,7 +1,8 @@
 <template>
   <div class="home">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="color: white; text-align: center; margin-left: 0px;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark"
+      style="color: white; text-align: center; margin-left: 0px;">
       <a class="navbar-brand" href="#">
         <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
           style="width: 75%;">
@@ -26,30 +27,49 @@
       </div>
     </nav>
     <div style="left: 0px;">
-
       <div class="three-columns" style="justify-content: center; color: white; text-align: center;">
-        <div class="divLeft" id="column1" style="width: 33%;">
-      
-         
-             <img  src="../../public/img/home4_4.png">
-             <div class="titulo-menu">
-              <h1  style="color: red;">Administrativo</h1>
-             </div>
-             
-         
+        <div id="column1" style="width: 33%;">
+          <router-link to="acesso/home">
+            <div class="image-container">
+              <img src="../../public/img/home4_4.png" style="width: 100%; height: 90vh; object-fit: cover;">
+              <div class="image-text">
+                <p>ADMINISTRATIVO</p>
+                <p class="image-text2">ADMINISTRATIVO</p>
+              </div>
+            </div>
+          </router-link>
         </div>
-        <div class="column" id="column2">
+        <div id="column1" style="width: 34%;">
+          <router-link to="/home">
+            <div class="image-container">
+              <img src="../../public/img/home4_5.png" style="width: 100%; height: 90vh; object-fit: cover;">
+              <div class="image-text">
+                <p>FÁBRICA</p>
+                <p class="image-text2">FÁBRICA</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+        <div id="column1" style="width: 33%;">
+          <router-link to="/home">
+            <div class="image-container">
+              <img src="../../public/img/home4_6.png" style="width: 100%; height: 90vh; object-fit: cover;">
+              <div class="image-text">
+                <p>GESTÃO</p>
+                <p class="image-text2">GESTÃO</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+       <!--  <div class="divLeft" id="column1" style="width: 34%;">
           <br><br>
-          <!-- <img  src="../../public/img/fabricaColorido.png"  width="500px"><br><br>
-          <h1>Fábrica</h1> -->
-
-        </div>
-        <div class="column" id="column3">
-          <br><br>
-          <!-- <img  src="../../public/img/gestaoColorido.png"  width="500px"><br><br>
-          <h1>Gestão</h1> -->
-
-        </div>
+          <img src="../../public/img/home4_5.png" style="width: 100%; height: 90vh; object-fit: cover;"><br><br><br><br>
+          <h1>Fábrica</h1> 
+        </div> -->
+       <!--  <div class="divLeft" id="column1" style="width: 33%;">
+          <img src="../../public/img/home4_6.png" style="width: 100%; height: 90vh; object-fit: cover;"><br><br>
+          <h1>Gestão</h1>
+        </div> -->
       </div>
     </div>
   </div>
@@ -98,12 +118,34 @@ export default {
 
   
 <style scoped>
-.divLeft {
-    width: 49.5%;
-    height: 949px;
-    float: left;
-    position: relative;
+.image-container {
+  position: relative;
 }
+.image-text {
+  position: absolute;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 41px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.image-text2 {
+  position: absolute;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 41px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-text-stroke-width: 1px;
+-webkit-text-stroke-color: #fff;
+-webkit-text-fill-color: transparent;
+}
+
+
 .home {
   position: fixed;
   bottom: 0;
@@ -126,6 +168,8 @@ nav {
   justify-content: space-between center;
   align-items: center;
   margin-left: 0px;
+
+  z-index: 7;
 }
 
 .column:hover {
@@ -178,7 +222,7 @@ nav {
 #column2 {
   border: 10px solid none;
   background-color: #393D40;
-  background-image: url(../../public/img/home4_5.png);
+  /* background-image: url(../../public/img/home4_5.png); */
   background-repeat: no-repeat;
   filter: grayscale(100%);
   transition: filter 0.3s ease;
@@ -188,7 +232,7 @@ nav {
 #column3 {
   border: 10px solid none;
   background-color: #515558;
-  background-image: url(../../public/img/home4_6.png);
+ /*  background-image: url(../../public/img/home4_6.png); */
   background-repeat: no-repeat;
   filter: grayscale(100%);
   transition: filter 0.3s ease;
