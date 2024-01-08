@@ -27,13 +27,16 @@
     </nav>
     <div style="left: 0px;">
 
-      <div class="three-columns" style="justify-content: center; color: white; text-align: center; ">
-        <div class="column" id="column1">
-          <br><br>
-          <!-- <img  src="../../public/img/admColorido.png"  width="500px"><br><br>
-          <h1>Administrativo</h1> -->
-          
-
+      <div class="three-columns" style="justify-content: center; color: white; text-align: center;">
+        <div class="divLeft" id="column1" style="width: 33%;">
+      
+         
+             <img  src="../../public/img/home4_4.png">
+             <div class="titulo-menu">
+              <h1  style="color: red;">Administrativo</h1>
+             </div>
+             
+         
         </div>
         <div class="column" id="column2">
           <br><br>
@@ -95,6 +98,12 @@ export default {
 
   
 <style scoped>
+.divLeft {
+    width: 49.5%;
+    height: 949px;
+    float: left;
+    position: relative;
+}
 .home {
   position: fixed;
   bottom: 0;
@@ -160,7 +169,7 @@ nav {
 #column1 {
   border: 10px solid none;
   background-color: var(--first-color);
-  background-image: url(../../public/img/home4_4.png);
+ /*  background-image: url(../../public/img/home4_4.png); */
   background-repeat: no-repeat;
   filter: grayscale(100%);
   transition: filter 0.3s ease;

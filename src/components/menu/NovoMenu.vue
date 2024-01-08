@@ -2,7 +2,6 @@
     <div class="menu " id="menu">
         <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="color: white; ">
             <a class="navbar-brand" href="/home">
-
                 <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
                     style="width: 75%; ">
             </a>
@@ -14,43 +13,38 @@
                         &nbsp; &nbsp;{{ menu.nome }}
                     </button>
                 </ul>
-
-                <div class="icons">
-
+                <div>
                     <div class="navbar-nav ml-auto">
                         <b-nav-item-dropdown right style="color: white;">
                             <template v-slot:button-content><i style="color: white;"
                                     class="fa-solid fa-circle-user"></i>
                                 <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
                             </template>
-                            <b-dropdown-item style="color: black" href="/alterarSenha">
-                                <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
-                                    Senha</span>
-                            </b-dropdown-item>
-
-                            <b-dropdown-divider></b-dropdown-divider>
-
                             <b-dropdown-item style="color: black">
-            <span style="color: black; margin-bottom: 5px;">Alterar empresa</span>
-            <div class="button-list">
-                <button v-for="local in localData" :key="local.local_nome" @click="selectLocal(local.id)"
-                        class="btn mb-2" :class="{ 'active': local.id === localSelecionado }">
-                    {{ local.local_nome }}
-                </button>
-            </div>
-        </b-dropdown-item>
-
+                                <span style="color: black; margin-bottom: 5px;"><i class="fa-solid fa-user-gear"></i>&nbsp;Alterar empresa</span>
+                                <div class="button-list">
+                                    <button v-for="local in localData" :key="local.local_nome"
+                                        @click="selectLocal(local.id)" class="btn mb-2"
+                                        :class="{ 'active': local.id === localSelecionado }">
+                                        {{ local.local_nome }}
+                                    </button>
+                                </div>
+                            </b-dropdown-item>
+                            <hr>
+                             <b-dropdown-item style="color: black" href="/alterarSenha">
+                                    <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
+                                        Senha</span>
+                                </b-dropdown-item>
+                               <hr>
                             <b-dropdown-item style="color: black" @click="logout">
                                 <span style="color: black;"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
                                     Logout</span>
                             </b-dropdown-item>
-
                         </b-nav-item-dropdown>
                     </div>
                 </div>
             </div>
         </nav>
-
         <!-- <div v-if="activeMenu " class="content" :style="{ backgroundColor: activeMenu.color} " @mouseleave="closeContent">
             <div v-for="submenu in activeMenu.filho" :key="submenu.id" class="submenu-columns ">
 
@@ -64,24 +58,18 @@
                 </div>
             </div>
         </div> -->
-
-
-
         <div v-if="activeMenu" class="menunovo" @mouseleave="closeContent">
             <div v-for="submenu in activeMenu.filho" :key="submenu.id">
-                <h6 style="color: rgb(0, 0, 0)">{{ submenu.nome }}</h6>
+                <h6 style="color: #fff">{{ submenu.nome }}</h6>
                 <ul style="list-style-type: none;">
                     <li v-for="subsubmenu in submenu.filho" :key="subsubmenu.id">
-                        <a :href="subsubmenu.url" style="text-decoration: none; color: rgb(0, 0, 0); "
-                            class="submenu-link">
+                        <a :href="subsubmenu.url" style="text-decoration: none; color: #fff; " class="submenu-link">
                             {{ subsubmenu.nome }}
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
-
-
     </div>
 </template>
   
@@ -242,7 +230,7 @@ export default {
 }
 
 .menunovo {
-    background-color: #C6C2C2;
+    background-color: #3b373b;
     display: flex;
     flex-flow: row-reverse;
     justify-content: space-around;

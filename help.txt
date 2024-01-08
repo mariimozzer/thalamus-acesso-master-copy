@@ -797,3 +797,26 @@ handleMessage(event) {
 },
 
 
+
+
+#column1 {
+  border: 10px solid none;
+  background-color: var(--first-color);
+  background-image: url(../../public/img/home4_4.png);
+  background-repeat: no-repeat;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+
+  /* Add router-link here */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+<router-link to="/your-link-path"> <!-- Replace "/your-link-path" with the desired path -->
+  <!-- Your content goes here -->
+  <img src="../../public/img/admColorido.png" width="500px" alt="Administrativo">
+  <h1>Administrativo</h1>
+</router-link>

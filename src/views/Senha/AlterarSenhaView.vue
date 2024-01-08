@@ -2,70 +2,78 @@
     <div class="container">
         <br>
         <div class="box-login">
-    
+
             <div style="text-align: right;">
-                <b-button variant="outline-secondary" @click="toggleShowPassword ">
+                <b-button variant="outline-secondary" @click="toggleShowPassword">
                     <!-- <b-icon :icon="showNewPasswordConf ? 'eye-fill' : 'eye-slash-fill'"></b-icon> -->
-                    <i class="fa-solid fa-eye" :icon="showNewPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+                    <!-- <i class="fa-solid fa-eye" :icon="showNewPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i> -->
+                    <i class="fas" :class="{ 'fa-eye-slash': showNewPassword, 'fa-eye': !showNewPassword }"></i>
+
                 </b-button>
             </div>
             <br>
-            <h4 class="titulo"> Alterar Senha <i class="fa-solid fa-lock"></i></h4>
-    
+            <div style="text-align: center;">
+
+                <h4 class="titulo"> Alterar Senha </h4>
+            </div>
             <hr>
-    
+
             <b-input-group class="mb-2">
                 <b-input-group-prepend is-text>
                     <i class="fa-solid fa-lock"></i>
                 </b-input-group-prepend>
-                <b-form-input :type="showCurrentPassword ? 'text' : 'password'" ref="currentInput" placeholder="Senha Atual" v-model="current_password"></b-form-input>
+                <b-form-input :type="showCurrentPassword ? 'text' : 'password'" ref="currentInput" placeholder="Senha Atual"
+                    v-model="current_password"></b-form-input>
                 <b-input-group-append>
-    
+
                 </b-input-group-append>
             </b-input-group>
-    
+
             <b-input-group class="mb-2">
                 <b-input-group-prepend is-text>
                     <i class="fa-solid fa-lock"></i>
                 </b-input-group-prepend>
-                <b-form-input :type="showNewPassword ? 'text' : 'password'" placeholder="Nova Senha" v-model="new_password"></b-form-input>
+                <b-form-input :type="showNewPassword ? 'text' : 'password'" placeholder="Nova Senha"
+                    v-model="new_password"></b-form-input>
                 <b-input-group-append>
-    
+
                 </b-input-group-append>
             </b-input-group>
-    
+
             <b-input-group class="mb-2">
                 <b-input-group-prepend is-text>
                     <i class="fa-solid fa-lock"></i>
                 </b-input-group-prepend>
-                <b-form-input :type="showNewPasswordConf ? 'text' : 'password'" :state="validationState" placeholder="Repita a Nova Senha" v-model="new_password_confirmation"></b-form-input>
-    
+                <b-form-input :type="showNewPasswordConf ? 'text' : 'password'" :state="validationState"
+                    placeholder="Repita a Nova Senha" v-model="new_password_confirmation"></b-form-input>
+
             </b-input-group>
-    
+
             <div class="matches" v-if='notSamePasswords' style="color: red; text-align: center;">
                 <p>A senhas não conferem!</p>
             </div>
-    
+
             <br>
-      
+
             <br>
             <transition name="hint" appear>
                 <div v-if='passwordValidation.errors.length > 0 && !submitted' class='hints'>
-    
+
                     <hr>
-                    <p style="color: green;" v-for='error in passwordValidation.errors' :key="error.id">{{error}} </p>
+                    <p style="color: green;" v-for='error in passwordValidation.errors' :key="error.id">{{ error }} </p>
                 </div>
             </transition>
-    
-    
-    
-            <b-button @click="resetPassword" class="b-button" v-if='passwordsFilled && !notSamePasswords && passwordValidation.valid'>
+
+
+
+            <b-button @click="resetPassword" class="button-default"
+                v-if='passwordsFilled && !notSamePasswords && passwordValidation.valid'>
                 <b-icon v-if="!loading" icon="check-circle-fill" aria-hidden="true"></b-icon>
                 <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
                 <span v-if="!loading">Salvar </span>
                 <span v-if="loading">Salvando...</span>
             </b-button>
-            
+
         </div>
         <br><br><br><br><br>
     </div>
@@ -141,14 +149,14 @@ export default {
                 console.log(this.reset_token)
 
                 axios.post('http://192.168.0.6:8000/api/usuario/senha/alterar', {
-                        current_password: this.current_password,
-                        new_password: this.new_password,
-                        new_password_confirmation: this.new_password_confirmation
-                    }, {
-                        headers: {
-                            'Authorization': `Bearer ${this.reset_token}`
-                        }
-                    })
+                    current_password: this.current_password,
+                    new_password: this.new_password,
+                    new_password_confirmation: this.new_password_confirmation
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${this.reset_token}`
+                    }
+                })
                     .then(
                         response => {
                             this.current_password = ''
@@ -242,6 +250,5 @@ export default {
     .box-login {
         margin-top: 20px;
     }
-} */
-</style>
+} */</style>
   
