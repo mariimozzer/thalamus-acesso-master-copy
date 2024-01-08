@@ -9,20 +9,20 @@
             <!-- COLUNA 1 -->
             <div class="col-lg-6 col-md-12">
 
-                <div class="auto p-4">
+                <div class="auto ">
 
                     <!-- local do acesso -->
-                    <div style="display: flex; flex-flow: row; align-items: baseline;">
+                    <!-- <div style="display: flex; flex-flow: row; align-items: baseline;">
                         <label style="margin-right: 10px;">Empresa: </label>
                         <select v-model="localSelecionado" @change="alterarLocal" class="select"
                             style="border: solid; border-radius: 5px; border-width: 1px; border-color: lightgrey; padding:5px 10px 5px 10px;">
                             <option v-for="local in localData" :key="local.id" :value="local.id">{{ local.local_nome }}
                             </option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <!-- input de pesquisa -->
-                    <div class="input-group mt-3 mb-4">
+                    <div class="input-group mb-4">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <i class="fa-solid fa-magnifying-glass"></i>

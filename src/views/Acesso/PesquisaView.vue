@@ -4,12 +4,10 @@
     <div class="container">
 
         <br>
-        <div class="col-sm-12" style="text-align: center;">
-            <h2 class="titulo">Pesquisa</h2>
-            <hr>
-        </div>
 
-        <div class="mt-3">
+        <h2 class="titulo">Pesquisa</h2>
+
+        <div>
 
             <div class="d-flex col-lg-12 justify-content-around">
 
@@ -98,15 +96,26 @@
                         </tr>
                     </tbody>
                 </table>
+
+            </div>
+
+            <div v-if="filtroVazio" style="text-align: center;">
+                <p style="font-size: 20px; color: brown;">Não há dados</p>
+            </div>
+
+            <div class="d-flex align-items-baseline justify-content-end mt-4">
+
+                <button @click="irParaPagina(pagina - 1)" :disabled="pagina === 1" class="btn btn-primary">Página
+                    Anterior</button>
+
+                <span class="mr-2 ml-2">{{ pagina }} de {{ totalPaginas }}</span>
+
+                <button @click="irParaPagina(pagina + 1)" :disabled="pagina === totalPaginas"
+                    class="btn btn-primary">Próxima Página</button>
+
             </div>
 
         </div>
-
-         <div class="d-flex align-items-baseline justify-content-end mt-4">
-             <button @click="irParaPagina(pagina - 1)" :disabled="pagina === 1" class="btn btn-primary">Página Anterior</button>
-             <span class="mr-2 ml-2">{{ pagina }} de {{ totalPaginas }}</span>
-             <button @click="irParaPagina(pagina + 1)" :disabled="pagina === totalPaginas" class="btn btn-primary">Próxima Página</button>
-         </div>
 
         <br><br><br><br>
 
@@ -115,11 +124,9 @@
 
 <script>
 
-import axios from 'axios';
+import api from '../../services/api';
 import moment from 'moment-timezone';
-//import html2pdf from 'html2pdf.js';
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
-
 
 export default {
 
@@ -141,9 +148,9 @@ export default {
                 setor: null,
                 local: null,
             },
-            dadosFiltro: [], // retorno do filtro
-            listaSetores: [], // traz todos os setores
-            setorSelecionado: null, //id do setor escolhido na lista
+            dadosFiltro: [],
+            listaSetores: [],
+            setorSelecionado: null,
             localLista: [],
             localSelecionado: null,
             pagina: 1,
@@ -159,21 +166,6 @@ export default {
     },
 
     methods: {
-
-        ordenarPessoas(a, b) {
-            return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
-        },
-
-        /* generatePDF() {
-            const element = document.getElementById('tabela-acessos');
-            html2pdf(element, {
-                margin: 10,
-                filename: 'acessos_pesquisa.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            });
-        }, */
 
         formatarDataHora(valor) {
             if (valor) {
@@ -203,15 +195,10 @@ export default {
             }
         },
 
-
         pesquisar() {
 
             // Converte o valor de visitante para 1 ou 0
-            //this.filtro.visitante = this.filtro.visitante === "1" ? 1 : this.filtro.visitante === "0" ? 0 : null;
-
             this.filtro.visitante = this.filtro.visitante === "Sim" ? "1" : this.filtro.visitante === "Não" ? "0" : null;
-
-            /* this.filtro.visitante = this.filtro.visitante === "Sim" ? 1 : "0"; */
 
             // Verifica se localSelecionado é null ou undefined, se undefined define como null
             this.filtro.local = this.localSelecionado;
@@ -223,40 +210,23 @@ export default {
                 params: this.filtro, page: this.pagina
             };
 
-            /* const params = {
-                params: {
-                    visitante: 1                    
-                },
-                page: this.pagina,
-            };
- */
-            axios.get(`http://192.168.0.6:8000/api/acesso/filtro?page=${this.pagina}`, params)
+            api.get(`/acesso/filtro?page=${this.pagina}`, params)
                 .then(response => {
-
-                    console.log('API Response', response);
 
                     this.dadosFiltro = response.data.data;
                     this.totalPaginas = response.data.last_page;
 
-                    console.log('API response.data.data', this.dadosFiltro);
-
                     if (this.dadosFiltro == undefined) {
                         this.filtroVazio = true
                     }
-
-                    console.log(`API Request URL: http://192.168.0.6:8000/api/acesso/filtro?page=${this.pagina}`, params);
-
-                    console.log('é visita?', this.filtro.visitante);
                 })
                 .catch(error => {
                     console.error("Erro ao buscar dados:", error);
                 });
-
-
         },
 
         carregarSetores() {
-            axios.get('http://192.168.0.6:8000/api/setor')
+            api.get('/setor')
                 .then(response => {
                     this.listaSetores = response.data.data;
                 })
@@ -265,13 +235,15 @@ export default {
                 });
         },
 
-        async carregarLocais() {
-            try {
-                const response = await fetch("http://192.168.0.6:8000/api/local");
-                this.localLista = await response.json();
-            } catch (error) {
-                console.error("Erro ao buscar locais", error);
-            }
+        carregarLocais() {
+            api.get('/local')
+                .then(response => {
+                    this.localLista = response.data
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
         },
 
         limparCampos() {

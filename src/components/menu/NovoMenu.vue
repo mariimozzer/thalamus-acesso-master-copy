@@ -30,16 +30,15 @@
 
                             <b-dropdown-divider></b-dropdown-divider>
 
-                            <b-dropdown-item style="color: black" href="/alterarSenha">
-                                <span style="color: black;">Alterar empresa</span>
-                                <ul style="list-style: none;  margin: 0; padding: 0;">
-                                    <li v-for="local in localData" :key="local.local_nome">
-                                        <input type="radio" :value="local.id" v-model="localSelecionado"
-                                            @change="salvarLocalSelecionado" style="margin-right: 5px;" />
-                                        <span>{{ local.local_nome }}</span>
-                                    </li>
-                                </ul>
-                            </b-dropdown-item>
+                            <b-dropdown-item style="color: black">
+            <span style="color: black; margin-bottom: 5px;">Alterar empresa</span>
+            <div class="button-list">
+                <button v-for="local in localData" :key="local.local_nome" @click="selectLocal(local.id)"
+                        class="btn mb-2" :class="{ 'active': local.id === localSelecionado }">
+                    {{ local.local_nome }}
+                </button>
+            </div>
+        </b-dropdown-item>
 
                             <b-dropdown-item style="color: black" @click="logout">
                                 <span style="color: black;"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
@@ -89,6 +88,13 @@
 <script>
 import axios from 'axios'
 import Menu from '@/models/Menu.js'
+import api from '../../services/api';
+import { createToaster } from "@meforma/vue-toaster";
+
+const toaster = createToaster({
+    position: "top-right",
+    duration: "4000",
+});
 
 export default {
     name: "TesteMenuView",
@@ -103,6 +109,10 @@ export default {
             adm: '',
             fabrica: '',
             gestao: '',
+
+            localData: [],
+            localSelecionado: null,
+            apiUrl: api.defaults.baseURL,
 
         }
     },
@@ -144,8 +154,6 @@ export default {
                 })
         },
 
-
-
         activateMenu(menu) {
 
             this.activeMenu = menu;
@@ -185,6 +193,27 @@ export default {
             this.activeMenu = null;
         },
 
+        async buscaLocal() {
+            try {
+                const response = await fetch(`${this.apiUrl}/local`);
+                this.localData = await response.json();
+            } catch (error) {
+                console.error('Error ao buscar empresas', error);
+                toaster.show(`Erro buscar empresa`, { type: "error" });
+            }
+        },
+
+        salvarLocalSelecionado() {
+            localStorage.setItem('localSelecionado', this.localSelecionado);
+            window.location.reload();
+            
+        },
+        selectLocal(selectedLocal) {
+            this.localSelecionado = selectedLocal;
+            this.salvarLocalSelecionado();
+        },
+
+
     },
 
     created() {
@@ -198,6 +227,11 @@ export default {
         //this.getAllAdm()
        // this.getAllFab()
        // this.getAllGestao()
+       this.buscaLocal();
+
+        if (localStorage.local) {
+            this.local = localStorage.local
+        }
     }
 }
 </script>
@@ -314,6 +348,10 @@ submenu a {
     margin-left: 10px;
     cursor: pointer;
     color: white
+}
+.button-list {
+    display: flex;
+    flex-direction: column;
 }
 </style>
   
