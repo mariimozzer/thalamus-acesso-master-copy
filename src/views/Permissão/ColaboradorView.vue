@@ -111,7 +111,7 @@
             <div class="d-flex justify-content-end" style="width: 20%;">
                 <button @click="cancelar" class="btn button-cancel" >Cancelar</button>
                 &nbsp;&nbsp;
-                <button @click="cadastrarPessoa" aria-hidden="true" class="btn btn-primary">
+                <button @click="salvarPessoa" aria-hidden="true" class="btn btn-primary">
                     <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                     <span v-if="!loading">Salvar</span>
                     <span v-if="loading">&nbsp; Salvando...</span>
@@ -155,6 +155,7 @@ import WebSocketService from '../../services/websocketservice';
 import { createToaster } from "@meforma/vue-toaster";
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
+//import api from '../../services/api';
 
 
 const toaster = createToaster({
@@ -208,15 +209,14 @@ export default {
     },
 
     created() {
-        let id = this.$route.params.id;
+      let id = this.$route.params.id;
         if (id) {
             this.modoCadastro = false;
             this.obterPessoaPorId(id);
         } else {
             this.modoCadastro = true;
         }
-        // console.log(this.localSelecionado)
-        //this.wsService.addListener(this.handleMessage);
+        this.gerarUsuarioCheck = this.modoCadastro;
     },
 
     beforeUnmount() {
@@ -228,12 +228,12 @@ export default {
 
         this.getAllSetor();
 
-        let id = this.$route.params.id;
+       /*  let id = this.$route.params.id;
         this.modoCadastro = !id;
         this.gerarUsuarioCheck = this.modoCadastro;
         if (!this.modoCadastro) {
             this.obterPessoaPorId(id);
-        }
+        } */
 
         this.buscaLocal();
         const localSelecionadoStorage = localStorage.getItem('localSelecionado');
@@ -302,10 +302,11 @@ export default {
                     this.email = pessoaData.email;
                     this.celular = pessoaData.celular;
                     this.id_setor = pessoaData.id_setor;
+                    this.mostraFotoPessoa();
 
-                    console.log('caminho foto', this.imagePath);
+                    //console.log('caminho foto', this.imagePath);
 
-                    if (this.imagePath) {
+                    /* if (this.imagePath) {
                         const urlfoto = 'http://192.168.0.6:8000/storage/';
                         this.fotoPessoa = urlfoto + this.imagePath;
                         console.log(this.fotoPessoa);
@@ -313,12 +314,30 @@ export default {
 
                     } else {
                         console.log('Colaborador sem foto');
-                    }
+                    } */
                 })
                 .catch(error => {
                     console.log(error);
                 });
         },
+
+        mostraFotoPessoa() {
+            try {
+                if (this.imagePath) {
+
+                    const urlfoto = 'http://192.168.0.6:8000/storage/';
+                    this.fotoPessoa = urlfoto + this.imagePath;
+                    this.mostraFoto = true;
+                } else {
+                    console.error('Cadastro sem foto');
+
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+
 
         // enviar somente quando tiver dados
         adicionarSePresente(formData, chave, valor) {
@@ -327,22 +346,64 @@ export default {
             }
         },
 
+         cadastrarColaborador() {
+            const formData = new FormData();
+
+            this.adicionarSePresente(formData, 'nomeCompleto', this.nomeCompleto);
+            this.adicionarSePresente(formData, 'id_setor', this.id_setor);
+            this.adicionarSePresente(formData, 'dtNasc', this.dtNasc);
+            this.adicionarSePresente(formData, 'sexo', this.sexo);
+            this.adicionarSePresente(formData, 'CPF', this.CPF);
+            this.adicionarSePresente(formData, 'email', this.email);
+            this.adicionarSePresente(formData, 'celular', this.celular);
+            this.adicionarSePresente(formData, 'pessoa_img', this.pessoa_img);
+
+            // Adiciona o qrcode apenas se estiver presente
+            if (this.qrCodeCartao) {
+                formData.append('qrcode', this.qrCodeCartao);
+            }
+
+            axios.post('http://192.168.0.6:8000/api/pessoa', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+                .then(response => {
+                    console.log('cadastro pessoa ', response);
+
+                    const responseData = response.data;
+
+                    if (responseData.cod === 1) {
+
+                        
+                        this.qrCodeCartao = '';
+
+                    } else {
+
+                        this.$router.push({ name: "ControleDeColaborador" })
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+           
+        },
+
         cadastrarPessoa() {
             this.loading = true
             this.usuario.email = this.email
             this.usuario.name = this.nomeCompleto
             this.emailCriar = this.usuario.email
+
             const formData = new FormData();
 
             if (!this.nomeCompleto || !this.sexo || !this.id_setor) {
                 this.loading = false
                 toaster.show(`Por favor, preencha os campos obrigatórios`, { type: "error" });
-
-            } else {
+            } 
+            else {
                 this.loading = true
-
                 if (this.gerarUsuarioCheck) {
-
                     this.adicionarSePresente(formData, 'nomeCompleto', this.nomeCompleto);
                     this.adicionarSePresente(formData, 'id_setor', this.id_setor);
                     this.adicionarSePresente(formData, 'dtNasc', this.dtNasc);
@@ -363,17 +424,33 @@ export default {
                                 'Content-Type': 'multipart/form-data',
                             },
                         })
+
                         .then(response => {
-                            // console.log('cadastro pessoa ', response);
-
                             const responseData = response.data;
-
                             if (responseData.cod === 1) {
                                 this.qrCodeCartao = '';
                             }
+
+                            usuarioService.cadastrar(this.usuario)
+                                .then(() => {
+                                    this.loading = true
+                                    this.usuario = new Usuario()
+                                    axios.post('http://192.168.0.6:8000/api/enviar-codigo', {
+                                        email: this.emailCriar
+                                    }).then(res => {
+                                        toaster.show(`Colaborador e usuário criado com sucesso! Email enviado para ` + this.email, { type: "success" });
+                                        this.$router.push({ name: "ControleDeColaborador" })
+                                        this.loading = false
+                                        console.log(res)
+                                    })
+                                })
+                                .catch(error => {
+                                    this.loading = false
+                                    console.error(error);
+                                });
                         })
 
-                    usuarioService.cadastrar(this.usuario)
+                 /*    usuarioService.cadastrar(this.usuario)
                         .then(() => {
                             this.loading = true
                             this.usuario = new Usuario()
@@ -386,13 +463,13 @@ export default {
                                 console.log(res)
                             })
                         })
-
+ */
                         .catch(error => {
                             this.loading = false
                             console.error(error);
                         });
-
-                } else {
+                } 
+                else {
                     this.loading = true
 
                     this.adicionarSePresente(formData, 'nomeCompleto', this.nomeCompleto);
@@ -416,12 +493,9 @@ export default {
                         })
                         .then(response => {
                             this.loading = false
-
                             const responseData = response.data;
-
                             if (responseData.cod === 1) {
                                 this.qrCodeCartao = '';
-
                             } else {
                                 this.loading = false
                                 toaster.show(`Colaborador cadastrado com sucesso!`, { type: "success" });
@@ -430,7 +504,6 @@ export default {
                         })
                         .catch(error => {
                             this.loading = false
-
                             console.error(error);
                         });
                 }
@@ -438,9 +511,13 @@ export default {
         },
 
         atualizarPessoa() {
+
             this.loading = true
+
             const id = this.$route.params.id;
+
             const formData = new FormData();
+
             this.adicionarSePresente(formData, 'nomeCompleto', this.nomeCompleto);
             this.adicionarSePresente(formData, 'id_setor', this.id_setor);
             this.adicionarSePresente(formData, 'dtNasc', this.dtNasc);
@@ -453,33 +530,33 @@ export default {
             if (this.qrCodeCartao) {
                 formData.append('qrcode', this.qrCodeCartao);
             }
+            
             axios.post(`http://192.168.0.6:8000/api/pessoa/${id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 })
+
                 .then(response => {
                     const responseData = response.data;
                     if (responseData.cod === 1) {
                         this.loading = false
-
                         toaster.show(`Qr Code já existente. Por favor, escolha um QR code diferente`, { type: "error" });
                     } else {
                         this.loading = false
-
-                        toaster.show(`Pessoa atualizada com sucesso!`, { type: "success" });
                         this.$router.push({ name: "ControleDeColaborador" })
                     }
                 })
                 .catch((error) => {
                     this.loading = false
-                    toaster.show(`Erro ao atualizar colaborador`, { type: "success" });
                     console.error('Erro ao atualizar colaborador:', error);
                 });
+
+                 toaster.show(`Colaborador cadastrado com sucesso!`, { type: "success" });
         },
 
         salvarPessoa() {
-            if (this.modoCadastro) {
+           if (this.modoCadastro) {
                 this.cadastrarPessoa();
             } else {
                 this.atualizarPessoa();
