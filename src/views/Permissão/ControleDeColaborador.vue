@@ -60,6 +60,11 @@
                                             title="Clique para excluir colaborador">
                                             <i class="fa fa-trash icones-tabela" style="font-size: 18px; color: var(--first-color);"></i>
                                         </button>
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            @click="enviarQRCode(item.id)" class="btn btn-color-grey" data-bs-placement="top"
+                                            title="Clique para enviar QR Code do colaborador">
+                                            <i class="fa fa-edit icones-tabela" style="font-size: 18px; color: var(--first-color);"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -151,6 +156,8 @@ export default {
             filtro: '',
             nome: null,
             totalPages: null,
+            idToDelete: null,
+            idColaborador: null,
         }
     },
 
@@ -273,23 +280,21 @@ export default {
             this.pesquisaColaborador(this.filtroNome);
         },
 
+        async enviarQRCode(id) {
+            try {
+                
+                const response = await api.post(`/send-qrcode-email`, { id });
 
-        /* setPage(pageNumber) {
-            this.currentPage = pageNumber;
-        },
-        prevPage() {
-            if (this.currentPage > 0) {
-                this.currentPage--;
+                if (response.status === 200) {
+                    toaster.show(`QR Code enviado`, { type: 'success' });
+                } else {
+                    toaster.show(`Falha ao enviar QR Code`, { type: 'error' });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toaster.show(`FFalha ao enviar QR Code`, { type: 'error' });
             }
-        },
-        nextPage() {
-            if (this.currentPage < this.numberOfPages - 1) {
-                this.currentPage++;
-            }
-        },
-        changePage() {
-            this.currentPage = this.selectedPage;
-        }, */
+        }
 
     },
 
