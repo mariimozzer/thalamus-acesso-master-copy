@@ -9,11 +9,9 @@
             </div>
         </div>
         <div class="row sub-container">
-
             <div class="col-sm-2">
                 <button @click="adicionarColaborador" class="button-cadastrar">
                     <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
-
             </div>
             <br>
             <br>
@@ -24,14 +22,14 @@
                     <b-input-group class="mb-2 mt-3">
                         <b-input-group-prepend is-text>
                             <i class="fa-solid fa-magnifying-glass"></i> </b-input-group-prepend>
-                        <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtro">
+                        <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtroNome" @input="pesquisaComFiltro">
                         </b-form-input>
                     </b-input-group>
                 </div>
                 <br>
                 <br>
                 <!-- TABELA DE colaboradores -->
-                <div class="col-sm-12">
+                <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -44,7 +42,7 @@
                             </tr>
                         </thead>
                         <tbody style="text-align: center;">
-                            <tr v-for="item in paginatedData" :key="item.id">
+                            <tr v-for="item in colaboradoresFiltrados" :key="item.id">
                                 <td>{{ item.nomeCompleto }}</td>
                                 <td>{{ item.CPF }}</td>
                                 <td>{{ mostraGenero(item.sexo) }}</td>
@@ -69,17 +67,16 @@
                     </table>
                     <nav>
                         <ul class="pagination">
-                            <li class="page-item" :class="{disabled: currentPage === 0}">
-                                <a class="page-link" href="#" aria-label="Previous" @click="prevPage">
+                            <li class="page-item" :class="{disabled: currentPage === 1}">
+                                <a class="page-link" href="#" aria-label="Previous" @click="buscaColaborador(page - 1)">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
-                            <li v-for="n in numberOfPages" :key="n" class="page-item"
-                                :class="{active: n === currentPage}">
-                                <a class="page-link" href="#" @click="setPage(n)">{{ n + 1 }}</a>
+                            <li v-for="n in totalPages" :key="n" class="page-item" :class="{active: n === currentPage}">
+                                <a class="page-link" href="#" @click="buscaColaborador(n)">{{ n }}</a>
                             </li>
-                            <li class="page-item" :class="{disabled: currentPage === numberOfPages - 1}">
-                                <a class="page-link" href="#" aria-label="Next" @click="nextPage">
+                            <li class="page-item" :class="{disabled: currentPage === totalPages - 1}">
+                                <a class="page-link" href="#" aria-label="Next" @click="buscaColaborador(totalPages)">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
@@ -101,9 +98,9 @@
                         <p>Confirma a exclusão do registro?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-color" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-color" @click="confirmarExclusao"
-                            data-bs-dismiss="modal">Confirmar</button>
+                        <button type="button" class="btn button-cancel" data-bs-dismiss="modal">Cancelar</button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" @click="confirmarExclusao" data-bs-dismiss="modal">Confirmar</button>
                     </div>
                 </div>
             </div>
@@ -114,9 +111,10 @@
 <script>
 import Setores from '../../models/Setor'
 import setorService from '../../services/setor-service';
-import axios from 'axios';
+//import axios from 'axios';
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 import { createToaster } from "@meforma/vue-toaster";
+import api from '../../services/api';
 
 const toaster = createToaster({
     position: "top-right",
@@ -130,7 +128,6 @@ export default {
     components: {
         MenuLSGP,
     },
-
   
     data() {
         return {
@@ -149,40 +146,39 @@ export default {
             localData: [],
             page: 1,
             lastPage: null,
-            currentPage: 0,
+            currentPage: null,
             itemsPerPage: 10,
             filtro: '',
-            nome: null
+            nome: null,
+            totalPages: null,
         }
     },
 
     mounted() {
-
         this.buscaColaborador(this.page);
-
         this.obterTodosSetores();
         this.nome = localStorage.getItem('userName')
-
     },
 
     computed: {
+
+        colaboradoresFiltrados() {
+            const buscaNome = this.filtroNome.toLowerCase();
+            return this.colaborador.filter(item =>
+                item.nomeCompleto.toLowerCase().includes(buscaNome)
+            );
+        },
+
         paginatedData() {
-            const startIndex = this.currentPage * this.itemsPerPage;
-            const endIndex = startIndex + this.itemsPerPage;
-            let colaboradoresFiltrados = this.colaborador.filter(item => {
-                return item.nomeCompleto.toLowerCase().includes(this.filtro.toLowerCase());
-            });
-            return colaboradoresFiltrados.slice(startIndex, endIndex);
-
-
+            const itemsPerPage = '';
+            const startIndex = this.currentPage * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            return this.colaborador.slice(startIndex, endIndex);
         },
 
-        numberOfPages() {
+       /*  numberOfPages() {
             return Math.ceil(this.colaborador.length / this.itemsPerPage);
-        },
-
-
-
+        }, */
 
     },
 
@@ -213,15 +209,13 @@ export default {
             return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
         },
 
-
         async buscaColaborador(page) {
             try {
-                const response = await fetch(`http://192.168.0.6:8000/api/pessoa?page=${page}`);
-                const responseData = await response.json();
-
-                this.colaborador = responseData.data || [];
-                this.lastPage = responseData.last_page || 1;
-                this.page = page;
+                const response = await api.get(`/pessoa?page=${page}`);
+                this.colaborador = response.data.data;
+                this.totalPages = response.data.last_page;
+                console.log(this.colaborador)
+    
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -231,16 +225,13 @@ export default {
             this.$router.push({ name: "AdicionarColaborador" })
         },
 
-
         editarColaborador(colaborador) {
             this.$router.push({ name: "ColaboradorEditar", params: { id: colaborador.id } })
             console.log('id colaborador', colaborador.id)
-
         },
 
         excluirPessoa(id) {
             this.idToDelete = id;
-
         },
 
         confirmarExclusao() {
@@ -249,7 +240,7 @@ export default {
 
             if (index !== -1) {
 
-                axios.delete(`http://192.168.0.6:8000/api/pessoa/${id}`)
+                api.delete(`/pessoa/${id}`)
                     .then(response => {
                         console.log('Response', response);
                         if (response.status === 200 || response.status === 204) {
@@ -257,7 +248,6 @@ export default {
                             toaster.show(`Colaborador excluido com sucesso`, { type: "success" });
                         } else {
                             toaster.show(`Falha ao deletar`, { type: "error" });
-
                         }
                     })
                     .catch(error => {
@@ -266,8 +256,25 @@ export default {
             }
         },
 
+        async pesquisaColaborador(searchTerm = '') {
+            try {
+                const response = await api.get(`/pessoa`);
+                this.colaborador = response.data.data || [];
+                this.lastPage = response.data.last_page || 1;
+                this.page = 1;
+                this.colaborador = this.colaborador.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
 
-        setPage(pageNumber) {
+        pesquisaComFiltro() {
+            this.pesquisaColaborador(this.filtroNome);
+        },
+
+
+        /* setPage(pageNumber) {
             this.currentPage = pageNumber;
         },
         prevPage() {
@@ -282,7 +289,7 @@ export default {
         },
         changePage() {
             this.currentPage = this.selectedPage;
-        },
+        }, */
 
     },
 

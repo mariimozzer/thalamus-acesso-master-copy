@@ -1,5 +1,5 @@
 <template>
-     <MenuLSGP></MenuLSGP>
+    <MenuLSGP></MenuLSGP>
     <div class="container">
         <div class="row mb-3" style="text-align: center;">
             <div class="col-sm-12">
@@ -30,7 +30,8 @@
                         <label class="form-check-label" for="feminino">Feminino</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sexo" id="masculino" value="m" v-model="sexo">
+                        <input class="form-check-input" type="radio" name="sexo" id="masculino" value="m"
+                            v-model="sexo">
                         <label class="form-check-label" for="masculino">Masculino</label>
                     </div>
                 </div>
@@ -47,7 +48,8 @@
             <div class="col-6 col-md-6 col-sm12">
                 <div class="mt-2">
                     <label class="mr-3">Foto do visitante</label>
-                    <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
+                    <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera"
+                        v-if="!isCameraOpen">
                         Abrir câmera
                     </button>
 
@@ -56,13 +58,13 @@
                         Fechar câmera
                     </button>
 
-                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="captureImage"
-                        v-if="isCameraOpen">
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary"
+                        @click="captureImage" v-if="isCameraOpen">
                         Tirar foto
                     </button>
 
-                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="discardImage"
-                        v-if="isCameraOpen">
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary"
+                        @click="discardImage" v-if="isCameraOpen">
                         Descartar foto
                     </button>
                 </div>
@@ -74,9 +76,10 @@
                 <!-- camera -->
                 <div>
                     <div class="mt-3">
-                        <video ref="video" width="500" height="400" autoplay v-if="isCameraOpen && !isPhotoTaken"></video>
-                        <img :src="imageBase64" alt="" v-if="isPhotoTaken" style="max-width: 100%; max-height: 400px;" />
-
+                        <video ref="video" width="500" height="400" autoplay
+                            v-if="isCameraOpen && !isPhotoTaken"></video>
+                        <img :src="imageBase64" alt="" v-if="isPhotoTaken"
+                            style="max-width: 100%; max-height: 400px;" />
                     </div>
                 </div>
                 <!-- mostra a foto salva -->
@@ -87,12 +90,9 @@
             </div>
         </div>
         <div class="d-flex justify-content-end">
-
-            <button @click="cancelarAcao" class="btn button-cancel">Cancelar</button>     
-            
-                <button @click="salvarVisitante" class=" btn btn-primary">Salvar</button>
-                          
-            
+            <button @click="cancelarAcao" class="btn button-cancel">Cancelar</button>
+            &nbsp;&nbsp;
+            <button @click="salvarVisitante" class=" btn btn-primary">Salvar</button>
         </div>
     </div>
 </template>

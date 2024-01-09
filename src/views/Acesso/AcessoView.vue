@@ -189,11 +189,8 @@ export default {
                 this.page = 1;
                 this.acessos = this.acessos.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
                 );
-
             } catch (error) {
-
                 console.error('Error:', error);
-
             }
 
         },

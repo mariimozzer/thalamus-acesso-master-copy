@@ -107,7 +107,8 @@
                         <p>Confirma a exclusão do registro?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="">Cancelar</button>
+                        <button type="button" class="btn button-cancel" data-bs-dismiss="modal" style="">Cancelar</button>
+                        &nbsp;&nbsp;
                         <button type="button" class="btn btn-primary" @click="confirmarExclusao"
                             data-bs-dismiss="modal">Confirmar</button>
                     </div>
@@ -243,6 +244,7 @@ export default {
                 const response = await api.get(`/visitante?page=${page}`);
                 this.visitantes = response.data.data;
                 this.totalPages = response.data.last_page;
+                console.log(this.visitantes)
                 //this.visitantes = this.visitantes.sort(this.ordenarPessoas).reverse();
             } catch (error) {
                 console.error('Error:', error);

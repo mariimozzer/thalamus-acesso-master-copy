@@ -10,14 +10,14 @@
         <div style="display: flex; flex-flow: row;">
             <!-- FORNMULÁRIO DE CADASTRO DE PESSOA -->
             <div style="width: 50%; display: flex; flex-flow: column;">
-                <div class="d-flex align-items-baseline">
+                <!-- <div class="d-flex align-items-baseline">
                     <label style="margin-right: 10px;">Local</label>
                     <select v-model="localSelecionado" @change="alterarLocal" class="select"
                         style="border: solid; border-radius: 5px; border-width: 1px; border-color: lightgrey; padding:5px 10px 5px 10px; width: fit-content;">
                         <option v-for="local in localData" :key="local.id" :value="local.id">{{ local.local_nome }}
                         </option>
                     </select>
-                </div>
+                </div> -->
                 <div style="margin: 10px 0 10px 0;">
                     <label for="nomeCompleto">Nome&nbsp;<i style="color: red;">*</i></label>
                     <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" class="form-control">
@@ -95,7 +95,7 @@
             </div>
         </div>
         <div class="d-flex">
-            <div class="d-flex justify-content-start" style="width: 50%;">               
+            <div class="d-flex justify-content-start align-items-center" style="width: 80%;">               
                 <button @click="iniciaLeitor" 
                 class="btn btn-primary" 
                 style="width: 180px;" 
@@ -106,11 +106,11 @@
                 Vincular cartão&nbsp;
                 <i class="fa-regular fa-address-card"></i>
                 </button>
-                <span class="ml-5">QR Code lido: {{ qrCodeCartao }}</span>
+                <span v-if="qrCodeCartao" class="ml-5">QR Code lido: {{ qrCodeCartao }}</span>
             </div>
-            <div class="d-flex justify-content-end" style="width: 50%;">
+            <div class="d-flex justify-content-end" style="width: 20%;">
                 <button @click="cancelar" class="btn button-cancel" >Cancelar</button>
-
+                &nbsp;&nbsp;
                 <button @click="cadastrarPessoa" aria-hidden="true" class="btn btn-primary">
                     <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                     <span v-if="!loading">Salvar</span>
@@ -143,7 +143,6 @@
             </div>
         </div>
         <!-- fim modal qrcode -->
-
     </div>
 </template>
 
@@ -203,15 +202,10 @@ export default {
             cameraAberta: false,
             qrcodeWebcam: null,
 
-
             result: '',
             error: '',
-
-
         }
     },
-
-
 
     created() {
         let id = this.$route.params.id;
@@ -277,7 +271,6 @@ export default {
         handleFileUpload(event) {
             this.mostraFoto = true;
             const file = event.target.files[0];
-
             if (file) {
                 this.fotoPessoa = URL.createObjectURL(file);
                 this.pessoa_img = file;
@@ -298,7 +291,6 @@ export default {
         },
 
         obterPessoaPorId(id) {
-
             axios.get(`http://192.168.0.6:8000/api/pessoa/${id}`)
                 .then(response => {
                     const pessoaData = response.data;
@@ -344,7 +336,6 @@ export default {
 
             if (!this.nomeCompleto || !this.sexo || !this.id_setor) {
                 this.loading = false
-
                 toaster.show(`Por favor, preencha os campos obrigatórios`, { type: "error" });
 
             } else {
@@ -378,17 +369,13 @@ export default {
                             const responseData = response.data;
 
                             if (responseData.cod === 1) {
-
                                 this.qrCodeCartao = '';
-
                             }
                         })
-
 
                     usuarioService.cadastrar(this.usuario)
                         .then(() => {
                             this.loading = true
-
                             this.usuario = new Usuario()
                             axios.post('http://192.168.0.6:8000/api/enviar-codigo', {
                                 email: this.emailCriar
@@ -396,14 +383,12 @@ export default {
                                 toaster.show(`Colaborador e usuário criado com sucesso! Email enviado para ` + this.email, { type: "success" });
                                 this.$router.push({ name: "ControleDeColaborador" })
                                 this.loading = false
-
                                 console.log(res)
                             })
                         })
 
                         .catch(error => {
                             this.loading = false
-
                             console.error(error);
                         });
 
@@ -440,8 +425,7 @@ export default {
                             } else {
                                 this.loading = false
                                 toaster.show(`Colaborador cadastrado com sucesso!`, { type: "success" });
-
-                                this.$router.push({ name: "ControleDeColaborador" })
+                                this.$router.push({ name: "ControleDeColaborador" });
                             }
                         })
                         .catch(error => {
@@ -450,22 +434,13 @@ export default {
                             console.error(error);
                         });
                 }
-
             }
-
-
-
-
-
-
-
         },
 
         atualizarPessoa() {
             this.loading = true
             const id = this.$route.params.id;
             const formData = new FormData();
-
             this.adicionarSePresente(formData, 'nomeCompleto', this.nomeCompleto);
             this.adicionarSePresente(formData, 'id_setor', this.id_setor);
             this.adicionarSePresente(formData, 'dtNasc', this.dtNasc);
@@ -501,13 +476,9 @@ export default {
                     toaster.show(`Erro ao atualizar colaborador`, { type: "success" });
                     console.error('Erro ao atualizar colaborador:', error);
                 });
-
         },
 
         salvarPessoa() {
-
-
-
             if (this.modoCadastro) {
                 this.cadastrarPessoa();
             } else {
@@ -545,7 +516,6 @@ export default {
             this.qrCodeCartao = '';
             this.mostraAlerta = false;
         },
-
        
        handleMessage(event) {
             try {
@@ -581,14 +551,11 @@ export default {
             this.qrCodeCartao = '';
             this.mostraAlerta = false; 
             console.log('tem qr code?', this.qrCodeCartao);
-
             this.qrCodeCartao = result;
             console.log('lido na webcam:', this.qrCodeCartao);
             this.cameraAberta = false;
-
-          this.fechaModal();
-           
-           toaster.show(`Qr code capturado`, { type: "success" });
+            this.fechaModal();
+            toaster.show(`Qr code capturado`, { type: "success" });
         },
 
         async onInit(promise) {
@@ -633,8 +600,6 @@ export default {
                 modalCloseButton.click();
             }
         },
-
-
     }
 }
 </script>

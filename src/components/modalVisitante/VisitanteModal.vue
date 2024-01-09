@@ -491,7 +491,7 @@ export default {
     flex-direction: column;
     background-color: #fff;
     width: 800px;
-    height: 450px;
+    height: 470px;
     padding: 30px;
     border-radius: 10px;
 }
