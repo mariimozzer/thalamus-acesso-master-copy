@@ -127,6 +127,8 @@ export default {
                     this.user = res.data.user.name
                     localStorage.setItem('userName', this.user)
                     localStorage.setItem('token', res.data.token)
+                    localStorage.setItem('LoggedUser', true)
+
                     this.loading = false
                     this.$router.push({ name: "HomeView" })
                 }

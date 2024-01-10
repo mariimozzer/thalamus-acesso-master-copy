@@ -172,6 +172,7 @@ export default {
                     this.$router.push('/');
                     localStorage.removeItem('token')
                     localStorage.removeItem('userName')
+                    localStorage.removeItem('LoggedUser')
                 })
                 .catch(error => {
                     console.error('Logout failed:', error);
