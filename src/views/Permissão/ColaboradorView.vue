@@ -150,12 +150,12 @@
 import Pessoa from '../../models/Pessoa.js';
 import Usuario from '@/models/Usuario'
 import usuarioService from '@/services/usuario-service'
-import axios from 'axios';
+//import axios from 'axios';
 import WebSocketService from '../../services/websocketservice';
 import { createToaster } from "@meforma/vue-toaster";
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
-//import api from '../../services/api';
+import api from '../../services/api';
 
 
 const toaster = createToaster({
@@ -248,7 +248,8 @@ export default {
 
         async buscaLocal() {
             try {
-                const response = await fetch('http://192.168.0.6:8000/api/local');
+                //const response = await fetch('http://192.168.0.6:8000/api/local');
+                const response = await api.fetch('/local');
                 this.localData = await response.json();
             } catch (error) {
                 console.error('Error ao buscar locais', error);
@@ -258,7 +259,8 @@ export default {
         async alterarLocal() {
             if (this.localSelecionado !== null) {
                 try {
-                    const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
+                    //const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
+                    const response = await api.fetch(`/local/${this.localSelecionado}/acessos`);
                     const responseData = await response.json();
                     this.acessos = responseData.data || [];
                     localStorage.setItem('localSelecionado', JSON.stringify(this.localSelecionado));
@@ -281,7 +283,8 @@ export default {
         },
 
         getAllSetor() {
-            axios.get('http://192.168.0.6:8000/api/setor')
+            //axios.get('http://192.168.0.6:8000/api/setor')
+            api.get('/setor')
                 .then(response => {
                     this.setores = response.data.data;
                 })
@@ -291,7 +294,8 @@ export default {
         },
 
         obterPessoaPorId(id) {
-            axios.get(`http://192.168.0.6:8000/api/pessoa/${id}`)
+            //axios.get(`http://192.168.0.6:8000/api/pessoa/${id}`)
+            api.get(`/pessoa/${id}`)
                 .then(response => {
                     const pessoaData = response.data;
                     this.imagePath = response.data.path_image;
@@ -324,7 +328,6 @@ export default {
         mostraFotoPessoa() {
             try {
                 if (this.imagePath) {
-
                     const urlfoto = 'http://192.168.0.6:8000/storage/';
                     this.fotoPessoa = urlfoto + this.imagePath;
                     this.mostraFoto = true;
@@ -336,8 +339,6 @@ export default {
                 console.error(error);
             }
         },
-
-
 
         // enviar somente quando tiver dados
         adicionarSePresente(formData, chave, valor) {
@@ -363,7 +364,8 @@ export default {
                 formData.append('qrcode', this.qrCodeCartao);
             }
 
-            axios.post('http://192.168.0.6:8000/api/pessoa', formData, {
+            //axios.post('http://192.168.0.6:8000/api/pessoa', formData, {
+            api.post('/pessoa', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -419,7 +421,8 @@ export default {
                         formData.append('qrcode', this.qrCodeCartao);
                     }
 
-                    axios.post('http://192.168.0.6:8000/api/pessoa', formData, {
+                    //axios.post('http://192.168.0.6:8000/api/pessoa', formData, {
+                    api.post('/pessoa', formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                             },
@@ -435,7 +438,8 @@ export default {
                                 .then(() => {
                                     this.loading = true
                                     this.usuario = new Usuario()
-                                    axios.post('http://192.168.0.6:8000/api/enviar-codigo', {
+                                    //axios.post('http://192.168.0.6:8000/api/enviar-codigo', {
+                                    api.post('/enviar-codigo', {
                                         email: this.emailCriar
                                     }).then(res => {
                                         toaster.show(`Colaborador e usuário criado com sucesso! Email enviado para ` + this.email, { type: "success" });
@@ -486,7 +490,8 @@ export default {
                         formData.append('qrcode', this.qrCodeCartao);
                     }
 
-                    axios.post('http://192.168.0.6:8000/api/pessoa', formData, {
+                   // axios.post('http://192.168.0.6:8000/api/pessoa', formData, {
+                    api.post('/pessoa', formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                             },
@@ -531,7 +536,8 @@ export default {
                 formData.append('qrcode', this.qrCodeCartao);
             }
             
-            axios.post(`http://192.168.0.6:8000/api/pessoa/${id}`, formData, {
+            //axios.post(`http://192.168.0.6:8000/api/pessoa/${id}`, formData, {
+            api.post(`/pessoa/${id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -552,7 +558,7 @@ export default {
                     console.error('Erro ao atualizar colaborador:', error);
                 });
 
-                 toaster.show(`Colaborador cadastrado com sucesso!`, { type: "success" });
+                 toaster.show(`Colaborador atualizado com sucesso!`, { type: "success" });
         },
 
         salvarPessoa() {

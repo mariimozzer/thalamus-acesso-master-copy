@@ -81,8 +81,9 @@
   
 <script>
 import AlterarSenha from '@/models/AlterarSenha'
-import axios from 'axios';
+//import axios from 'axios';
 import { createToaster } from "@meforma/vue-toaster";
+import api from '../../services/api';
 
 const toaster = createToaster({
     position: "top-right",
@@ -148,7 +149,8 @@ export default {
                 this.reset_token = localStorage.getItem('token')
                 console.log(this.reset_token)
 
-                axios.post('http://192.168.0.6:8000/api/usuario/senha/alterar', {
+                //axios.post('http://192.168.0.6:8000/api/usuario/senha/alterar', {
+                api.post('/usuario/senha/alterar', {
                     current_password: this.current_password,
                     new_password: this.new_password,
                     new_password_confirmation: this.new_password_confirmation

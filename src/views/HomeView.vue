@@ -76,7 +76,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
+import api from '../services/api';
 
 export default {
   name: "Home3Component",
@@ -88,8 +89,8 @@ export default {
 
     logout() {
       const token = localStorage.getItem('token')
-      axios
-        .post('http://192.168.0.6:8000/api/logout', {}, {
+      //axios.post('http://192.168.0.6:8000/api/logout', {}, {
+      api.post('/logout', {}, {
           headers: {
             Authorization: `Bearer ${token}`
           }
