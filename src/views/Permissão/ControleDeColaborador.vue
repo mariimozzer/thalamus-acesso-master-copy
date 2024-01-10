@@ -10,7 +10,8 @@
         </div>
         <div class="row sub-container">
             <div class="col-sm-2">
-                <button @click="adicionarColaborador" class="button-cadastrar">
+                <button @click="adicionarColaborador" class="button-cadastrar" data-bs-toggle="tooltip"
+                    data-bs-placement="top" title="Clique para cadastrar novo colaborador">
                     <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
             </div>
             <br>
@@ -22,7 +23,8 @@
                     <b-input-group class="mb-2 mt-3">
                         <b-input-group-prepend is-text>
                             <i class="fa-solid fa-magnifying-glass"></i> </b-input-group-prepend>
-                        <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtroNome" @input="pesquisaComFiltro">
+                        <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtroNome"
+                            @input="pesquisaComFiltro">
                         </b-form-input>
                     </b-input-group>
                 </div>
@@ -50,20 +52,23 @@
                                 <td>{{ item.email }}</td>
                                 <td>
                                     <div>
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop1"
+                                            @click="enviarQRCode(item.id)" class="btn btn-color-grey"
+                                            data-bs-placement="top" title="Clique para enviar QR Code do colaborador">
+                                            <i class="fa-solid fa-qrcode icones-tabela"
+                                                style="font-size: 18px; color: var(--first-color);"></i>
+                                        </button>
                                         <button @click="editarColaborador(item)" class="btn btn-color-grey"
-                                            style="margin-right: 20px;" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Clique para editar colaborador">
-                                            <i class="fa fa-edit icones-tabela" style="font-size: 18px; color: var(--first-color);"></i>
+                                            <i class="fa fa-edit icones-tabela"
+                                                style="font-size: 18px; color: var(--first-color);"></i>
                                         </button>
                                         <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                            @click="excluirPessoa(item.id)" class="btn btn-color-grey" data-bs-placement="top"
-                                            title="Clique para excluir colaborador">
-                                            <i class="fa fa-trash icones-tabela" style="font-size: 18px; color: var(--first-color);"></i>
-                                        </button>
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                            @click="enviarQRCode(item.id)" class="btn btn-color-grey" data-bs-placement="top"
-                                            title="Clique para enviar QR Code do colaborador">
-                                            <i class="fa fa-edit icones-tabela" style="font-size: 18px; color: var(--first-color);"></i>
+                                            @click="excluirPessoa(item.id)" class="btn btn-color-grey"
+                                            data-bs-placement="top" title="Clique para excluir colaborador">
+                                            <i class="fa fa-trash icones-tabela"
+                                                style="font-size: 18px; color: var(--first-color);"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -72,15 +77,15 @@
                     </table>
                     <nav>
                         <ul class="pagination">
-                            <li class="page-item" :class="{disabled: currentPage === 1}">
+                            <li class="page-item" :class="{ disabled: currentPage === 1 }">
                                 <a class="page-link" href="#" aria-label="Previous" @click="buscaColaborador(page - 1)">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
-                            <li v-for="n in totalPages" :key="n" class="page-item" :class="{active: n === currentPage}">
+                            <li v-for="n in totalPages" :key="n" class="page-item" :class="{ active: n === currentPage }">
                                 <a class="page-link" href="#" @click="buscaColaborador(n)">{{ n }}</a>
                             </li>
-                            <li class="page-item" :class="{disabled: currentPage === totalPages - 1}">
+                            <li class="page-item" :class="{ disabled: currentPage === totalPages - 1 }">
                                 <a class="page-link" href="#" aria-label="Next" @click="buscaColaborador(totalPages)">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
@@ -91,8 +96,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -105,7 +109,27 @@
                     <div class="modal-footer">
                         <button type="button" class="btn button-cancel" data-bs-dismiss="modal">Cancelar</button>
                         &nbsp;&nbsp;
-                        <button type="button" class="btn btn-primary" @click="confirmarExclusao" data-bs-dismiss="modal">Confirmar</button>
+                        <button type="button" class="btn btn-primary" @click="confirmarExclusao"
+                            data-bs-dismiss="modal">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="staticBackdrop1" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmação</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Deseja enviar o QR Code para o colaborador?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn button-cancel" data-bs-dismiss="modal">Cancelar</button>
+                        &nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" @click="confirmarEnvioQRCode"
+                            data-bs-dismiss="modal">Confirmar</button>
                     </div>
                 </div>
             </div>
@@ -133,7 +157,7 @@ export default {
     components: {
         MenuLSGP,
     },
-  
+
     data() {
         return {
             filtroSetor: '',
@@ -183,9 +207,9 @@ export default {
             return this.colaborador.slice(startIndex, endIndex);
         },
 
-       /*  numberOfPages() {
-            return Math.ceil(this.colaborador.length / this.itemsPerPage);
-        }, */
+        /*  numberOfPages() {
+             return Math.ceil(this.colaborador.length / this.itemsPerPage);
+         }, */
 
     },
 
@@ -222,7 +246,7 @@ export default {
                 this.colaborador = response.data.data;
                 this.totalPages = response.data.last_page;
                 console.log(this.colaborador)
-    
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -281,10 +305,9 @@ export default {
         },
 
         async enviarQRCode(id) {
-            try {
-                
+            this.idColaborador = id;
+            /* try {
                 const response = await api.post(`/send-qrcode-email`, { id });
-
                 if (response.status === 200) {
                     toaster.show(`QR Code enviado`, { type: 'success' });
                 } else {
@@ -292,12 +315,30 @@ export default {
                 }
             } catch (error) {
                 console.error('Error:', error);
-                toaster.show(`FFalha ao enviar QR Code`, { type: 'error' });
+                toaster.show(`Falha ao enviar QR Code`, { type: 'error' });
+            } */
+        },
+
+        async confirmarEnvioQRCode() {
+            const id = this.idColaborador;
+
+            try {
+
+                const response = await api.post(`/pessoa/enviar-qrcode/${id}`);
+
+                if (response.cod === 1) {
+                    toaster.show(`Falha ao enviar QR Code`, { type: 'error' });
+
+                } else {
+                    toaster.show(`QR Code enviado`, { type: 'success' });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                toaster.show(`Falha ao enviar QR Code`, { type: 'error' });
             }
-        }
 
+        },
     },
-
 }
 </script>
 
@@ -339,5 +380,4 @@ export default {
         width: 100%;
         padding: 10px;
     }
-}
-</style>
+}</style>
