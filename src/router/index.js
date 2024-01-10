@@ -19,6 +19,22 @@ import ColaboradorView from "@/views/Permissão/ColaboradorView"
 import ControleDeColaborador from "@/views/Permissão/ControleDeColaborador"
 
 
+function guardMyroute(to, from, next)
+{
+ var isAuthenticated= false;
+if(localStorage.getItem('LoggedUser'))
+  isAuthenticated = true;
+ else
+  isAuthenticated= false;
+ if(isAuthenticated) 
+ {
+  next(); 
+ } 
+ else
+ {
+  next('/'); 
+ }
+}
 
 
 const routes = [
@@ -36,7 +52,8 @@ const routes = [
     path: '/alterarSenha',
     name: 'AlterarSenha',
     component: AlterarSenhaView,
-   
+    beforeEnter: guardMyroute,
+
   },
 
     {
@@ -60,68 +77,90 @@ const routes = [
   {
     path: '/home',
     name: 'HomeView',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: guardMyroute,
+
   },
   //Acesso
   {
     path: '/acesso',
     name: 'AcessoView',
-    component: AcessoView
+    component: AcessoView,
+    beforeEnter: guardMyroute,
+
   },
   {
     path: '/acesso2',
     name: 'AcessoView2',
-    component: AcessoView2Vue
+    component: AcessoView2Vue,
+    beforeEnter: guardMyroute
+
   },
   {
     path: '/acesso/home',
     name: 'AcessoHomeView',
-    component: AcessoHomeView
+    component: AcessoHomeView,
+    beforeEnter: guardMyroute
+
   },
   {
     path: '/visitante',
     name: 'VisitanteView',
-    component: VisitanteView
+    component: VisitanteView,
+    beforeEnter: guardMyroute
   },
   {
     path: '/visitante/novo',
     name: 'VisitanteCadastro',
-    component: VisitanteCadastro
+    component: VisitanteCadastro,
+    beforeEnter: guardMyroute
   },
   {
     path: '/visitante/editar/:id',
     name: 'EditarVisitante',
-    component: VisitanteCadastro
+    component: VisitanteCadastro,
+    beforeEnter: guardMyroute
+
   },
   {
     path: '/pesquisa',
     name: 'PesquisaView',
-    component: PesquisaView
+    component: PesquisaView,
+    beforeEnter: guardMyroute
+
   },
   //Permissão
   {
     path: '/colaborador',
     name: 'ControleDeColaborador',
     component: ControleDeColaborador,
+    beforeEnter: guardMyroute
+
    
   },
   {
     path: '/colaboradores/novo',
     name: 'AdicionarColaborador',
     component: ColaboradorView,
-    title: 'Adicionar Colaborador'   
+    title: 'Adicionar Colaborador',
+    beforeEnter: guardMyroute
+   
   },
   {
     path: '/colaboradores/editar/:id',
     name: 'ColaboradorEditar',
     component: ColaboradorView,
-    title: 'Editar Colaborador'   
+    title: 'Editar Colaborador',
+    beforeEnter: guardMyroute
+   
   },
   {
     path: '/colaboradores/excluir',
     name: 'ExcluirColaborador',
     component: ColaboradorView,
-    title: 'Excluir Colaborador'   
+    title: 'Excluir Colaborador',
+    beforeEnter: guardMyroute
+   
   },
 ]
 

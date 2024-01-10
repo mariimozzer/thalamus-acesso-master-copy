@@ -27,7 +27,7 @@
                 <input type="number" class="form-control" :disabled="codigoValido" placeholder="Digite o código do e-mail" v-model="codigo">
             </div>
     
-            <button v-if="!codigoValido" @click="validarCodigo" class="b-button">
+            <button class="button-default" v-if="!codigoValido" @click="validarCodigo" >
                                             <i v-if="!loading" class="fa-solid fa-key" aria-hidden="true"></i> &nbsp;
                                             <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                                             <span v-if="!loading">Verificar </span>
@@ -57,8 +57,8 @@
                     <p>A senhas não conferem!</p>
                 </div>
     
-                <button @click="resetarSenha" v-if='passwordsFilled && !notSamePasswords && passwordValidation.valid'>
-                                    <i v-if="!loading" icon="check-circle-fill" aria-hidden="true"></i>
+                <button class="button-default" @click="resetarSenha" v-if='passwordsFilled && !notSamePasswords && passwordValidation.valid'>
+                                    <i v-if="!loading" class="fa-solid fa-circle-check" aria-hidden="true"></i>
                                     <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
                                     <span v-if="!loading">Resetar Senha</span>
                                     <span v-if="loading">Resetando...</span>
