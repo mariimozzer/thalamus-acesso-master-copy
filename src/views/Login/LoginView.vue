@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
 import { createToaster } from "@meforma/vue-toaster";
 import api from '../../services/api';
 
@@ -118,7 +118,8 @@ export default {
                 toaster.show(`Por favor, preencha a senha`, { type: "error" });
             }
 
-            axios.post('http://192.168.0.6:8000/api/login', {
+            //axios.post('http://192.168.0.6:8000/api/login', {
+            api.post('/login', {
                 email: this.email,
                 password: this.password,
             }).then(

@@ -74,7 +74,7 @@
 </template>
   
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 import Menu from '@/models/Menu.js'
 import api from '../../services/api';
 import { createToaster } from "@meforma/vue-toaster";
@@ -107,14 +107,16 @@ export default {
 
     methods: {
         getAllHome() {
-            axios.get(`http://192.168.0.6:8000/api/menu/home`)
+           // axios.get(`http://192.168.0.6:8000/api/menu/home`)
+            api.get(`/menu/home`)
                 .then(response => {
                     this.home = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllEstrutura() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura`)
+            //axios.get(`http://192.168.0.6:8000/api/menu/estrutura`)
+            api.get(`/menu/estrutura`)
                 .then(response => {
                     this.menus = response.data.data.map((p) => new Menu(p));
                 })
@@ -122,21 +124,24 @@ export default {
 
 
         getAllAdm() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/25`)
+            //axios.get(`http://192.168.0.6:8000/api/menu/estrutura/25`)
+            api.get(`/menu/estrutura/25`)
                 .then(response => {
                     this.adm = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllFab() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/44`)
+           // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/44`)
+            api.get(`/menu/estrutura/44`)
                 .then(response => {
                     this.fabrica = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllGestao() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/52`)
+           // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/52`)
+            api.get(`/menu/estrutura/52`)
                 .then(response => {
                     this.gestao = response.data.data.map((p) => new Menu(p));
                 })
@@ -162,8 +167,8 @@ export default {
 
         logout() {
             const token = localStorage.getItem('token')
-            axios
-                .post('http://192.168.0.6:8000/api/logout', {}, {
+            //axios.post('http://192.168.0.6:8000/api/logout', {}, {
+            api.post('/logout', {}, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

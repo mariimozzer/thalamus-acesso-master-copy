@@ -34,8 +34,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 import { createToaster } from "@meforma/vue-toaster";
+import api from '../../services/api';
 
 const toaster = createToaster({
     position: "top-right",
@@ -67,7 +68,8 @@ export default {
                 toaster.show(`Por favor, preencha o e-mail`, { type: "error" });
             }
 
-            axios.post('http://192.168.0.6:8000/api/enviar-codigo', {
+            //axios.post('http://192.168.0.6:8000/api/enviar-codigo', {
+            api.post('/enviar-codigo', {
                 email: this.email,
 
             }).then(

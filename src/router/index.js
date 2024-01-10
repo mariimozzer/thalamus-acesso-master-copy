@@ -1,4 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+
+import { createRouter, createWebHashHistory } from 'vue-router'
+//import { createRouter, createWebHistory } from 'vue-router'
+
 //Login
 import LoginView from "@/views/Login/LoginView.vue"
 //Home
@@ -8,12 +11,12 @@ import EsqueceuSenhaView from "@/views/Senha/EsqueceuSenhaView"
 import ValidarSenhaView from "@/views/Senha/ValidarSenhaView"
 import AlterarSenhaView from "@/views/Senha/AlterarSenhaView"
 //Acesso
-import AcessoView from '@/views/Acesso/AcessoView.vue'
+import AcessoView from '../views/Acesso/AcessoView.vue'
 import VisitanteView from '../views/Acesso/VisitanteView.vue'
 import VisitanteCadastro from '../views/Acesso/VisitanteCadastro.vue'
-import PesquisaView from '@/views/Acesso/PesquisaView.vue'
-import AcessoHomeView from '@/views/Acesso/AcessoHomeView.vue'
-import AcessoView2Vue from '@/views/Acesso/AcessoView2.vue'
+import PesquisaView from '../views/Acesso/PesquisaView.vue'
+import AcessoHomeView from '../views/Acesso/AcessoHomeView.vue'
+import AcessoView2Vue from '../views/Acesso/AcessoView2.vue'
 //Permissão
 import ColaboradorView from "@/views/Permissão/ColaboradorView"
 import ControleDeColaborador from "@/views/Permissão/ControleDeColaborador"
@@ -35,7 +38,6 @@ if(localStorage.getItem('LoggedUser'))
   next('/'); 
  }
 }
-
 
 const routes = [
   // Login
@@ -162,11 +164,20 @@ const routes = [
     beforeEnter: guardMyroute
    
   },
+   { 
+    path: '/:pathMatch(.*)*', redirect: '/home' 
+  }
 ]
+
+
+/* const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+}) */
 
 const router = createRouter({
   mode: 'history',
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
