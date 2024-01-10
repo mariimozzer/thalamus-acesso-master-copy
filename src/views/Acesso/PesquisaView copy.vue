@@ -85,10 +85,8 @@
                             <td>{{ item.nomeCompleto }}</td>
                             <td>{{ formatarDataHora(item.created_at) }}</td>
                             <td>
-                                <span v-if="item.sentido === 'e'" class="material-symbols-outlined">login</span>
-                                <span v-if="item.sentido === 's'" class="material-symbols-outlined">logout</span>
-                                <!-- <i v-if="item.sentido === 'e'" class="fa-solid fa-arrow-up"></i>
-                                <i v-if="item.sentido === 's'" class="fa-solid fa-arrow-down"></i> -->
+                                <span v-if="item.sentido === 'e'" class="material-symbols-outlined" style="color:#388E3C">login</span>
+                                <span v-if="item.sentido === 's'" class="material-symbols-outlined" style="color: #E53935;" >logout</span>
                             </td>
                             <td>{{ item.local_nome }}</td>
                             <td>{{ item.setor_nome }}</td>
@@ -97,13 +95,13 @@
                     </tbody>
                 </table>
 
+               
+
             </div>
 
-            <div v-if="filtroVazio" style="text-align: center;">
-                <p style="font-size: 20px; color: brown;">Não há dados</p>
-            </div>
+             
 
-            <div class="d-flex align-items-baseline justify-content-end mt-4">
+            <!-- <div class="d-flex align-items-baseline justify-content-end mt-4">
 
                 <button @click="irParaPagina(pagina - 1)" :disabled="pagina === 1" class="btn btn-primary">Página
                     Anterior</button>
@@ -112,9 +110,16 @@
 
                 <button @click="irParaPagina(pagina + 1)" :disabled="pagina === totalPaginas"
                     class="btn btn-primary">Próxima Página</button>
-            
-            </div>
 
+            </div> -->
+
+        </div>
+        <div v-if="!filtroVazio" style="text-align: center;">
+            <p>Total de registros: {{ totalResultado }}</p>
+        </div>
+
+        <div v-if="filtroVazio" style="text-align: center;">
+            <p style="font-size: 20px; color: brown;">Não há dados</p>
         </div>
 
         <br><br><br><br>
@@ -133,9 +138,7 @@ export default {
     name: "PesquisaView",
 
     components: {
-
         MenuLSGP,
-
     },
 
     data() {
@@ -148,14 +151,15 @@ export default {
                 setor: null,
                 local: null,
             },
-            dadosFiltro: [], 
-            listaSetores: [], 
+            dadosFiltro: [],
+            listaSetores: [],
             setorSelecionado: null,
             localLista: [],
             localSelecionado: null,
             pagina: 1,
             totalPaginas: 1,
             filtroVazio: false,
+            totalResultado: null,
         };
     },
 
@@ -188,42 +192,52 @@ export default {
             this.filtro.final = dataFormatada;
         },
 
-        irParaPagina(pagina) {
+       /*  irParaPagina(pagina) {
             if (pagina >= 1 && pagina <= this.totalPaginas) {
                 this.pagina = pagina;
                 this.pesquisar();
             }
-        },
+        }, */
 
         pesquisar() {
-
-            // Converte o valor de visitante para 1 ou 0
             this.filtro.visitante = this.filtro.visitante === "Sim" ? "1" : this.filtro.visitante === "Não" ? "0" : null;
-
-            // Verifica se localSelecionado é null ou undefined, se undefined define como null
             this.filtro.local = this.localSelecionado;
-
-            // Verifica se setorSelecionado é null ou undefined, se undefined define como null
             this.filtro.setor = this.setorSelecionado || null;
 
-            const params = {
-                params: this.filtro, page: this.pagina
+            this.dadosFiltro = []; 
+
+            const dadosFiltro = (page) => {
+                const params = {
+                    params: { ...this.filtro, page },
+                };
+
+                api.get('/acesso/filtro', params)
+                    .then(response => {
+                        this.dadosFiltro = this.dadosFiltro.concat(response.data.data);
+
+                        if (page < response.data.last_page) {
+                           
+                            dadosFiltro(page + 1);
+                        } else {
+                           
+                            this.totalPaginas = response.data.last_page;
+
+                            if (this.dadosFiltro.length === 0) {
+                                this.filtroVazio = true;
+                                 
+                            }
+                            this.totalResultado = this.dadosFiltro.length;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erro ao buscar dados:", error);
+                    });
             };
 
-            api.get(`/acesso/filtro?page=${this.pagina}`, params)
-                .then(response => {
-
-                    this.dadosFiltro = response.data.data;
-                    this.totalPaginas = response.data.last_page;
-
-                    if (this.dadosFiltro == undefined) {
-                        this.filtroVazio = true
-                    }
-                })
-                .catch(error => {
-                    console.error("Erro ao buscar dados:", error);
-                });
+            dadosFiltro(1); 
+           
         },
+
 
         carregarSetores() {
             api.get('/setor')
@@ -236,14 +250,14 @@ export default {
         },
 
         carregarLocais() {
-             api.get('/local')
+            api.get('/local')
                 .then(response => {
                     this.localLista = response.data
                 })
                 .catch(error => {
                     console.log(error);
                 });
-            
+
         },
 
         limparCampos() {
@@ -255,18 +269,13 @@ export default {
                 local: null,
                 visitante: null,
             };
-
             this.dadosFiltro = [];
-
             this.setorSelecionado = null;
-
             this.localSelecionado = null;
-
             this.pagina = 1;
-
             this.totalPaginas = 1;
-
             this.filtroVazio = false;
+            this.totalResultado = null;
         },
 
     }
