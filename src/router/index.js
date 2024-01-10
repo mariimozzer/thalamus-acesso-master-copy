@@ -18,7 +18,7 @@ import AcessoView2Vue from '@/views/Acesso/AcessoView2.vue'
 import ColaboradorView from "@/views/Permissão/ColaboradorView"
 import ControleDeColaborador from "@/views/Permissão/ControleDeColaborador"
 
-
+//teste
 
 
 const routes = [
