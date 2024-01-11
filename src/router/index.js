@@ -25,7 +25,7 @@ import ControleDeColaborador from "@/views/Permissão/ControleDeColaborador"
 function guardMyroute(to, from, next)
 {
  var isAuthenticated= false;
-if(localStorage.getItem('LoggedUser'))
+if(sessionStorage.getItem('LoggedUser'))
   isAuthenticated = true;
  else
   isAuthenticated= false;

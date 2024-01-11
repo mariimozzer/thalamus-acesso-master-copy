@@ -166,8 +166,8 @@ export default {
         },
 
         logout() {
-            const token = localStorage.getItem('token')
-            //axios.post('http://192.168.0.6:8000/api/logout', {}, {
+            const token = sessionStorage.getItem('token')
+            // axios.post('http://192.168.0.6:8000/api/logout', {}, {
             api.post('/logout', {}, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -175,9 +175,9 @@ export default {
                 })
                 .then(() => {
                     this.$router.push('/');
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('userName')
-                    localStorage.removeItem('LoggedUser')
+                    sessionStorage.removeItem('token')
+                    sessionStorage.removeItem('userName')
+                    sessionStorage.removeItem('LoggedUser')
                 })
                 .catch(error => {
                     console.error('Logout failed:', error);
@@ -211,7 +211,7 @@ export default {
     },
 
     created() {
-        this.userName = localStorage.getItem('userName')
+        this.userName = sessionStorage.getItem('userName')
 
     },
 
