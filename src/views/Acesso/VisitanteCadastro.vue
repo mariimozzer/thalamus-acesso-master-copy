@@ -346,7 +346,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .titulo {
     font-size: 25px;
     font-weight: 500;

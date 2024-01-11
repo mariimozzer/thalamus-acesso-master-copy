@@ -16,26 +16,18 @@
                 <div>
                     <div class="navbar-nav ml-auto">
                         <b-nav-item-dropdown right style="color: white;">
-                            <template v-slot:button-content><i style="color: white;"
-                                    class="fa-solid fa-circle-user"></i>
+                            <template v-slot:button-content><i style="color: white;" class="fa-solid fa-circle-user"></i>
                                 <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
                             </template>
-                            <b-dropdown-item style="color: black">
-                                <span style="color: black; margin-bottom: 5px;"><i class="fa-solid fa-user-gear"></i>&nbsp;Alterar empresa</span>
-                                <div class="button-list">
-                                    <button v-for="local in localData" :key="local.local_nome"
-                                        @click="selectLocal(local.id)" class="btn mb-2"
-                                        :class="{ 'active': local.id === localSelecionado }">
-                                        {{ local.local_nome }}
-                                    </button>
-                                </div>
+                            <b-dropdown-item style="color: black" @click="configuracoesUsuario()">
+                                <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Configurações</span>
                             </b-dropdown-item>
                             <hr>
-                             <b-dropdown-item style="color: black" @click="alterarSenha()">
-                                    <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
-                                        Senha</span>
-                                </b-dropdown-item>
-                               <hr>
+                            <b-dropdown-item style="color: black" href="/alterarSenha">
+                                <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
+                                    Senha</span>
+                            </b-dropdown-item>
+                            <hr>
                             <b-dropdown-item style="color: black" @click="logout">
                                 <span style="color: black;"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
                                     Logout</span>
@@ -106,13 +98,8 @@ export default {
     },
 
     methods: {
-        alterarSenha(){
-            this.$router.push({ name: "AlterarSenha" })
-
-
-        },
         getAllHome() {
-           // axios.get(`http://192.168.0.6:8000/api/menu/home`)
+            // axios.get(`http://192.168.0.6:8000/api/menu/home`)
             api.get(`/menu/home`)
                 .then(response => {
                     this.home = response.data.data.map((p) => new Menu(p));
@@ -137,7 +124,7 @@ export default {
         },
 
         getAllFab() {
-           // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/44`)
+            // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/44`)
             api.get(`/menu/estrutura/44`)
                 .then(response => {
                     this.fabrica = response.data.data.map((p) => new Menu(p));
@@ -145,7 +132,7 @@ export default {
         },
 
         getAllGestao() {
-           // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/52`)
+            // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/52`)
             api.get(`/menu/estrutura/52`)
                 .then(response => {
                     this.gestao = response.data.data.map((p) => new Menu(p));
@@ -174,10 +161,10 @@ export default {
             const token = sessionStorage.getItem('token')
             // axios.post('http://192.168.0.6:8000/api/logout', {}, {
             api.post('/logout', {}, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(() => {
                     this.$router.push('/');
                     sessionStorage.removeItem('token')
@@ -202,14 +189,17 @@ export default {
             }
         },
 
-        salvarLocalSelecionado() {
+       /*  salvarLocalSelecionado() {
             localStorage.setItem('localSelecionado', this.localSelecionado);
             window.location.reload();
-            
-        },
-        selectLocal(selectedLocal) {
+
+        }, */
+       /*  selectLocal(selectedLocal) {
             this.localSelecionado = selectedLocal;
             this.salvarLocalSelecionado();
+        }, */
+         configuracoesUsuario() {
+            this.$router.push('/usuario');
         },
 
 
@@ -224,9 +214,9 @@ export default {
         this.getAllHome()
         this.getAllEstrutura()
         //this.getAllAdm()
-       // this.getAllFab()
-       // this.getAllGestao()
-       this.buscaLocal();
+        // this.getAllFab()
+        // this.getAllGestao()
+        this.buscaLocal();
 
         if (localStorage.local) {
             this.local = localStorage.local
@@ -253,17 +243,13 @@ export default {
     z-index: 1;
     width: 100%;
     margin-left: 0px;
+    margin-top: 0;
 }
 
 .submenu-column {
     width: 20%;
     box-sizing: border-box;
     margin-bottom: 20px;
-}
-
-.username {
-    color: white;
-    font-family: 'montserrat', sans-serif;
 }
 
 navbar {
@@ -335,7 +321,7 @@ submenu a {
 }
 
 .submenu-link:hover {
-    color: rgb(255, 255, 255) !important;
+    color: rgb(131, 131, 131) !important;
 }
 
 .icons {
@@ -347,10 +333,6 @@ submenu a {
     margin-left: 10px;
     cursor: pointer;
     color: white
-}
-.button-list {
-    display: flex;
-    flex-direction: column;
 }
 </style>
   

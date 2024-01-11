@@ -328,7 +328,7 @@ export default {
 };
 </script>
 
-<style> 
+<style scoped> 
 .card-foto {
      min-height: 500px;
  }
