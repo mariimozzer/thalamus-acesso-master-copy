@@ -10,7 +10,7 @@ import HomeView from '../views/HomeView'
 import EsqueceuSenhaView from "@/views/Senha/EsqueceuSenhaView"
 import ValidarSenhaView from "@/views/Senha/ValidarSenhaView"
 import AlterarSenhaView from "@/views/Senha/AlterarSenhaView"
-import ConfiguracaoUsuarioVue from '@/views/Senha/ConfiguracaoUsuario.vue'
+import ConfiguracaoUsuario from '@/views/Senha/ConfiguracaoUsuario.vue'
 //Acesso
 import AcessoView from '../views/Acesso/AcessoView.vue'
 import VisitanteView from '../views/Acesso/VisitanteView.vue'
@@ -77,9 +77,10 @@ const routes = [
     }
   },
   {
-    path: '/usuario', 
-    name: 'Usuario',
-    component: ConfiguracaoUsuarioVue,
+    path: '/configuracao', 
+    name: 'Configuracao',
+    component: ConfiguracaoUsuario,
+    beforeEnter: guardMyroute,
   },
   //Home
   {

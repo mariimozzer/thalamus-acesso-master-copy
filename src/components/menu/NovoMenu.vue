@@ -23,7 +23,7 @@
                                 <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Configurações</span>
                             </b-dropdown-item>
                             <hr>
-                            <b-dropdown-item style="color: black" href="/alterarSenha">
+                            <b-dropdown-item style="color: black" @click="alterarSenha">
                                 <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
                                     Senha</span>
                             </b-dropdown-item>
@@ -199,8 +199,12 @@ export default {
             this.salvarLocalSelecionado();
         }, */
          configuracoesUsuario() {
-            this.$router.push('/usuario');
+            this.$router.push({ name: "Configuracao" })
         },
+
+        alterarSenha() {
+            this.$router.push({name:  "AlterarSenha"})
+        }
 
 
     },
