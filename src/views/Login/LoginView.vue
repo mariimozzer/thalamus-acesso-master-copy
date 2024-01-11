@@ -95,14 +95,14 @@ export default {
     mounted() {
         this.buscaLocal();
 
-        if (localStorage.local) {
-            this.local = localStorage.local
+        if (localStorage.localSelecionado) {
+            this.localSelecionado = localStorage.localSelecionado
         }
     },
 
     watch: {
         local(newLocal) {
-            localStorage.local = newLocal;
+            localStorage.localSelecionado = newLocal;
         }
     },
 
@@ -126,9 +126,9 @@ export default {
                 res => {
                     this.id = res.data.user.id
                     this.user = res.data.user.name
-                    localStorage.setItem('userName', this.user)
-                    localStorage.setItem('token', res.data.token)
-                    localStorage.setItem('LoggedUser', true)
+                    sessionStorage.setItem('userName', this.user)
+                    sessionStorage.setItem('token', res.data.token)
+                    sessionStorage.setItem('LoggedUser', true)
 
                     this.loading = false
                     this.$router.push({ name: "HomeView" })
