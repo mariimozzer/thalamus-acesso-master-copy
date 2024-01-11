@@ -183,7 +183,7 @@ export default {
         const pessoaNome = this.pessoaNomeModal
         const pessoaCPF = this.pessoaCPFModal
         const pessoaEmail = this.pessoaEmail
-        console.log('modal', 'local id:', local, 'id pessoa:', pessoaID, 'nome pessoa:', pessoaNome, 'cpf pessoa:', pessoaCPF, 'email:', pessoaEmail);
+        console.log('modal', local, pessoaID, pessoaNome, pessoaCPF, pessoaEmail);
          
     },
 

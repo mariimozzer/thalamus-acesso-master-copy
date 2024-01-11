@@ -76,7 +76,7 @@
                     </tbody>
                 </table>
                 <br>
-                <!-- <nav>
+                <nav>
                     <ul class="pagination">
                         <li class="page-item" :class="{ disabled: currentPage === 1 }">
                             <a class="page-link" href="#" aria-label="Previous" @click="buscarTodosVisitantes(page - 1)">
@@ -92,7 +92,7 @@
                             </a>
                         </li>
                     </ul>
-                </nav> -->
+                </nav>
             </div>
         </div>
         <!-- Modal excluir -->
@@ -184,6 +184,14 @@ export default {
     },
 
     computed: {
+        /* setoresFiltrados() {
+            return this.setores.filter(setor => {
+                const buscaSetor = this.filtroSetor.toLowerCase();
+                return (
+                    (setor.nome && setor.nome.toLowerCase().includes(buscaSetor))
+                );
+            });
+        }, */
 
         visitantesFiltrados() {
             const buscaNome = this.filtroNome.toLowerCase();
