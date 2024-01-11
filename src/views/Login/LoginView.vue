@@ -53,7 +53,7 @@
             </div>
     
             <div class="col-sm-12" style="text-align: center; font-size: 15px;">
-                <a href="/esqueceuSenha" style="color: rgb(0, 0, 0);">Esqueceu sua senha ?</a>
+                <a @click="EsqueceuSenha()" style="color: rgb(0, 0, 0); text-decoration: underline;">Esqueceu sua senha ?</a>
             </div>
         </div>
     </form>
@@ -107,6 +107,9 @@ export default {
     },
 
     methods: {
+        EsqueceuSenha(){
+            this.$router.push({ name: "EsqueceuSenha" })
+        },
 
         login() {
 
