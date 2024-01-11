@@ -41,7 +41,7 @@
                         </tr>
                     </thead>
                     <tbody style="text-align: center;">
-                        <tr v-for="item in visitantesFiltrados" :key="item.id">
+                        <tr v-for="item in visitantes" :key="item.id">
                             <td>{{ item.nomeCompleto }}</td>
                             <td>{{ item.CPF }}</td>
                             <td>{{ mostraGenero(item.sexo) }}</td>
@@ -133,6 +133,7 @@ import api from '../../services/api';
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 import { ref } from 'vue';
 import VisitanteModal from '@/components/modalVisitante/VisitanteModal.vue';
+import Pessoa from '@/models/Pessoa';
 
 const toaster = createToaster({
     position: "top-right",
@@ -169,6 +170,7 @@ export default {
             lastPage: null,
             currentPage: null,
             totalPages: null,
+            visitantesFiltrados: [],
         }
     },
 
@@ -177,27 +179,13 @@ export default {
         if (localSelecionado) {
             this.localSelecionado = localSelecionado;
         }
+ 
     },
 
     mounted() {
-        this.buscarTodosVisitantes(this.page);
-    },
 
-    computed: {
-
-        visitantesFiltrados() {
-            const buscaNome = this.filtroNome.toLowerCase();
-            return this.visitantes.filter(item =>
-                item.nomeCompleto.toLowerCase().includes(buscaNome)
-            );
-        },
-
-        paginatedData() {
-            const itemsPerPage = '';
-            const startIndex = this.currentPage * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            return this.visitantes.slice(startIndex, endIndex);
-        },
+         this.buscarTodosVisitantes()
+ 
     },
 
     methods: {
@@ -231,21 +219,42 @@ export default {
             toaster.show(`Visitante excluído`, { type: "success" });
         },
 
-        async buscarTodosVisitantes(page) {
-            try {
-                const response = await api.get(`/visitante?page=${page || 1}`);
-                this.visitantes = response.data.data;
-                this.totalPages = response.data.last_page;
-                console.log(this.visitantes)
-                //this.visitantes = this.visitantes.sort(this.ordenarPessoas).reverse();
-            } catch (error) {
-                console.error('Error:', error);
-                toaster.show(`Erro ao buscar visitantes`, { type: "error" });
-            }
-        },
-
         ordenarPessoas(a, b) {
             return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
+        },
+
+        pesquisaComFiltro() {
+            const termoPesquisa = this.filtroNome.toLowerCase();
+            this.visitantesFiltrados = this.visitantes.filter(item =>
+                item.nomeCompleto.toLowerCase().includes(termoPesquisa)
+            );
+        },
+
+          buscarTodosVisitantes() {
+            const getAllPages = async () => {
+                let currentPage = 1;
+                let totalPages = 1;
+                let todosVisitantes = [];
+
+                while (currentPage <= totalPages) {
+                    try {
+                        const response = await api.get(`/visitante?page=${currentPage}`);
+                        const pessoas = response.data.data.map(p => new Pessoa(p));
+                        todosVisitantes = todosVisitantes.concat(pessoas);
+                        totalPages = response.data.last_page;
+                        currentPage++;
+                    } catch (error) {
+                        console.error(`Error`, error);
+                        toaster.show(`Erro ao buscar os visitantes`, { type: "error" });
+                        break;
+                    }
+                }
+
+                this.visitantes = todosVisitantes.sort(this.ordenarPessoas).reverse();
+                console.log('visitantes', this.visitantes);
+            };
+
+            getAllPages();
         },
 
         mostraGenero(generoAbreviado) {
@@ -258,22 +267,6 @@ export default {
             }
         },
 
-        async pesquisaVisitantes(searchTerm = '') {
-            try {
-                const response = await api.get(`/visitante`);
-                this.visitantes = response.data.data || [];
-                this.lastPage = response.data.last_page || 1;
-                this.page = 1;
-                this.visitantes = this.visitantes.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        },
-
-        pesquisaComFiltro() {
-            this.pesquisaVisitantes(this.filtroNome);
-        },
 
         abrirModal(pessoa) { 
             this.pessoaIDModal = pessoa.id;

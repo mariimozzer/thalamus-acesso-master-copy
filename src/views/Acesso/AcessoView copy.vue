@@ -22,7 +22,7 @@
                     </div> -->
 
                     <!-- input de pesquisa -->
-                   <!--  <div class="input-group mb-4">
+                    <div class="input-group mb-4">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -31,7 +31,7 @@
                         <input v-model="filtroNome" @input="pesquisaComFiltro" type="text" class="form-control"
                             placeholder="Pesquisar acessos" />
                     </div>
- -->
+
                     <!-- TABELA DE ACESSOS -->
                     <div style="max-height: 600px; margin-top: 10px;">
                         <table class="table">
@@ -58,7 +58,24 @@
                                 </tr>
                             </tbody>
                         </table>
-                        
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                                    <a class="page-link" href="#" aria-label="Previous" @click="buscaAcessos(page - 1)">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li v-for="n in totalPages" :key="n" class="page-item"
+                                    :class="{ active: n === currentPage }">
+                                    <a class="page-link" href="#" @click="buscaAcessos(n)">{{ n }}</a>
+                                </li>
+                                <li class="page-item" :class="{ disabled: currentPage === totalPages - 1 }">
+                                    <a class="page-link" href="#" aria-label="Next" @click="buscaAcessos(totalPages)">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -84,6 +101,8 @@
             </div>
         </div>
         <br><br><br>
+          <br><br><br>
+        
     </div>
 </template>
 
@@ -93,7 +112,6 @@ import api, { urlFoto } from '../../services/api';
 import WebSocketService from '../../services/websocketservice'
 import { createToaster } from "@meforma/vue-toaster";
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
-import Acesso from '../../models/Acesso'
 
 const toaster = createToaster({
     position: "top-right",
@@ -145,17 +163,26 @@ export default {
 
     mounted() {
         this.buscaLocal();
-        this.buscaAcessos();
+        this.buscaAcessos(this.page);
     },
 
+    computed: {
+
+        paginatedData() {
+            const startIndex = this.currentPage * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            return this.visitantes.slice(startIndex, endIndex);
+        },
+        
+    },
 
     methods: {
 
-       /*  pesquisaComFiltro() {
+        pesquisaComFiltro() {
             this.pesquisaAcessos(this.filtroNome);
-        }, */
+        },
 
-        /* async pesquisaAcessos(searchTerm = '') {
+        async pesquisaAcessos(searchTerm = '') {
             try {
                 const response = await api.get(`/local/${this.localSelecionado}/acessos`);
                 //const responseData = await response.json();
@@ -168,23 +195,7 @@ export default {
                 console.error('Error:', error);
             }
 
-        }, */
-        async pesquisaAcessos(searchTerm = '', page = 1) {
-            try {
-                const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${page}`);
-                this.acessos = response.data.data;
-                this.currentPage = response.data.current_page;
-                this.totalPages = response.data.last_page;
-                this.lastPage = response.data.last_page_url;
-
-                this.acessos = this.acessos.filter(item =>
-                    item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-            } catch (error) {
-                console.error('Error:', error);
-            }
         },
-
 
         replaceIcon() {
             this.results = this.text.replace(this.text, this.newText);
@@ -198,62 +209,23 @@ export default {
             return '';
         },
 
-
-       /*  async buscaAcessos(page = 1) {
+        async buscaAcessos(page) {
             try {
                 const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${page}`);
                 this.acessos = response.data.data;
-                this.currentPage = response.data.current_page;
                 this.totalPages = response.data.last_page;
-                this.lastPage = response.data.last_page_url;
-                console.log('acessos', this.acessos)
-
             } catch (error) {
                 console.error('Erro:', error);
                 toaster.show(`Erro ao buscar acessos`, { type: "error" });
             }
-        }, */
-
-         ordenarPessoas(a, b) {
-            return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
         },
-
-        buscaAcessos() {
-             const getAllPages = async () => {
-                let currentPage = 1;
-                let totalPages = 1;
-                let todosAcessos = [];
-
-                while (currentPage <= totalPages) {
-                    try {
-                        const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${currentPage}`);
-                        const acessos = response.data.data.map(a => new Acesso(a));
-                        todosAcessos = todosAcessos.concat(acessos);
-                        totalPages = response.data.last_page;
-                        currentPage++;
-                    } catch (error) {
-                        console.error(`Error`, error);
-                        toaster.show(`Erro ao buscar os visitantes`, { type: "error" });
-                        break;
-                    }
-                }
-
-                this.aacessos = todosAcessos.sort(this.ordenarPessoas).reverse();
-                console.log('visitantes', this.acessos);
-            };
-
-            getAllPages();
-
-        },
-
-        
-
 
         async alterarLocal() {
             if (this.localSelecionado !== null) {
                 try {
-                    const response = await api.get(`/local/${this.localSelecionado}/acessos`);
-                    this.acessos = response.data.data || [];
+                    const response = await fetch(`${this.apiUrl}/local/${this.localSelecionado}/acessos`);
+                    const responseData = await response.json();
+                    this.acessos = responseData.data || [];
                     localStorage.setItem('localSelecionado', JSON.stringify(this.localSelecionado));
                 } catch (error) {
                     console.error('Error ao alterar empresa', error);
@@ -261,8 +233,6 @@ export default {
                 }
             }
         },
-
-    
 
         async buscaLocal() {
             try {

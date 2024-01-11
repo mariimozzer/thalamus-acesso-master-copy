@@ -241,29 +241,27 @@ export default {
             this.localSelecionado = JSON.parse(localSelecionadoStorage);
             this.alterarLocal();
         }
-        console.log('local', this.localSelecionado)
 
     },
 
     methods: {
 
-        buscaLocal() {
-           api.get('/local')
-           .then(response => {
-            const localLista = response.data
-            this.localData = localLista
-           })
-           .catch(error => {
-                    console.log(error);
-                });
+        async buscaLocal() {
+            try {
+                //const response = await fetch('http://192.168.0.6:8000/api/local');
+                const response = await api.fetch('/local');
+                this.localData = await response.json();
+            } catch (error) {
+                console.error('Error ao buscar locais', error);
+            }
         },
 
         async alterarLocal() {
             if (this.localSelecionado !== null) {
                 try {
                     //const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
-                    const response = await api.get(`/local/${this.localSelecionado}/acessos`);
-                    const responseData = response.data;
+                    const response = await api.fetch(`/local/${this.localSelecionado}/acessos`);
+                    const responseData = await response.json();
                     this.acessos = responseData.data || [];
                     localStorage.setItem('localSelecionado', JSON.stringify(this.localSelecionado));
                 } catch (error) {
@@ -379,6 +377,7 @@ export default {
 
                     if (responseData.cod === 1) {
 
+                        
                         this.qrCodeCartao = '';
 
                     } else {
