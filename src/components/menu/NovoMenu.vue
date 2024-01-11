@@ -31,7 +31,7 @@
                                 </div>
                             </b-dropdown-item>
                             <hr>
-                             <b-dropdown-item style="color: black" href="/alterarSenha">
+                             <b-dropdown-item style="color: black" @click="alterarSenha()">
                                     <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
                                         Senha</span>
                                 </b-dropdown-item>
@@ -106,6 +106,11 @@ export default {
     },
 
     methods: {
+        alterarSenha(){
+            this.$router.push({ name: "AlterarSenha" })
+
+
+        },
         getAllHome() {
            // axios.get(`http://192.168.0.6:8000/api/menu/home`)
             api.get(`/menu/home`)
