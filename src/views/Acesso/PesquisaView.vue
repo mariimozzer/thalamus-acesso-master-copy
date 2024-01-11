@@ -1,16 +1,10 @@
 <template>
     <MenuLSGP></MenuLSGP>
-
     <div class="container">
-
         <br>
-
         <h2 class="titulo">Pesquisa</h2>
-
         <div>
-
             <div class="d-flex col-lg-12 justify-content-around">
-
                 <div style="margin: 0px 20px 0px 0px;">
                     <label for="dataInicial">Data Inicial:</label>
                     <input type="date" v-model="filtro.inicial" id="dataInicial" class="form-control" />
@@ -51,22 +45,16 @@
                         </option>
                     </select>
                 </div>
-
             </div>
-
             <div style="display: flex; flex-flow: row; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
-
                 <div style="margin: 0px 20px 0px 0px;">
                     <button @click="pesquisar" class="btn btn-primary">Pesquisar&nbsp;<i
                             class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
-
                 <div>
                     <button @click="limparCampos" class="btn btn-primary">Limpar&nbsp;</button>
                 </div>
-
             </div>
-
             <div style="margin: 10px 0px 10px 0px;">
 
                 <table v-if="dadosFiltro && dadosFiltro.length > 0" class="table" id="tabela-acessos">
@@ -94,12 +82,7 @@
                         </tr>
                     </tbody>
                 </table>
-
-               
-
             </div>
-
-             
 
             <!-- <div class="d-flex align-items-baseline justify-content-end mt-4">
 
@@ -117,13 +100,10 @@
         <div v-if="!filtroVazio" style="text-align: center;">
             <p>Total de registros: {{ totalResultado }}</p>
         </div>
-
         <div v-if="filtroVazio" style="text-align: center;">
             <p style="font-size: 20px; color: brown;">Não há dados</p>
         </div>
-
         <br><br><br><br>
-
     </div>
 </template>
 

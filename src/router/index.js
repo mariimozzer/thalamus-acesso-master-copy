@@ -169,16 +169,17 @@ const routes = [
   }
 ]
 
-
-/* const router = createRouter({
-  history: createWebHashHistory(),
-  routes
-}) */
-
 const router = createRouter({
-  mode: 'history',
   history: createWebHashHistory(),
   routes
 })
+
+/* router.beforeEach((to, from, next) => {
+  console.log(`Navigating from: ${from.name}`)
+  console.log(`Navigating to: ${to.name}`);
+ 
+  next();
+}); */
+
 
 export default router

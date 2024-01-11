@@ -55,8 +55,8 @@ export default ({
 }
 
 .router {
-    margin-left: 300px;
-    margin-bottom: 100px;
+    margin-left: 350px;
+    margin-bottom: 100px;   
 }
 
 .footer {
