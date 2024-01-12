@@ -183,10 +183,8 @@ export default {
     },
 
     mounted() {
-
          this.buscarTodosVisitantes();
-        
- 
+  
     },
 
     methods: {
