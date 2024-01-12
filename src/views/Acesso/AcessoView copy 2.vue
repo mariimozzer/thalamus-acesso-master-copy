@@ -60,9 +60,13 @@
 
                             <!-- FOTO DA ÚLTIMA PESSOA QUE PASSOU NA CATRACA -->
                             <div class="col-md-12 text-center">
-                                <img class="col-12" v-if="mostraFoto" :src="fotoPessoa" alt="Foto Acesso"/>
+                                <img v-if="mostraFoto" :src="fotoPessoa" alt="Foto Acesso"
+                                    style="object-fit:none; border: solid 1px lightgray; border-radius: 20px;" />
+
                                 <!-- IMAGEM DE BACKGROUND QUANDO NÃO HÁ FOTO DE PESSOA -->
-                                <img class="col-12" src="../../../public/img/user-avatar.png" v-if="!mostraFoto" alt="Foto Acesso"/>
+
+                                <img src="../../../public/img/user-avatar.png" v-if="!mostraFoto" alt="Foto Acesso"
+                                    style="object-fit:contain" />
                             </div>
                         </div>
 
@@ -84,7 +88,7 @@ import api, { urlFoto } from '../../services/api';
 import WebSocketService from '../../services/websocketservice'
 import { createToaster } from "@meforma/vue-toaster";
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
-//import Acesso from '../../models/Acesso'
+import Acesso from '../../models/Acesso'
 
 const toaster = createToaster({
     position: "top-right",
@@ -139,54 +143,42 @@ export default {
         this.buscaAcessos();
     },
 
-    watch: {
-        filtroNome: {
-            handler: 'pesquisaComFiltro',
-            immediate: true,
-        },
-    },
-
 
     methods: {
-        async buscaAcessos() {
-            try {
-                let currentPage = 1;
-                let allAcessos = [];
-                let responseData; // Declare responseData outside the loop
-
-                do {
-                    const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${currentPage}`);
-                    responseData = response.data; // Assign value to responseData
-
-                    if (responseData.data && responseData.data.length > 0) {
-                        allAcessos = allAcessos.concat(responseData.data);
-                    }
-
-                    currentPage = responseData.current_page + 1;
-                } while (currentPage <= responseData.last_page);
-
-                this.acessos = allAcessos;
-
-            } catch (error) {
-                console.error('Error ao buscar acessos', error);
-                toaster.show(`Erro buscar acessos`, { type: "error" });
-            }
-        },
-
-        pesquisaComFiltro() {
-            const termoPesquisa = this.filtroNome.toLowerCase();
-
-            if (!termoPesquisa) {
-                this.buscaAcessos();
-                return;
-            }
-
-            this.acessos = this.acessos.filter(acesso => {
-                return acesso.nomeCompleto.toLowerCase().includes(termoPesquisa);
-            });
-        },
-
         
+       /*  pesquisaComFiltro() {
+            this.pesquisaAcessos(this.filtroNome);
+        }, */
+
+        /* async pesquisaAcessos(searchTerm = '') {
+            try {
+                const response = await api.get(`/local/${this.localSelecionado}/acessos`);
+                //const responseData = await response.json();
+                this.acessos = response.data.data;
+                this.lastPage = response.last_page;
+                this.page = 1;
+                this.acessos = this.acessos.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
+        }, */
+        async pesquisaAcessos(searchTerm = '', page = 1) {
+            try {
+                const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${page}`);
+                this.acessos = response.data.data;
+                this.currentPage = response.data.current_page;
+                this.totalPages = response.data.last_page;
+                this.lastPage = response.data.last_page_url;
+
+                this.acessos = this.acessos.filter(item =>
+                    item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
 
 
         replaceIcon() {
@@ -202,9 +194,53 @@ export default {
         },
 
 
+       /*  async buscaAcessos(page = 1) {
+            try {
+                const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${page}`);
+                this.acessos = response.data.data;
+                this.currentPage = response.data.current_page;
+                this.totalPages = response.data.last_page;
+                this.lastPage = response.data.last_page_url;
+                console.log('acessos', this.acessos)
+
+            } catch (error) {
+                console.error('Erro:', error);
+                toaster.show(`Erro ao buscar acessos`, { type: "error" });
+            }
+        }, */
+
          ordenarPessoas(a, b) {
             return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
         },
+
+        buscaAcessos() {
+             const getAllPages = async () => {
+                let currentPage = 1;
+                let totalPages = 1;
+                let todosAcessos = [];
+
+                while (currentPage <= totalPages) {
+                    try {
+                        const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${currentPage}`);
+                        const acessos = response.data.data.map(a => new Acesso(a));
+                        todosAcessos = todosAcessos.concat(acessos);
+                        totalPages = response.data.last_page;
+                        currentPage++;
+                    } catch (error) {
+                        console.error(`Error`, error);
+                        toaster.show(`Erro ao buscar os visitantes`, { type: "error" });
+                        break;
+                    }
+                }
+
+                this.aacessos = todosAcessos.sort(this.ordenarPessoas).reverse();
+                console.log('visitantes', this.acessos);
+            };
+
+            getAllPages();
+
+        },
+
         
 
 
@@ -220,6 +256,7 @@ export default {
                 }
             }
         },
+
     
 
         async buscaLocal() {
@@ -287,12 +324,9 @@ export default {
 </script>
 
 <style scoped> 
-
-
 .card-foto {
      min-height: 500px;
  }
-
  .foto-ultimo {
      width: 400px;
      height: 400px;

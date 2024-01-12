@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="login" class="container">
-    
+            
         <div class="box-login">
             <div style="text-align: center;">
                 <img class="logo" src="../../../public/img/thalamus-logo.png" width="150px"><br><br>
@@ -28,21 +28,17 @@
                 <br>
                 <input class="form-check-input" type="radio" id="zontec" value="zontec" v-model="local">
                 <label class="form-check-label" for="zontec"> Zontec </label>
-                
- -->
+                -->
                 <ul style="list-style: none;  margin: 0; padding: 0;">
                     <li v-for="local in localData" :key="local.local_nome">
                         <input type="radio" :value="local.id" v-model="localSelecionado" @change="salvarLocalSelecionado" style="margin-right: 5px;" />
                         <span>{{ local.local_nome }}</span>
                     </li>
                 </ul>
-                
-
                 <!-- <select v-model="localSelecionado" @change="alterarLocal" class="select" style="border: solid; border-radius: 5px; border-width: 1px; border-color: lightgrey; padding:5px 10px 5px 10px;">
                     <option v-for="local in localData" :key="local.id" :value="local.id">{{ local.local_nome }}</option>
                 </select> -->
             </div>
-
             <br>
             <div class="col-sm-12 text-center">
                 <button class="button-default" value="Entrar">
@@ -51,7 +47,6 @@
                     <span v-if="loading">Processando...</span>
                 </button>
             </div>
-    
             <div class="col-sm-12" style="text-align: center; font-size: 15px;">
                 <a @click="EsqueceuSenha()" style="color: rgb(0, 0, 0); text-decoration: underline;">Esqueceu sua senha ?</a>
             </div>
@@ -175,7 +170,8 @@ export default {
 
 .box-login {
     max-width: 80%;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
     border: 2px solid #ddd;
     margin-top: 10px;
     padding: 30px;
@@ -197,6 +193,7 @@ export default {
     align-items: center;
     flex-direction: column;
     margin-left: -50px;
+    margin-top: -80px;
 }
 
 @media (max-width: 768px) {

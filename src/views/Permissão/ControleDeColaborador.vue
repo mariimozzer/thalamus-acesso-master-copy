@@ -55,8 +55,8 @@
                                         <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop1"
                                             @click="enviarQRCode(item.id)" class="btn btn-color-grey"
                                             data-bs-placement="top" title="Clique para enviar QR Code do colaborador">
-                                            <i class="fa-solid fa-qrcode icones-tabela"
-                                                style="font-size: 18px; color: var(--first-color);"></i>
+                                            <i class="fa-solid fa-envelope"   style="font-size: 18px; color: var(--first-color);"></i>
+                                           
                                         </button>
                                         <button @click="editarColaborador(item)" class="btn btn-color-grey"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
@@ -75,7 +75,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <nav>
+                   <!--  <nav>
                         <ul class="pagination">
                             <li class="page-item" :class="{ disabled: currentPage === 1 }">
                                 <a class="page-link" href="#" aria-label="Previous" @click="buscaColaborador(page - 1)">
@@ -91,7 +91,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </nav>
+                    </nav> -->
                 </div>
             </div>
         </div>

@@ -1,8 +1,11 @@
 <template>
     <MenuLSGP></MenuLSGP>
     <div class="container">
-        <br>
-        <h2 class="titulo">Pesquisa</h2>
+         <div class="col-sm-12" style="text-align: center;">
+                        <h2 class="titulo">Pesquisa</h2>
+                        <hr>
+                    </div>
+        
         <div>
             <div class="d-flex col-lg-12 justify-content-around">
                 <div style="margin: 0px 20px 0px 0px;">

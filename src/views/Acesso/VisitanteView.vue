@@ -41,7 +41,7 @@
                         </tr>
                     </thead>
                     <tbody style="text-align: center;">
-                        <tr v-for="item in visitantes" :key="item.id">
+                        <tr v-for="item in visitantesFiltrados" :key="item.id">
                             <td>{{ item.nomeCompleto }}</td>
                             <td>{{ item.CPF }}</td>
                             <td>{{ mostraGenero(item.sexo) }}</td>
@@ -184,7 +184,8 @@ export default {
 
     mounted() {
 
-         this.buscarTodosVisitantes()
+         this.buscarTodosVisitantes();
+        
  
     },
 
@@ -223,13 +224,6 @@ export default {
             return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
         },
 
-        pesquisaComFiltro() {
-            const termoPesquisa = this.filtroNome.toLowerCase();
-            this.visitantesFiltrados = this.visitantes.filter(item =>
-                item.nomeCompleto.toLowerCase().includes(termoPesquisa)
-            );
-        },
-
           buscarTodosVisitantes() {
             const getAllPages = async () => {
                 let currentPage = 1;
@@ -251,10 +245,17 @@ export default {
                 }
 
                 this.visitantes = todosVisitantes.sort(this.ordenarPessoas).reverse();
+                  this.pesquisaComFiltro();
                 console.log('visitantes', this.visitantes);
             };
 
             getAllPages();
+        },
+
+         pesquisaComFiltro() {
+            this.visitantesFiltrados = this.visitantes.filter(item =>
+                item.nomeCompleto.toLowerCase().includes(this.filtroNome.toLowerCase())
+            );
         },
 
         mostraGenero(generoAbreviado) {
