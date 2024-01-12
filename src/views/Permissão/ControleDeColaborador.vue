@@ -144,6 +144,7 @@ import setorService from '../../services/setor-service';
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 import { createToaster } from "@meforma/vue-toaster";
 import api from '../../services/api';
+//import Pessoa from '@/models/Pessoa';
 
 const toaster = createToaster({
     position: "top-right",
@@ -240,18 +241,46 @@ export default {
             return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
         },
 
-        async buscaColaborador(page) {
+     async buscaColaborador() {
             try {
-                const response = await api.get(`/pessoa?page=${page}`);
-                this.colaborador = response.data.data;
+                const response = await api.get(`/pessoa`);
+                this.colaborador = response.data;
                 this.totalPages = response.data.last_page;
                 console.log(this.colaborador)
 
             } catch (error) {
                 console.error('Error:', error);
             }
-        },
+        }, 
+        
+       /*  async buscaColaborador() {
+          const getAllPages = async () => {
+                let currentPage = 1;
+                let totalPages = 1;
+                let todosVisitantes = [];
 
+                while (currentPage <= totalPages) {
+                    try {
+                        const response = await api.get(`/pessoa?page=${currentPage}`);
+                        const pessoas = response.data.data.map(p => new Pessoa(p));
+                        todosVisitantes = todosVisitantes.concat(pessoas);
+                        totalPages = response.data.last_page;
+                        currentPage++;
+                    } catch (error) {
+                        console.error(`Error`, error);
+                        toaster.show(`Erro ao buscar os colaboradores`, { type: "error" });
+                        break;
+                    }
+                }
+
+                this.colaborador = todosVisitantes.sort(this.ordenarPessoas).reverse();
+               // this.pesquisaComFiltro();
+               // console.log('visitantes', this.visitantes);
+            };
+
+            getAllPages();
+        },
+ */
         adicionarColaborador() {
             this.$router.push({ name: "AdicionarColaborador" })
         },
@@ -290,9 +319,9 @@ export default {
         async pesquisaColaborador(searchTerm = '') {
             try {
                 const response = await api.get(`/pessoa`);
-                this.colaborador = response.data.data || [];
-                this.lastPage = response.data.last_page || 1;
-                this.page = 1;
+                this.colaborador = response.data || [];
+                //this.lastPage = response.data.last_page || 1;
+               // this.page = 1;
                 this.colaborador = this.colaborador.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
                 );
             } catch (error) {

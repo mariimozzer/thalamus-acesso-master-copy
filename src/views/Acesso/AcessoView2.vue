@@ -263,7 +263,7 @@ export default {
 
                     if (visitanteInfo.data.path_image) {
                         // const urlfoto = `${api.defaults.caminhoFoto}`;
-                        const urlfoto = 'http://192.168.0.6:8000/storage/';
+                        const urlfoto = 'http://192.168.0.5:8000/storage/';
                         this.fotoPessoa = urlfoto + visitanteInfo.data.path_image;
                         this.mostraFoto = true;
                         this.buscaAcessos();
@@ -281,7 +281,7 @@ export default {
                     });
                     if (colaboradorInfo.data.path_image) {
                         // const urlfoto = `${api.defaults.caminhoFoto}`;
-                        const urlfoto = 'http://192.168.0.6:8000/storage/';
+                        const urlfoto = 'http://192.168.0.5:8000/storage/';
                         this.fotoPessoa = urlfoto + colaboradorInfo.data.path_image;
                         this.mostraFoto = true;
                         this.buscaAcessos();

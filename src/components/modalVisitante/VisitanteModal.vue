@@ -26,7 +26,7 @@
                             </div>
                             <div>
                                 <input class="form-control d-inline" type="number" max="24" id="horas" size="sm"
-                                    value="0" style="width:50px;" />
+                                    value="0" style="width:60px;" />
                                 <label for="horas" class="d-inline ms-1">Hora(s)</label>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                                 <span>Informações</span>
                             </div>
                             <div>
-                                <textarea class="form-control" id="info" rows="5" for="info"></textarea>
+                                <textarea class="form-control" id="info" rows="5" for="info" placeholder="Digite as informações sobre a visita (Opcional)"></textarea>
                             </div>
                         </div>
                     </div>

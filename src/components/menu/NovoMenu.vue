@@ -1,7 +1,7 @@
 <template>
     <div class="menu " id="menu">
         <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="color: white; ">
-            <a class="navbar-brand" href="/home">
+            <a class="navbar-brand" @click="logo">
                 <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
                     style="width: 75%; ">
             </a>
@@ -98,6 +98,10 @@ export default {
     },
 
     methods: {
+        logo(){
+            this.$router.push({name: "HomeView"});
+        },
+
         getAllHome() {
             // axios.get(`http://192.168.0.6:8000/api/menu/home`)
             api.get(`/menu/home`)

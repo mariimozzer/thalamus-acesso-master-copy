@@ -328,7 +328,7 @@ export default {
         mostraFotoPessoa() {
             try {
                 if (this.imagePath) {
-                    const urlfoto = 'http://192.168.0.6:8000/storage/';
+                    const urlfoto = 'http://192.168.0.5:8000/storage/';
                     this.fotoPessoa = urlfoto + this.imagePath;
                     this.mostraFoto = true;
                 } else {
