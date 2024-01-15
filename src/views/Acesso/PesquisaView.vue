@@ -197,10 +197,12 @@ export default {
                 api.get('/acesso/filtro', params)
                     .then(response => {
                         this.dadosFiltro = this.dadosFiltro.concat(response.data.data);
+                        console.log('filtro', params)
 
                         if (page < response.data.last_page) {
                            
                             dadosFiltro(page + 1);
+
                         } else {
                            
                             this.totalPaginas = response.data.last_page;
@@ -220,7 +222,6 @@ export default {
             dadosFiltro(1); 
            
         },
-
 
         carregarSetores() {
             api.get('/setor')

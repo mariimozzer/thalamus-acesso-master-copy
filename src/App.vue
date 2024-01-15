@@ -55,7 +55,7 @@ export default ({
 }
 
 .router {
-    margin-left: 350px;
+    margin-left: 300px;
     margin-bottom: 100px;   
 }
 

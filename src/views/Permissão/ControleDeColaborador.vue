@@ -1,81 +1,87 @@
 <template>
     <MenuLSGP></MenuLSGP>
     <div class="container">
-
-        <div class="row">
-            <div class="col-sm-12" style="text-align: center;">
-                <h3 class="titulo">Colaborador</h3>
-                <hr>
-            </div>
-        </div>
-        <div class="row sub-container">
-            <div class="col-sm-2">
-                <button @click="adicionarColaborador" class="button-cadastrar" data-bs-toggle="tooltip"
-                    data-bs-placement="top" title="Clique para cadastrar novo colaborador">
-                    <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
-            </div>
-            <br>
-            <br>
+        <div>
             <div class="row">
-                <!-- Filtro -->
-                <div class="col-md-4 mb-3">
-                    <!-- Filtro -->
-                    <b-input-group class="mb-2 mt-3">
-                        <b-input-group-prepend is-text>
-                            <i class="fa-solid fa-magnifying-glass"></i> </b-input-group-prepend>
-                        <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtroNome"
-                            @input="pesquisaComFiltro">
-                        </b-form-input>
-                    </b-input-group>
+                <div class="col-sm-12" style="text-align: center;">
+                    <h3 class="titulo">Colaborador</h3>
+                    <hr>
                 </div>
-                <br>
-                <br>
-                <!-- TABELA DE colaboradores -->
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nome</th>
-                                <th scope="col">CPF</th>
-                                <th scope="col">Gênero</th>
-                                <th scope="col">Celular</th>
-                                <th scope="col">E-mail</th>
-                                <th scope="col">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody style="text-align: center;">
-                            <tr v-for="item in colaboradoresFiltrados" :key="item.id">
-                                <td>{{ item.nomeCompleto }}</td>
-                                <td>{{ item.CPF }}</td>
-                                <td>{{ mostraGenero(item.sexo) }}</td>
-                                <td>{{ item.celular }}</td>
-                                <td>{{ item.email }}</td>
-                                <td>
-                                    <div>
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop1"
-                                            @click="enviarQRCode(item.id)" class="btn btn-color-grey"
-                                            data-bs-placement="top" title="Clique para enviar QR Code do colaborador">
-                                            <i class="fa-solid fa-envelope"   style="font-size: 18px; color: var(--first-color);"></i>
-                                           
-                                        </button>
-                                        <button @click="editarColaborador(item)" class="btn btn-color-grey"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="Clique para editar colaborador">
-                                            <i class="fa fa-edit icones-tabela"
-                                                style="font-size: 18px; color: var(--first-color);"></i>
-                                        </button>
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                            @click="excluirPessoa(item.id)" class="btn btn-color-grey"
-                                            data-bs-placement="top" title="Clique para excluir colaborador">
-                                            <i class="fa fa-trash icones-tabela"
-                                                style="font-size: 18px; color: var(--first-color);"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                   <!--  <nav>
+            </div>
+            <div class="mb-3">
+                <div class="col-sm-2">
+                    <button @click="adicionarColaborador" class="button-cadastrar" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Clique para cadastrar novo colaborador">
+                        <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <!--   <b-input-group class="mb-2 mt-3">
+                            <b-input-group-prepend is-text>
+                                <i class="fa-solid fa-magnifying-glass"></i> </b-input-group-prepend>
+                            <b-form-input type="text" placeholder="Pesquisar colaborador por nome" v-model="filtroNome"
+                                @input="pesquisaComFiltro">
+                            </b-form-input>
+                        </b-input-group> -->
+
+                    <div class="input-group mt-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </span>
+                        </div>
+                        <input v-model="filtroNome" @input="pesquisaComFiltro" type="text"
+                            placeholder="Pesquisar visitante por nome" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABELA DE colaboradores -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">CPF</th>
+                            <!--   <th scope="col">Gênero</th> -->
+                            <th scope="col">Celular</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+                        <tr v-for="item in colaboradoresFiltrados" :key="item.id">
+                            <td>{{ item.nomeCompleto }}</td>
+                            <td>{{ item.CPF }}</td>
+                            <!--  <td>{{ mostraGenero(item.sexo) }}</td> -->
+                            <td>{{ item.celular }}</td>
+                            <td>{{ item.email }}</td>
+                            <td>
+                                <div>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop1"
+                                        @click="enviarQRCode(item.id)" class="btn btn-color-grey"
+                                        data-bs-placement="top" title="Clique para enviar QR Code do colaborador">
+                                        <i class="fa-solid fa-envelope"
+                                            style="font-size: 18px; color: var(--first-color);"></i>
+                                    </button>
+                                    <button @click="editarColaborador(item)" class="btn btn-color-grey"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Clique para editar colaborador">
+                                        <i class="fa fa-edit icones-tabela"
+                                            style="font-size: 18px; color: var(--first-color);"></i>
+                                    </button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                        @click="excluirPessoa(item.id)" class="btn btn-color-grey"
+                                        data-bs-placement="top" title="Clique para excluir colaborador">
+                                        <i class="fa fa-trash icones-tabela"
+                                            style="font-size: 18px; color: var(--first-color);"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--  <nav>
                         <ul class="pagination">
                             <li class="page-item" :class="{ disabled: currentPage === 1 }">
                                 <a class="page-link" href="#" aria-label="Previous" @click="buscaColaborador(page - 1)">
@@ -92,11 +98,12 @@
                             </li>
                         </ul>
                     </nav> -->
-                </div>
             </div>
         </div>
+
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -115,7 +122,9 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="staticBackdrop1" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+        <div class="modal fade" id="staticBackdrop1" tabindex="-1" aria-labelledby="staticBackdropLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

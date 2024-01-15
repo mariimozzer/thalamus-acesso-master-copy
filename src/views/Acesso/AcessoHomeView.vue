@@ -9,18 +9,14 @@
 </template>
 
 <script>
-
 import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
-
-
 
 export default {
     name: 'AcessoHomeView',
 
     components: {
         MenuLSGP,
-    },
-   
+    }, 
 };
 </script>
 

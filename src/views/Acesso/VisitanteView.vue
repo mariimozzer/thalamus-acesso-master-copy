@@ -1,18 +1,24 @@
 <template>
+
     <MenuLSGP></MenuLSGP>
+
     <div class="container">
         <div>
+
             <div class="row">
                 <div class="col-sm-12" style="text-align: center;">
                     <h2 class="titulo">Visitante</h2>
                     <hr>
                 </div>
             </div>
+
             <div class="mb-3">
                 <div class="col-sm-2">
                         <button type="button" class="button-cadastrar" @click="adicionarPessoa">
                             <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
                 </div>
+                
+
                 <div class="col-lg-6 col-md-12">
                     <div class="input-group mt-3">
                         <div class="input-group-prepend">
@@ -24,19 +30,19 @@
                             class="form-control" />
                     </div>
                 </div>
+
             </div>
-            <div class="d-flex row mb-3">
-            </div>
+         
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
+                        <tr style="text-align: center;">
                             <th>Nome</th>
                             <th>CPF</th>
-                            <th>Gênero</th>
+                          <!--   <th>Gênero</th> -->
                             <th>Celular</th>
                             <th>E-mail</th>
-                            <th style="text-align: center;">Nova visita</th>
+                            <th>Nova visita</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -44,7 +50,7 @@
                         <tr v-for="item in visitantesFiltrados" :key="item.id">
                             <td>{{ item.nomeCompleto }}</td>
                             <td>{{ item.CPF }}</td>
-                            <td>{{ mostraGenero(item.sexo) }}</td>
+                           <!--  <td>{{ mostraGenero(item.sexo) }}</td> -->
                             <td>{{ item.celular }}</td>
                             <td>{{ item.email }}</td>
                             <td>
@@ -58,7 +64,7 @@
                             </td>
                             <td>
                                 <div>
-                                    <button @click="editarPessoa(item)" class="btn btn-color-grey" style="margin-right: 20px;"
+                                    <button @click="editarPessoa(item)" class="btn btn-color-grey" 
                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="Clique para editar visitante">
                                         <i class="fa fa-edit icones-tabela"
@@ -95,6 +101,7 @@
                 </nav> -->
             </div>
         </div>
+
         <!-- Modal excluir -->
         <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">

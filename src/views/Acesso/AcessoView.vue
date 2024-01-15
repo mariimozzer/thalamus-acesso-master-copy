@@ -1,73 +1,76 @@
 <template>
     <MenuLSGP></MenuLSGP>
-    <div class="container-fluid">
-        <br>
-        <div class="text-center">
-            <h2 class="titulo">Acessos Recentes</h2>
-            <hr>
-        </div>
-        <div class="col-12">
-            <!-- COLUNA 1 -->
-
-            <!-- input de pesquisa -->
-
-            <div class="form-group input-group" style="width: 100%;">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                </div>
-                <input v-model="filtroNome" @input="pesquisaComFiltro" type="text" class="form-control"
-                    placeholder="Pesquisar acessos" />
+    <div class="container">
+        <div>
+            <br>
+            <div class="text-center">
+                <h2 class="titulo">Acessos Recentes</h2>
+                <hr>
             </div>
+            <div class="col-12">
 
-            <!-- TABELA DE ACESSOS -->
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-8">
-                    <div class="table-responsive">
-                        <table class="table table-striped" style="width: 100$;">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Data/Hora</th>
-                                    <th style="text-align: center;">Entrada/Saída</th>
-                                    <th>Empresa</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="acesso in acessos" :key="acesso.id">
-                                    <td>{{ acesso.nomeCompleto }}</td>
-                                    <td>{{ formatarDataHora(acesso.created_at) }}</td>
-                                    <!--  <td>{{ acesso.sentido }}</td> -->
-                                    <td style="text-align: center;">
-                                        <span v-if="acesso.sentido === 'e'" class="material-symbols-outlined"
-                                            style="color:#388E3C">login</span>
-                                        <span v-if="acesso.sentido === 's'" class="material-symbols-outlined"
-                                            style="color: #E53935;">logout</span>
-                                    </td>
-                                    <td>{{ acesso.local_nome }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                <div class="form-group input-group" style="width: 100%;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
                     </div>
+                    <input v-model="filtroNome" @input="pesquisaComFiltro" type="text" class="form-control"
+                        placeholder="Pesquisar acessos" />
                 </div>
 
-                <!-- COLUNA 2 -->
-                <div class="col-12 col-sm-12 col-md-4">
-                    <div class="row">
-                        <div class="col-12 mb-2" style="border: solid 1px lightgray; border-radius: 20px;">
-
-                            <!-- FOTO DA ÚLTIMA PESSOA QUE PASSOU NA CATRACA -->
-                            <div class="col-md-12 text-center">
-                                <img class="col-12" v-if="mostraFoto" :src="fotoPessoa" alt="Foto Acesso"/>
-                                <!-- IMAGEM DE BACKGROUND QUANDO NÃO HÁ FOTO DE PESSOA -->
-                                <img class="col-12" src="../../../public/img/user-avatar.png" v-if="!mostraFoto" alt="Foto Acesso"/>
-                            </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-8">
+                        <div class="table-responsive">
+                            <table class="table table-striped" style="width: 100$;">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Data/Hora</th>
+                                        <th style="text-align: center;">Entrada/Saída</th>
+                                        <th>Empresa</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="acessos.length > 0">
+                                    <tr v-for="acesso in acessos" :key="acesso.id">
+                                        <td>{{ acesso.nomeCompleto }}</td>
+                                        <td>{{ formatarDataHora(acesso.created_at) }}</td>
+                                        <!--  <td>{{ acesso.sentido }}</td> -->
+                                        <td style="text-align: center;">
+                                            <span v-if="acesso.sentido === 'e'" class="material-symbols-outlined"
+                                                style="color:#388E3C">login</span>
+                                            <span v-if="acesso.sentido === 's'" class="material-symbols-outlined"
+                                                style="color: #E53935;">logout</span>
+                                        </td>
+                                        <td>{{ acesso.local_nome }}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <!-- Exibição de mensagem quando não há acessos -->
+                                    <tr>
+                                        <td colspan="4" class="text-center">Nenhum acesso registrado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
 
-                        <div class="col-md-12 acesso-permitido text-center align-middle" v-if="this.mostraFoto">
-                            <p>Acesso permitido</p>
+                    <div class="col-12 col-sm-12 col-md-4">
+                        <div class="row">
+                            <div class="col-12 mb-2" style="border: solid 1px lightgray; border-radius: 20px;">
+
+                                <!-- FOTO DA ÚLTIMA PESSOA QUE PASSOU NA CATRACA -->
+                                <div class="col-md-12 text-center">
+                                    <img class="col-12" v-if="mostraFoto" :src="fotoPessoa" alt="Foto Acesso" />
+                                    <!-- IMAGEM DE BACKGROUND QUANDO NÃO HÁ FOTO DE PESSOA -->
+                                    <img class="col-12" src="../../../public/img/user-avatar.png" v-if="!mostraFoto"
+                                        alt="Foto Acesso" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 acesso-permitido text-center align-middle" v-if="this.mostraFoto">
+                                <p>Acesso permitido</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,7 +78,6 @@
         </div>
     </div>
     <br><br><br>
-
 </template>
 
 <script>
@@ -136,7 +138,7 @@ export default {
 
     mounted() {
         this.buscaLocal();
-        this.buscaAcessos();
+      this.buscaAcessos();
     },
 
     watch: {
@@ -146,30 +148,18 @@ export default {
         },
     },
 
-
     methods: {
+
+       
+        //busca acessos sem paginação
         async buscaAcessos() {
             try {
-                let currentPage = 1;
-                let allAcessos = [];
-                let responseData; // Declare responseData outside the loop
-
-                do {
-                    const response = await api.get(`/local/${this.localSelecionado}/acessos?page=${currentPage}`);
-                    responseData = response.data; // Assign value to responseData
-
-                    if (responseData.data && responseData.data.length > 0) {
-                        allAcessos = allAcessos.concat(responseData.data);
-                    }
-
-                    currentPage = responseData.current_page + 1;
-                } while (currentPage <= responseData.last_page);
-
-                this.acessos = allAcessos;
-
+                const response = await api.get(`/local/${this.localSelecionado}/acessos-hoje`);
+                this.acessos = response.data;
+               // console.log('acessos', this.acessos)
             } catch (error) {
-                console.error('Error ao buscar acessos', error);
-                toaster.show(`Erro buscar acessos`, { type: "error" });
+                console.error('Erro:', error);
+                toaster.show(`Erro ao buscar acessos`, { type: "error" });
             }
         },
 
@@ -186,9 +176,6 @@ export default {
             });
         },
 
-        
-
-
         replaceIcon() {
             this.results = this.text.replace(this.text, this.newText);
         },
@@ -200,13 +187,6 @@ export default {
             }
             return '';
         },
-
-
-         ordenarPessoas(a, b) {
-            return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;
-        },
-        
-
 
         async alterarLocal() {
             if (this.localSelecionado !== null) {
@@ -221,7 +201,6 @@ export default {
             }
         },
     
-
         async buscaLocal() {
             try {
                 const response = await fetch(`${this.apiUrl}/local`);
