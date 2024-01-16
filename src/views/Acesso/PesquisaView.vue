@@ -2,7 +2,7 @@
     <MenuLSGP></MenuLSGP>
     <div class="container">
          <div class="col-sm-12" style="text-align: center;">
-                        <h2 class="titulo">Pesquisa</h2>
+                        <h2 class="titulo">Pesquisa Avaçada</h2>
                         <hr>
                     </div>
         
@@ -28,7 +28,7 @@
                 </div>
 
                 <div style="margin: 0px 20px 0px 0px;">
-                    <label for="pessoa">Nome</label>
+                    <label for="pessoa">Nome Completo</label>
                     <input type="text" v-model="filtro.nome" id="nome" class="form-control" />
                 </div>
 

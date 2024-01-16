@@ -9,11 +9,7 @@
                 </div>
             </div>
             <div class="mb-3">
-                <div class="col-sm-2">
-                    <button @click="adicionarColaborador" class="button-cadastrar" data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="Clique para cadastrar novo colaborador">
-                        <i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Cadastrar</button>
-                </div>
+              
 
                 <div class="col-lg-6 col-md-12">
                     <!--   <b-input-group class="mb-2 mt-3">
@@ -32,6 +28,7 @@
                         </div>
                         <input v-model="filtroNome" @input="pesquisaComFiltro" type="text"
                             placeholder="Pesquisar colaborador por nome" class="form-control" />
+                            <button class="btn-filter" @click="pesquisar"><i class="fa-solid fa-filter"></i></button>
                     </div>
                 </div>
             </div>
@@ -42,22 +39,18 @@
                     <thead>
                         <tr>
                             <th scope="col">Nome</th>
-                            <th scope="col">CPF</th>
                             <!--   <th scope="col">Gênero</th> -->
                             <th scope="col">Celular</th>
                             <th scope="col">E-mail</th>
-                            <th scope="col">Data de Nascimento</th>
                             <th scope="col">Ações</th>
                         </tr>
                     </thead>
                     <tbody style="text-align: center;">
                         <tr v-for="item in colaboradoresFiltrados" :key="item.id">
                             <td>{{ item.nomeCompleto }}</td>
-                            <td>{{ item.CPF }}</td>
                             <!--  <td>{{ mostraGenero(item.sexo) }}</td> -->
                             <td>{{ item.celular }}</td>
                             <td>{{ item.email }}</td>
-                            <td>{{ formatarDataHora(item.dtNasc) }}</td>
                             <td>
                                 <div>
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop1"
@@ -66,18 +59,7 @@
                                         <i class="fa-solid fa-envelope"
                                             style="font-size: 18px; color: var(--first-color);"></i>
                                     </button>
-                                    <button @click="editarColaborador(item)" class="btn btn-color-grey"
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="Clique para editar colaborador">
-                                        <i class="fa fa-edit icones-tabela"
-                                            style="font-size: 18px; color: var(--first-color);"></i>
-                                    </button>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                        @click="excluirPessoa(item.id)" class="btn btn-color-grey"
-                                        data-bs-placement="top" title="Clique para excluir colaborador">
-                                        <i class="fa fa-trash icones-tabela"
-                                            style="font-size: 18px; color: var(--first-color);"></i>
-                                    </button>
+                                  
                                 </div>
                             </td>
                         </tr>
@@ -147,8 +129,6 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
-
 import Setores from '../../models/Setor'
 import setorService from '../../services/setor-service';
 //import axios from 'axios';
@@ -195,6 +175,7 @@ export default {
             idToDelete: null,
             idColaborador: null,
             selectedCollaboratorEmail: null,
+
         }
     },
 
@@ -228,12 +209,8 @@ export default {
 
     methods: {
 
-        formatarDataHora(valor){
-            if (valor) {
-                const dataHoraGTM3 = moment.utc(valor).tz('America/Sao_Paulo');
-                return dataHoraGTM3.format('DD/MM/YYYY');
-            }
-            return '';
+        pesquisar(){
+            this.$router.push({name: "PesquisaView"})
         },
 
         mostraGenero(generoAbreviado) {
@@ -266,7 +243,7 @@ export default {
                 const response = await api.get(`/pessoa`);
                 this.colaborador = response.data;
                 this.totalPages = response.data.last_page;
-                console.log(this.colaborador)
+                // console.log(this.colaborador)
 
             } catch (error) {
                 console.error('Error:', error);

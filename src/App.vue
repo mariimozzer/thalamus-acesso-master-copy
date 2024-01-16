@@ -98,6 +98,18 @@ export default ({
     border: none !important;
 }
 
+.btn-filter{
+    background-color: var(--botao) !important;
+    margin:  0 !important;
+    border: none !important;
+    color: #fff;
+}
+
+.btn-filter:hover{
+    background-color: var(--botao-hover) !important;
+
+}
+
 .btn-primary:hover{
     background-color: var(--botao-hover) !important;
   

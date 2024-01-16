@@ -17,10 +17,10 @@ import VisitanteView from '../views/Acesso/VisitanteView.vue'
 import VisitanteCadastro from '../views/Acesso/VisitanteCadastro.vue'
 import PesquisaView from '../views/Acesso/PesquisaView.vue'
 import AcessoHomeView from '../views/Acesso/AcessoHomeView.vue'
-import AcessoView2Vue from '../views/Acesso/AcessoView2.vue'
 //Permissão
 import ColaboradorView from "@/views/Permissão/ColaboradorView"
-import ControleDeColaborador from "@/views/Permissão/ControleDeColaborador"
+import ControleDeColaboradorRH from "@/views/Permissão/ControleDeColaborador"
+import ColaboradorRecepcaoView from "@/views/Permissão/ColaboradorRecepcaoView"
 
 
 function guardMyroute(to, from, next)
@@ -98,13 +98,7 @@ const routes = [
     beforeEnter: guardMyroute,
 
   },
-  {
-    path: '/acesso2',
-    name: 'AcessoView2',
-    component: AcessoView2Vue,
-    beforeEnter: guardMyroute
 
-  },
   {
     path: '/acesso/home',
     name: 'AcessoHomeView',
@@ -140,9 +134,9 @@ const routes = [
   },
   //Permissão
   {
-    path: '/colaborador',
-    name: 'ControleDeColaborador',
-    component: ControleDeColaborador,
+    path: '/colaboradores-rh',
+    name: 'ControleDeColaboradorRH',
+    component: ControleDeColaboradorRH,
     beforeEnter: guardMyroute
 
    
@@ -171,6 +165,16 @@ const routes = [
     beforeEnter: guardMyroute
    
   },
+  {
+    path: '/colaboradores',
+    name: 'ControleDeColaborador',
+    component: ColaboradorRecepcaoView,
+    title: 'Colaborador Recepção',
+    beforeEnter: guardMyroute
+   
+  },
+
+
    { 
     path: '/:pathMatch(.*)*', redirect: '/home' 
   }

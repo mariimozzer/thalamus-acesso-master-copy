@@ -156,7 +156,7 @@ export default {
             try {
                 const response = await api.get(`/local/${this.localSelecionado}/acessos-hoje`);
                 this.acessos = response.data;
-               // console.log('acessos', this.acessos)
+               console.log('acessos', this.acessos)
             } catch (error) {
                 console.error('Erro:', error);
                 toaster.show(`Erro ao buscar acessos`, { type: "error" });
@@ -213,54 +213,44 @@ export default {
 
         async handleMessage(event) {
             this.message = event.data;
-            console.log('event', this.message)
+          //  console.log('event', this.message);
+
             try {
                 const messageData = JSON.parse(this.message);
 
                 if (messageData.mensagem === "acesso_autorizado" && messageData.visitante === 1) {
-                    const visitanteInfo = await new Promise((resolve, reject) => {
-                        api.get(`/visitante/${messageData.pessoa_id}`)
-                            .then(response => resolve(response))
-                            .catch(error => {
-                                reject(error);
-
-                            });
-                    });
+                    const visitanteInfo = await api.get(`/visitante/${messageData.pessoa_id}`);
 
                     if (visitanteInfo.data.path_image) {
-                        // const urlfoto = `${api.defaults.caminhoFoto}`;
                         const urlfoto = 'http://192.168.0.5:8000/storage/';
                         this.fotoPessoa = urlfoto + visitanteInfo.data.path_image;
                         this.mostraFoto = true;
-                        this.buscaAcessos();
+                        await this.buscaAcessos(); 
                     }
                 }
 
                 if (messageData.mensagem === "acesso_autorizado" && messageData.visitante === 0) {
-                    const colaboradorInfo = await new Promise((resolve, reject) => {
-                        api.get(`/pessoa/${messageData.pessoa_id}`)
-                            .then(response => resolve(response))
-                            .catch(error => {
-                                reject(error);
+                    const colaboradorInfo = await api.get(`/pessoa/${messageData.pessoa_id}`);
 
-                            });
-                    });
                     if (colaboradorInfo.data.path_image) {
-                        // const urlfoto = `${api.defaults.caminhoFoto}`;
                         const urlfoto = 'http://192.168.0.5:8000/storage/';
                         this.fotoPessoa = urlfoto + colaboradorInfo.data.path_image;
                         this.mostraFoto = true;
-                        this.buscaAcessos();
+                        await this.buscaAcessos(); 
                     }
-
                 } else if (messageData.mensagem === "acesso_negado") {
                     console.log(messageData.mensagem);
                     this.mostraFoto = false;
+                  
                 }
             } catch (error) {
                 console.error('Mensagem não reconhecida no Acesso', error);
             }
+
+   
         },
+
+
     },
 };
 </script>
