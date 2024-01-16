@@ -1,5 +1,6 @@
 <template>
-    <MenuLSGP></MenuLSGP>
+    <MenuLSGP>
+    </MenuLSGP>
     <div class="container">
         <div class="row mb-3" style="text-align: center;">
             <div class="col-sm-12">
@@ -12,14 +13,23 @@
             <div class="col-6 col-md-6 col-sm-12">
                 <div style="margin: 10px 0 10px 0;">
                     <div style="display: flex; flex-flow: row;">
-                        <label for="nomeCompleto">Nome</label>&nbsp;<p style="color: red;">*</p>
+                        <label for="nomeCompleto">Nome</label>&nbsp;
+                        <p style="color: red;">*</p>
                     </div>
-                    <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" required
-                        class="form-control">
+                    <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" required class="form-control">
                 </div>
+                <div style="margin: 10px 0 10px 0;">
+                    <div style="display: flex; flex-flow: row;">
+                        <label for="nomeCompleto">Sobrenome</label>&nbsp;
+                        <p style="color: red;">*</p>
+                    </div>
+                    <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" required class="form-control">
+                </div>
+                
                 <div>
                     <label for="cpf">CPF</label>
-                    <input type="text" id="CPF" v-model="CPF" class="form-control">
+                    <input type="text" id="CPF" v-model="CPF" @input="validarCPF" class="form-control" v-mask-cpf >
+                    <p v-if="cpfValidationError" style="color: red;">{{ cpfValidationError }}</p>
                 </div>
                 <div style="margin: 10px 0 0px 0;">
                     <label for="cpf">Gênero&nbsp;<i style="color: red;">*</i></label>
@@ -30,68 +40,62 @@
                         <label class="form-check-label" for="feminino">Feminino</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sexo" id="masculino" value="m"
-                            v-model="sexo">
+                        <input class="form-check-input" type="radio" name="sexo" id="masculino" value="m" v-model="sexo">
                         <label class="form-check-label" for="masculino">Masculino</label>
                     </div>
                 </div>
                 <div>
-                    <label for="email">E-mail</label>
+                    <label style="display: flex;" for="email">E-mail
+                        <div style="width: min-content; margin-left: 0.5rem;" v-b-tooltip.hover.top title="E-mail será utilizado para envio do QR Code para o visitante">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                    </label>
                     <input type="text" id="email" v-model="email" class="form-control">
                 </div>
                 <div style="margin: 10px 0 10px 0;">
                     <label for="celular">Celular</label>
-                    <input type="text" id="celular" v-model="celular" class="form-control">
+                    <input type="text" id="celular" v-model="celular" class="form-control" v-mask-phone.br>
                 </div>
             </div>
             <!-- FOTO -->
             <div class="col-6 col-md-6 col-sm12">
                 <div class="mt-2">
                     <label class="mr-3">Foto do visitante</label>
-                    <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera"
-                        v-if="!isCameraOpen">
-                        Abrir câmera
-                    </button>
-
-                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small @click="toggleCamera"
-                        v-if="isCameraOpen && !isPhotoTaken">
-                        Fechar câmera
-                    </button>
-
-                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary"
-                        @click="captureImage" v-if="isCameraOpen">
-                        Tirar foto
-                    </button>
-
-                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary"
-                        @click="discardImage" v-if="isCameraOpen">
-                        Descartar foto
-                    </button>
+                    <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
+                                        Abrir câmera
+                                    </button>
+    
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="isCameraOpen && !isPhotoTaken">
+                                        Fechar câmera
+                                    </button>
+    
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="captureImage" v-if="isCameraOpen">
+                                        Tirar foto
+                                    </button>
+    
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="discardImage" v-if="isCameraOpen">
+                                        Descartar foto
+                                    </button>
                 </div>
                 <!-- avatar / mostra se = fotoPessoa é vazia E não tem foto tirada E a camera esta fechada-->
                 <div class="mt-3" v-if="!fotoPessoa && !isPhotoTaken && !isCameraOpen">
-                    <img src="../../../public/img/user-avatar.png" alt="Imagem em Base64"
-                        style="border-radius: 10px; max-width: 400px; max-height: 500px; border: solid; border-color: lightgrey; border-width: 1px;">
+                    <img src="../../../public/img/user-avatar.png" alt="Imagem em Base64" style="border-radius: 10px; max-width: 400px; max-height: 500px; border: solid; border-color: lightgrey; border-width: 1px;">
                 </div>
                 <!-- camera -->
                 <div>
                     <div class="mt-3">
-                        <video ref="video" width="500" height="400" autoplay
-                            v-if="isCameraOpen && !isPhotoTaken"></video>
-                        <img :src="imageBase64" alt="" v-if="isPhotoTaken"
-                            style="max-width: 100%; max-height: 400px;" />
+                        <video ref="video" width="500" height="400" autoplay v-if="isCameraOpen && !isPhotoTaken"></video>
+                        <img :src="imageBase64" alt="" v-if="isPhotoTaken" style="max-width: 100%; max-height: 400px;" />
                     </div>
                 </div>
                 <!-- mostra a foto salva -->
                 <div v-if="fotoPessoa && !isCameraOpen && !isPhotoTaken" class="mt-3 mb-3">
-                    <img :src="fotoPessoa" alt="foto visitante"
-                        style="border-radius: 10px; max-width: 100%; max-height: 400px;" />
+                    <img :src="fotoPessoa" alt="foto visitante" style="border-radius: 10px; max-width: 100%; max-height: 400px;" />
                 </div>
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button @click="cancelarAcao" class="btn button-cancel">Cancelar</button>
-            &nbsp;&nbsp;
+            <button @click="cancelarAcao" class="btn button-cancel">Cancelar</button> &nbsp;&nbsp;
             <button @click="salvarVisitante" class=" btn btn-primary">Salvar</button>
         </div>
     </div>
@@ -136,8 +140,20 @@ export default {
             imagePath: '',
             showToast: false,
             fotoAtualizada: null,
+            cpfValidationError: null,
+
         }
     },
+
+
+
+    watch: {
+        CPF: function(newCPF) {
+            this.validarCPF(newCPF);
+        }
+    },
+
+
 
     created() {
         let id = this.$route.params.id;
@@ -151,7 +167,60 @@ export default {
 
     methods: {
 
+    
+
+
+
+        validarCPF() {
+
+
+            this.cpfValidationError = null;
+
+            
+
+            // Remove non-numeric characters from CPF
+            const cleanedCPF = this.CPF.replace(/\D/g, '');
+
+            // Check if CPF has 11 digits
+            if (cleanedCPF.length !== 11) {
+                this.cpfValidationError = 'CPF deve conter 11 dígitos';
+                return;
+            }
+
+            // Validate CPF algorithm
+            let sum = 0;
+            for (let i = 1; i <= 9; i++) {
+                sum += parseInt(cleanedCPF.charAt(i - 1)) * (11 - i);
+            }
+
+            let remainder = (sum * 10) % 11;
+            if (remainder === 10 || remainder === 11) {
+                remainder = 0;
+            }
+
+            if (remainder !== parseInt(cleanedCPF.charAt(9))) {
+                this.cpfValidationError = 'CPF inválido';
+                return;
+            }
+
+            sum = 0;
+            for (let i = 1; i <= 10; i++) {
+                sum += parseInt(cleanedCPF.charAt(i - 1)) * (12 - i);
+            }
+
+            remainder = (sum * 10) % 11;
+            if (remainder === 10 || remainder === 11) {
+                remainder = 0;
+            }
+
+            if (remainder !== parseInt(cleanedCPF.charAt(10))) {
+                this.cpfValidationError = 'CPF inválido';
+                return;
+            }
+        },
+
         toggleCamera() {
+
             if (this.isCameraOpen) {
                 this.closeCamera();
             } else {
@@ -165,9 +234,9 @@ export default {
                 this.video = this.$refs.video;
                 // Solicita acesso à webcam
                 navigator.mediaDevices
-                .getUserMedia({ 
-                    video: { width:500, height:400}
-                 })
+                    .getUserMedia({
+                        video: { width: 500, height: 400 }
+                    })
                     .then((stream) => {
                         this.video.srcObject = stream;
                     })
@@ -271,13 +340,13 @@ export default {
             if (this.imageBase64) {
                 // se houver nova foto, atualiza foto
                 axios.put(`${api.defaults.baseURL}/visitante/${id}`, {
-                    nomeCompleto: this.nomeCompleto,
-                    base64: this.imageBase64,
-                    sexo: this.sexo,
-                    CPF: this.CPF,
-                    email: this.email,
-                    celular: this.celular,
-                })
+                        nomeCompleto: this.nomeCompleto,
+                        base64: this.imageBase64,
+                        sexo: this.sexo,
+                        CPF: this.CPF,
+                        email: this.email,
+                        celular: this.celular,
+                    })
                     .then(response => {
                         console.log('Visitante atualizado:', response);
                         this.$router.push({ name: 'VisitanteView' });
@@ -290,12 +359,12 @@ export default {
             } else {
                 // se nao houver foto nova, atualiza outros campos sem alterar foto
                 axios.put(`${api.defaults.baseURL}/visitante/${id}`, {
-                    nomeCompleto: this.nomeCompleto,
-                    sexo: this.sexo,
-                    CPF: this.CPF,
-                    email: this.email,
-                    celular: this.celular,
-                })
+                        nomeCompleto: this.nomeCompleto,
+                        sexo: this.sexo,
+                        CPF: this.CPF,
+                        email: this.email,
+                        celular: this.celular,
+                    })
                     .then(response => {
                         console.log('Visitante atualizado:', response);
                         this.$router.push({ name: "VisitanteView" });
@@ -313,11 +382,11 @@ export default {
 
             if (!this.nomeCompleto) {
                 toaster.show(`Nome não pode ser vazio`, { type: "error" });
-                return;           
+                return;
             }
             if (!this.sexo) {
                 toaster.show(`Gênero não pode ser vazio`, { type: "error" });
-                return; 
+                return;
             }
             if (this.modoCadastro) {
                 this.cadastrarVisitante();
@@ -329,7 +398,7 @@ export default {
         mostraFotoPessoa() {
             try {
                 if (this.imagePath) {
-            
+
                     const urlfoto = 'http://192.168.0.5:8000/storage/';
                     this.fotoPessoa = urlfoto + this.imagePath;
                     this.mostraFoto = true;
@@ -343,7 +412,6 @@ export default {
         },
     }
 }
-
 </script>
 
 <style scoped>

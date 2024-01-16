@@ -31,7 +31,8 @@
                             </span>
                         </div>
                         <input v-model="filtroNome" @input="pesquisaComFiltro" type="text"
-                            placeholder="Pesquisar colaborador por nome" class="form-control" />
+                            placeholder="Pesquisar colaborador por nome" class="form-control" />&nbsp;&nbsp;&nbsp;
+                            <button class="btn-filter" @click="pesquisar"><i class="fa-solid fa-filter"></i>&nbsp;&nbsp;Filtro Avançado</button>
                     </div>
                 </div>
             </div>
@@ -227,6 +228,10 @@ export default {
     },
 
     methods: {
+
+        pesquisar(){
+            this.$router.push({name: "PesquisaView"})
+        },
 
         formatarDataHora(valor){
             if (valor) {
