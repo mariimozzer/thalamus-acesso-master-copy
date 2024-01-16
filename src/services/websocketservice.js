@@ -1,6 +1,7 @@
 export default class WebSocketService {
   constructor() {
-    this.ws = new WebSocket('ws://192.168.0.5:8081');
+     this.ws = new WebSocket('ws://192.168.0.5:8081');
+
     this.listeners = [];
     this.initialize();
   }

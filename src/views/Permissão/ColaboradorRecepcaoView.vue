@@ -27,8 +27,8 @@
                             </span>
                         </div>
                         <input v-model="filtroNome" @input="pesquisaComFiltro" type="text"
-                            placeholder="Pesquisar colaborador por nome" class="form-control" />
-                            <button class="btn-filter" @click="pesquisar"><i class="fa-solid fa-filter"></i></button>
+                            placeholder="Pesquisar colaborador por nome" class="form-control" />&nbsp;&nbsp;&nbsp;
+                            <button class="btn-filter" @click="pesquisar"><i class="fa-solid fa-filter"></i>&nbsp;&nbsp;Filtro Avançado</button>
                     </div>
                 </div>
             </div>

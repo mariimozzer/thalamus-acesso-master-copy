@@ -223,6 +223,7 @@ export default {
 
                     if (visitanteInfo.data.path_image) {
                         const urlfoto = 'http://192.168.0.5:8000/storage/';
+
                         this.fotoPessoa = urlfoto + visitanteInfo.data.path_image;
                         this.mostraFoto = true;
                         await this.buscaAcessos(); 
@@ -233,7 +234,9 @@ export default {
                     const colaboradorInfo = await api.get(`/pessoa/${messageData.pessoa_id}`);
 
                     if (colaboradorInfo.data.path_image) {
-                        const urlfoto = 'http://192.168.0.5:8000/storage/';
+                        // const urlfoto = 'http://192.168.0.5:8000/storage/';
+                        const urlfoto = 'http://192.168.0.6:8000/storage/';
+
                         this.fotoPessoa = urlfoto + colaboradorInfo.data.path_image;
                         this.mostraFoto = true;
                         await this.buscaAcessos(); 
