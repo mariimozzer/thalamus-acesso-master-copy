@@ -17,6 +17,9 @@
                     </div>
                     <input v-model="filtroNome" @input="pesquisaComFiltro" type="text" class="form-control"
                         placeholder="Pesquisar acessos" />
+
+                         <button class="btn-filter" @click="pesquisar"><i class="fa-solid fa-filter"></i>&nbsp;&nbsp;Filtro Avançado</button>
+
                 </div>
 
                 <div class="row">
@@ -149,6 +152,10 @@ export default {
     },
 
     methods: {
+
+         pesquisar() {
+            this.$router.push({ name: "PesquisaView" })
+        },
 
        
         //busca acessos sem paginação
