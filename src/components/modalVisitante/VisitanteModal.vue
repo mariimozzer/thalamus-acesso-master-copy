@@ -232,7 +232,7 @@ export default {
         async alterarLocal() {
             if (this.localSelecionado !== null) {
                 try {
-                    const response = await api.get(`/local/${this.localSelecionado}/acessos`);
+                    const response = await api.get(`/local/${this.localSelecionado}/acessos-hoje`);
                     this.localData = response.data || [];
                 } catch (error) {
                     console.error('Error', error);

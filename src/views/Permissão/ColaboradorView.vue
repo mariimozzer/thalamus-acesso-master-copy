@@ -262,7 +262,7 @@ export default {
             if (this.localSelecionado !== null) {
                 try {
                     //const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
-                    const response = await api.get(`/local/${this.localSelecionado}/acessos`);
+                    const response = await api.get(`/local/${this.localSelecionado}/acessos-hoje`);
                     const responseData = response.data;
                     this.acessos = responseData.data || [];
                     localStorage.setItem('localSelecionado', JSON.stringify(this.localSelecionado));
@@ -573,7 +573,7 @@ export default {
 
         cancelar() {
             this.pessoa = new Pessoa();
-            this.$router.push({ name: "ControleDeColaborador" })
+            this.$router.push({ name: "ControleDeColaboradorRH" })
         },
 
         //inicia a leitura do cartão chamando primeiro o websocket, caso não tenha resposta, chama a webcam
