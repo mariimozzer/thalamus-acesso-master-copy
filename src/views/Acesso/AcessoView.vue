@@ -16,7 +16,7 @@
                         </span>
                     </div>
                     <input v-model="filtroNome" @input="pesquisaComFiltro" type="text" class="form-control"
-                        placeholder="Pesquisar acessos" />
+                        placeholder="Pesquisar acessos" />&nbsp;&nbsp;
 
                          <button class="btn-filter" @click="pesquisar"><i class="fa-solid fa-filter"></i>&nbsp;&nbsp;Filtro Avançado</button>
 
@@ -198,7 +198,7 @@ export default {
         async alterarLocal() {
             if (this.localSelecionado !== null) {
                 try {
-                    const response = await api.get(`/local/${this.localSelecionado}/acessos`);
+                    const response = await api.get(`/local/${this.localSelecionado}/acessos-hoje`);
                     this.acessos = response.data.data || [];
                     localStorage.setItem('localSelecionado', JSON.stringify(this.localSelecionado));
                 } catch (error) {
@@ -242,7 +242,7 @@ export default {
 
                     if (colaboradorInfo.data.path_image) {
                         // const urlfoto = 'http://192.168.0.5:8000/storage/';
-                        const urlfoto = 'http://192.168.0.6:8000/storage/';
+                        const urlfoto = 'http://192.168.0.5:8000/storage/';
 
                         this.fotoPessoa = urlfoto + colaboradorInfo.data.path_image;
                         this.mostraFoto = true;
