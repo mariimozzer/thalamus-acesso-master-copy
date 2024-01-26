@@ -25,32 +25,33 @@
                     </div>
                     <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" required class="form-control">
                 </div>
-                
+    
                 <div>
                     <label for="cpf">CPF</label>
-                    <input type="text" id="CPF" v-model="CPF" @input="validarCPF" class="form-control" v-mask-cpf >
+                    <input type="text" id="CPF" v-model="CPF" @input="validarCPF" class="form-control" v-mask-cpf>
                     <p v-if="cpfValidationError" style="color: red;">{{ cpfValidationError }}</p>
                 </div>
-                <div style="margin: 10px 0 0px 0;">
-                    <label for="cpf">Gênero&nbsp;<i style="color: red;">*</i></label>
-                </div>
-                <div style="display: flex; flex-flow: row; margin: 0px 0 10px 0; ">
-                    <div class="form-check" style="margin-right: 10px;">
-                        <input class="form-check-input" type="radio" name="sexo" id="feminino" value="f" v-model="sexo">
-                        <label class="form-check-label" for="feminino">Feminino</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sexo" id="masculino" value="m" v-model="sexo">
-                        <label class="form-check-label" for="masculino">Masculino</label>
-                    </div>
-                </div>
+                <br>
                 <div>
                     <label style="display: flex;" for="email">E-mail
-                        <div style="width: min-content; margin-left: 0.5rem;" v-b-tooltip.hover.top title="E-mail será utilizado para envio do QR Code para o visitante">
-                            <i class="fa-solid fa-circle-info"></i>
+                                <div style="width: min-content; margin-left: 0.5rem;" v-b-tooltip.hover.top title="E-mail será utilizado para envio do QR Code para o visitante">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </div>
+                            </label>
+                    <div class="input-group">
+                        <input type="text" id="email" v-model="email" @input="validarEmail" class="form-control">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        @{{ selectedDomain || 'Escolha o domínio' }}
+                                    </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" @click="selecioneDominio('gmail.com')">gmail.com</a>
+                                <a class="dropdown-item" @click="selecioneDominio('hotmail.com')">hotmail.com</a>
+                                <a class="dropdown-item" @click="selecioneDominio('yahoo.com.br')">yahoo.com.br</a>
+                            </div>
                         </div>
-                    </label>
-                    <input type="text" id="email" v-model="email" class="form-control">
+                    </div>
+                    <p v-if="emailValidationError" style="color: red;">{{ emailValidationError }}</p>
                 </div>
                 <div style="margin: 10px 0 10px 0;">
                     <label for="celular">Celular</label>
@@ -62,20 +63,20 @@
                 <div class="mt-2">
                     <label class="mr-3">Foto do visitante</label>
                     <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
-                                        Abrir câmera
-                                    </button>
+                                                                                                    Abrir câmera
+                                                                                                </button>
     
                     <button class="mx-2 btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="isCameraOpen && !isPhotoTaken">
-                                        Fechar câmera
-                                    </button>
+                                                                                                    Fechar câmera
+                                                                                                </button>
     
                     <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="captureImage" v-if="isCameraOpen">
-                                        Tirar foto
-                                    </button>
+                                                                                                    Tirar foto
+                                                                                                </button>
     
                     <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="discardImage" v-if="isCameraOpen">
-                                        Descartar foto
-                                    </button>
+                                                                                                    Descartar foto
+                                                                                                </button>
                 </div>
                 <!-- avatar / mostra se = fotoPessoa é vazia E não tem foto tirada E a camera esta fechada-->
                 <div class="mt-3" v-if="!fotoPessoa && !isPhotoTaken && !isCameraOpen">
@@ -141,10 +142,11 @@ export default {
             showToast: false,
             fotoAtualizada: null,
             cpfValidationError: null,
+            emailValidationError: null,
+            selectedDomain: ''
 
         }
     },
-
 
 
     watch: {
@@ -152,8 +154,6 @@ export default {
             this.validarCPF(newCPF);
         }
     },
-
-
 
     created() {
         let id = this.$route.params.id;
@@ -166,22 +166,54 @@ export default {
     },
 
     methods: {
+        validarEmail() {
+            this.emailValidationError = null;
 
-    
+            if (!this.selectedDomain || !this.email.trim()) {
+                this.emailValidationError = 'E-mail não pode ser vazio';
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+
+            const normalizedEmail = this.email
+                .split('@')[0]
+                .replace(/[\u00C0-\u017F]/g, match => String.fromCharCode(match.charCodeAt(0) - 32))
+                .replace(/[^a-zA-Z0-9]/g, '');
+
+            const fullEmail = `${normalizedEmail}@${this.selectedDomain}`;
+
+            if (!emailRegex.test(fullEmail)) {
+                this.emailValidationError = 'E-mail inválido';
+            }
+        },
 
 
+
+
+
+
+        selecioneDominio(dominio) {
+            this.email = this.email.split('@')[0] + '@' + dominio;
+            this.selectedDomain = dominio;
+            this.validarEmail();
+        },
 
         validarCPF() {
 
 
             this.cpfValidationError = null;
 
-            
+            if (this.CPF == null) {
+                return;
+            }
 
-            // Remove non-numeric characters from CPF
             const cleanedCPF = this.CPF.replace(/\D/g, '');
 
-            // Check if CPF has 11 digits
+            if (!cleanedCPF) {
+                return;
+            }
+
             if (cleanedCPF.length !== 11) {
                 this.cpfValidationError = 'CPF deve conter 11 dígitos';
                 return;
@@ -384,10 +416,7 @@ export default {
                 toaster.show(`Nome não pode ser vazio`, { type: "error" });
                 return;
             }
-            if (!this.sexo) {
-                toaster.show(`Gênero não pode ser vazio`, { type: "error" });
-                return;
-            }
+
             if (this.modoCadastro) {
                 this.cadastrarVisitante();
             } else {
