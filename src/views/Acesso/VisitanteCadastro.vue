@@ -13,18 +13,13 @@
             <div class="col-6 col-md-6 col-sm-12">
                 <div style="margin: 10px 0 10px 0;">
                     <div style="display: flex; flex-flow: row;">
-                        <label for="nomeCompleto">Nome</label>&nbsp;
+                        <label for="nomeCompleto">Nome Completo</label>&nbsp;
                         <p style="color: red;">*</p>
                     </div>
                     <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" required class="form-control">
+                    <p v-if="nomeCompletoValidationError" style="color: red;">{{ nomeCompletoValidationError }}</p>
                 </div>
-                <div style="margin: 10px 0 10px 0;">
-                    <div style="display: flex; flex-flow: row;">
-                        <label for="nomeCompleto">Sobrenome</label>&nbsp;
-                        <p style="color: red;">*</p>
-                    </div>
-                    <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" required class="form-control">
-                </div>
+                
     
                 <div>
                     <label for="cpf">CPF</label>
@@ -57,7 +52,10 @@
                     <label for="celular">Celular</label>
                     <input type="text" id="celular" v-model="celular" class="form-control" v-mask-phone.br>
                 </div>
+                
             </div>
+
+
             <!-- FOTO -->
             <div class="col-6 col-md-6 col-sm12">
                 <div class="mt-2">
@@ -143,7 +141,8 @@ export default {
             fotoAtualizada: null,
             cpfValidationError: null,
             emailValidationError: null,
-            selectedDomain: ''
+            selectedDomain: '',
+            nomeCompletoValidationError: ''
 
         }
     },
@@ -152,7 +151,12 @@ export default {
     watch: {
         CPF: function(newCPF) {
             this.validarCPF(newCPF);
+        },
+
+        nomeCompleto: function(newNomeCompleto) {
+            this.validarNomeCompleto(newNomeCompleto);
         }
+
     },
 
     created() {
@@ -166,6 +170,15 @@ export default {
     },
 
     methods: {
+        validarNomeCompleto(nomeCompleto) {
+            this.nomeCompletoValidationError = null;
+
+            const nomeCompletoArray = nomeCompleto.trim().split(' ');
+            if (nomeCompletoArray.length < 2) {
+                this.nomeCompletoValidationError = 'Nome completo inválido!';
+            }
+        },
+
         validarEmail() {
             this.emailValidationError = null;
 
@@ -187,11 +200,6 @@ export default {
                 this.emailValidationError = 'E-mail inválido';
             }
         },
-
-
-
-
-
 
         selecioneDominio(dominio) {
             this.email = this.email.split('@')[0] + '@' + dominio;
@@ -413,7 +421,7 @@ export default {
         salvarVisitante() {
 
             if (!this.nomeCompleto) {
-                toaster.show(`Nome não pode ser vazio`, { type: "error" });
+                toaster.show(`Nome Completo não pode ser vazio`, { type: "error" });
                 return;
             }
 
