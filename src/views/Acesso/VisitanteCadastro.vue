@@ -52,7 +52,11 @@
                     <label for="celular">Celular</label>
                     <input type="text" id="celular" v-model="celular" class="form-control" v-mask-phone.br>
                 </div>
-                
+                <div style="margin: 10px 0 10px 0;">
+                    <label for="info">Informações (Opcional)</label>
+                    <textarea type="text" id="info" v-model="info" class="form-control" ></textarea>
+                </div>
+            
             </div>
 
 
@@ -142,7 +146,8 @@ export default {
             cpfValidationError: null,
             emailValidationError: null,
             selectedDomain: '',
-            nomeCompletoValidationError: ''
+            nomeCompletoValidationError: '',
+            info: ''
 
         }
     },
