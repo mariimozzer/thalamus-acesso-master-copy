@@ -19,7 +19,7 @@
                     <input type="text" id="nomeCompleto" v-model="nomeCompleto" autocomplete="off" required class="form-control">
                     <p v-if="nomeCompletoValidationError" style="color: red;">{{ nomeCompletoValidationError }}</p>
                 </div>
-                
+    
     
                 <div>
                     <label for="cpf">CPF</label>
@@ -29,16 +29,16 @@
                 <br>
                 <div>
                     <label style="display: flex;" for="email">E-mail
-                                <div style="width: min-content; margin-left: 0.5rem;" v-b-tooltip.hover.top title="E-mail será utilizado para envio do QR Code para o visitante">
-                                    <i class="fa-solid fa-circle-info"></i>
-                                </div>
-                            </label>
+                                                <div style="width: min-content; margin-left: 0.5rem;" v-b-tooltip.hover.top title="E-mail será utilizado para envio do QR Code para o visitante">
+                                                    <i class="fa-solid fa-circle-info"></i>
+                                                </div>
+                                            </label>
                     <div class="input-group">
                         <input type="text" id="email" v-model="email" @input="validarEmail" class="form-control">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        @{{ selectedDomain || 'Escolha o domínio' }}
-                                    </button>
+                                                        @{{ selectedDomain || 'Escolha o domínio' }}
+                                                    </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" @click="selecioneDominio('gmail.com')">gmail.com</a>
                                 <a class="dropdown-item" @click="selecioneDominio('hotmail.com')">hotmail.com</a>
@@ -54,31 +54,31 @@
                 </div>
                 <div style="margin: 10px 0 10px 0;">
                     <label for="info">Informações (Opcional)</label>
-                    <textarea type="text" id="info" v-model="info" class="form-control" ></textarea>
+                    <textarea type="text" id="info" v-model="info" class="form-control"></textarea>
                 </div>
-            
+    
             </div>
-
-
+    
+    
             <!-- FOTO -->
             <div class="col-6 col-md-6 col-sm12">
                 <div class="mt-2">
                     <label class="mr-3">Foto do visitante</label>
                     <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
-                                                                                                    Abrir câmera
-                                                                                                </button>
+                                                                                                                    Abrir câmera
+                                                                                                                </button>
     
                     <button class="mx-2 btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="isCameraOpen && !isPhotoTaken">
-                                                                                                    Fechar câmera
-                                                                                                </button>
+                                                                                                                    Fechar câmera
+                                                                                                                </button>
     
                     <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="captureImage" v-if="isCameraOpen">
-                                                                                                    Tirar foto
-                                                                                                </button>
+                                                                                                                    Tirar foto
+                                                                                                                </button>
     
                     <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="discardImage" v-if="isCameraOpen">
-                                                                                                    Descartar foto
-                                                                                                </button>
+                                                                                                                    Descartar foto
+                                                                                                                </button>
                 </div>
                 <!-- avatar / mostra se = fotoPessoa é vazia E não tem foto tirada E a camera esta fechada-->
                 <div class="mt-3" v-if="!fotoPessoa && !isPhotoTaken && !isCameraOpen">
@@ -154,6 +154,9 @@ export default {
 
 
     watch: {
+        email: function(newEmail) {
+            this.validarEmail(newEmail);
+        },
         CPF: function(newCPF) {
             this.validarCPF(newCPF);
         },
@@ -184,32 +187,26 @@ export default {
             }
         },
 
-        validarEmail() {
+        validarEmailDropdown() {
             this.emailValidationError = null;
+            this.validarEmail();
+        },
 
-            if (!this.selectedDomain || !this.email.trim()) {
-                this.emailValidationError = 'E-mail não pode ser vazio';
-                return;
-            }
-
+        validarEmail() {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 
-            const normalizedEmail = this.email
-                .split('@')[0]
-                .replace(/[\u00C0-\u017F]/g, match => String.fromCharCode(match.charCodeAt(0) - 32))
-                .replace(/[^a-zA-Z0-9]/g, '');
-
-            const fullEmail = `${normalizedEmail}@${this.selectedDomain}`;
-
-            if (!emailRegex.test(fullEmail)) {
+            if (!emailRegex.test(this.email)) {
                 this.emailValidationError = 'E-mail inválido';
+            } else {
+                this.emailValidationError = null;
             }
         },
+
 
         selecioneDominio(dominio) {
             this.email = this.email.split('@')[0] + '@' + dominio;
             this.selectedDomain = dominio;
-            this.validarEmail();
+            this.validarEmailDropdown();
         },
 
         validarCPF() {
@@ -232,7 +229,6 @@ export default {
                 return;
             }
 
-            // Validate CPF algorithm
             let sum = 0;
             for (let i = 1; i <= 9; i++) {
                 sum += parseInt(cleanedCPF.charAt(i - 1)) * (11 - i);
@@ -424,6 +420,11 @@ export default {
         },
 
         salvarVisitante() {
+
+            if (this.emailValidationError) {
+                toaster.show(`E-mail inválido. Por favor, corrija o e-mail antes de salvar.`, { type: "error" });
+                return;
+            }
 
             if (!this.nomeCompleto) {
                 toaster.show(`Nome Completo não pode ser vazio`, { type: "error" });
