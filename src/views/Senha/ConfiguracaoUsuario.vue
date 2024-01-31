@@ -1,6 +1,4 @@
-<template>
-    <MenuLSGP></MenuLSGP>
-    <div class="container">
+<template>    <div class="container">
         <div class="d-flex row justify-content-center">
             <div class="">
                 <h2 class="titulo" style="text-align: center;">Alterar empresa</h2>
@@ -30,7 +28,6 @@
 <script>
 import { createToaster } from "@meforma/vue-toaster";
 import api from '../../services/api';
-import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 
 const toaster = createToaster({
     position: "top-right",
@@ -41,7 +38,6 @@ export default {
     name: 'ConfiguracaoUsuarioComponent',
 
     components: {
-        MenuLSGP,
     },
 
     data() {
