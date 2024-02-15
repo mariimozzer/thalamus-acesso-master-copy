@@ -2,20 +2,20 @@
     <div class="menu " id="menu">
         <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="color: white; ">
             <a class="navbar-brand" @click="logo">
-                    <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
-                        style="width: 75%; ">
-                </a>
+                        <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
+                            style="width: 75%; ">
+                    </a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <button v-for="menu in menus" :key="menu.id" @mouseover="activateMenu(menu)" class="btn menu-block text-white mb-2 mr-2" :class="{ 'active': menu === activeMenu }" :style="{ backgroundColor: menu === activeMenu ? '' : '#343537' }">
-                            &nbsp; &nbsp;{{ menu.nome }}
-                        </button>
+                                &nbsp; &nbsp;{{ menu.nome }}
+                            </button>
                 </ul>
                 <div>
                     <div class="navbar-nav ml-auto">
                         <b-nav-item-dropdown right style="color: white;">
                             <template v-slot:button-content><i style="color: white;" class="fa-solid fa-circle-user"></i>
-                                    <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
+                                        <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
 </template>
                             <b-dropdown-item style="color: black" @click="configuracoesUsuario()">
                                 <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Configurações</span>
@@ -44,11 +44,12 @@
       <li v-for="subsubmenu in submenu.filho" :key="subsubmenu.id">
         <router-link
           v-if="isSubSubMenuEnabled(subsubmenu)"
-          :to="`http://192.168.0.5:${subsubmenu.porta}${subsubmenu.URL}/`"
+          :to="`http://192.168.0.5:${subsubmenu.porta}/${subsubmenu.url}/`"
           class="submenu-link"
           :style="{ color: 'rgb(255, 255, 255)', cursor: 'pointer' }"
         >
           {{ subsubmenu.nome }}
+       
         </router-link>
         <span v-else class="submenu-disabled">
           {{ subsubmenu.nome }}
@@ -96,13 +97,14 @@ export default {
     methods: {
 
         getSubSubMenuUrl(subsubmenu) {
-            if (subsubmenu.port) {
-                return `http://192.168.0.5:${subsubmenu.porta}${subsubmenu.URL}/`;
+            if (subsubmenu.porta && subsubmenu.URL) {
+                return `http://192.168.0.5:${subsubmenu.porta}/${subsubmenu.url}/`;
             } else {
-                console.error("Erro: A porta não está definida para o subsubmenu", subsubmenu);
+                console.error("Erro: A porta ou a URL não estão definidas para o subsubmenu", subsubmenu);
                 return '#';
             }
         },
+
 
 
         async activateMenu(menu) {
@@ -145,7 +147,7 @@ export default {
             }
         },
         getAllHome() {
-            axios.get(`http://192.168.0.6:8000/api/menu/home`)
+            axios.get(`http://192.168.0.5:8000/api/menu/home`)
                 .then(response => {
 
 
@@ -154,7 +156,7 @@ export default {
         },
 
         getAllEstrutura() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura`)
+            axios.get(`http://192.168.0.5:8000/api/menu/estrutura`)
                 .then(response => {
                     this.menus = response.data.data.map((p) => new Menu(p));
                 })
@@ -162,21 +164,21 @@ export default {
 
 
         getAllAdm() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/1`)
+            axios.get(`http://192.168.0.5:8000/api/menu/estrutura/1`)
                 .then(response => {
                     this.adm = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllFab() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/44`)
+            axios.get(`http://192.168.0.5:8000/api/menu/estrutura/44`)
                 .then(response => {
                     this.fabrica = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllGestao() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/52`)
+            axios.get(`http://192.168.0.5:8000/api/menu/estrutura/52`)
                 .then(response => {
                     this.gestao = response.data.data.map((p) => new Menu(p));
                 })
@@ -216,16 +218,16 @@ export default {
                 console.error('Error ao buscar empresas', error);
                 toaster.show(`Erro buscar empresa`, { type: "error" });
             }
-        
 
-      
-        }, 
-         configuracoesUsuario() {
+
+
+        },
+        configuracoesUsuario() {
             this.$router.push({ name: "Configuracao" })
         },
 
         alterarSenha() {
-            this.$router.push({name:  "AlterarSenha"})
+            this.$router.push({ name: "AlterarSenha" })
         }
 
     },

@@ -38,7 +38,7 @@
                                 <a :href="devURL + filho.url" style="text-decoration: none; color: rgb(255, 255, 255);">
                                     <div class="categorias1" >
                                         <span  style="text-decoration: none; color: rgb(255, 255, 255);">{{ filho.nome }}</span>
-                                      <!--  {{ devURL + filho.url }} -->
+                                       <!-- {{ devURL + filho.url }} -->
                                     </div>
                                 </a>
                             </div> 
@@ -67,7 +67,7 @@ export default {
 
         getAllSidebar() {
             //axios.get(`http://192.168.0.6:8000/api/menu/estrutura/7`)
-            api.get(`http://192.168.0.6:8000/api/menu/estrutura/7`)
+            api.get(`http://192.168.0.5:8000/api/menu/estrutura/7`)
                 .then(response => {
                     this.sgp = response.data.data.map((p) => new Menu(p));
                    // console.log(this.sgp)

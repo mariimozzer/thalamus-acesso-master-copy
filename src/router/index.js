@@ -175,9 +175,9 @@ const routes = [
   },
 
 
-   { 
-    path: '/:pathMatch(.*)*', redirect: '/home' 
-  }
+  //  { 
+  //   path: '/:pathMatch(.*)*', redirect: '/home' 
+  // }
 ]
 
 const router = createRouter({
