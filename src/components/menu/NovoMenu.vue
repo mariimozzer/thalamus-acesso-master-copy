@@ -2,23 +2,21 @@
     <div class="menu " id="menu">
         <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="color: white; ">
             <a class="navbar-brand" @click="logo">
-                <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
-                    style="width: 75%; ">
-            </a>
+                    <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
+                        style="width: 75%; ">
+                </a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <button v-for="menu in menus" :key="menu.id" @mouseover="activateMenu(menu)"
-                        class="btn menu-block text-white mb-2 mr-2" :class="{ 'active': menu === activeMenu }"
-                        :style="{ backgroundColor: menu === activeMenu ? '' : '#343537' }">
-                        &nbsp; &nbsp;{{ menu.nome }}
-                    </button>
+                    <button v-for="menu in menus" :key="menu.id" @mouseover="activateMenu(menu)" class="btn menu-block text-white mb-2 mr-2" :class="{ 'active': menu === activeMenu }" :style="{ backgroundColor: menu === activeMenu ? '' : '#343537' }">
+                            &nbsp; &nbsp;{{ menu.nome }}
+                        </button>
                 </ul>
                 <div>
                     <div class="navbar-nav ml-auto">
                         <b-nav-item-dropdown right style="color: white;">
                             <template v-slot:button-content><i style="color: white;" class="fa-solid fa-circle-user"></i>
-                                <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
-                            </template>
+                                    <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
+</template>
                             <b-dropdown-item style="color: black" @click="configuracoesUsuario()">
                                 <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Configurações</span>
                             </b-dropdown-item>
@@ -37,39 +35,37 @@
                 </div>
             </div>
         </nav>
-        <!-- <div v-if="activeMenu " class="content" :style="{ backgroundColor: activeMenu.color} " @mouseleave="closeContent">
-            <div v-for="submenu in activeMenu.filho" :key="submenu.id" class="submenu-columns ">
 
-            <div v-if="submenu.filho.length > 0 " class="submenu-column">
-
-                <h6 style="color: rgb(0, 0, 0);">{{ submenu.nome }}</h6>
-                    <a class="submenu-link" v-for="subsubmenu in submenu.filho" :key="subsubmenu.id"
-                        style="text-decoration: none; color: rgb(0, 0, 0);">
-                        {{ subsubmenu.nome }}
-                    </a>
-                </div>
-            </div>
-        </div> -->
+    
         <div v-if="activeMenu" class="menunovo" @mouseleave="closeContent">
-            <div v-for="submenu in activeMenu.filho" :key="submenu.id">
-                <h6 style="color: #fff">{{ submenu.nome }}</h6>
-                <ul style="list-style-type: none;">
-                    <li v-for="subsubmenu in submenu.filho" :key="subsubmenu.id">
-                        <a :href="subsubmenu.url" style="text-decoration: none; color: #fff; " class="submenu-link">
-                            {{ subsubmenu.nome }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+  <div v-for="submenu in activeMenu.filho" :key="submenu.id">
+    <h6 style="color: rgb(255, 255, 255)">{{ submenu.nome }}</h6>
+    <ul style="list-style-type: none;">
+      <li v-for="subsubmenu in submenu.filho" :key="subsubmenu.id">
+        <router-link
+          v-if="isSubSubMenuEnabled(subsubmenu)"
+          :to="`http://192.168.0.5:${subsubmenu.porta}${subsubmenu.URL}/`"
+          class="submenu-link"
+          :style="{ color: 'rgb(255, 255, 255)', cursor: 'pointer' }"
+        >
+          {{ subsubmenu.nome }}
+        </router-link>
+        <span v-else class="submenu-disabled">
+          {{ subsubmenu.nome }}
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
     </div>
 </template>
   
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 import Menu from '@/models/Menu.js'
-import api from '../../services/api';
 import { createToaster } from "@meforma/vue-toaster";
+import api from '../../services/api';
+
 
 const toaster = createToaster({
     position: "top-right",
@@ -89,30 +85,76 @@ export default {
             adm: '',
             fabrica: '',
             gestao: '',
-
+            id: '',
+            menuUrl: '',
             localData: [],
             localSelecionado: null,
             apiUrl: api.defaults.baseURL,
-
         }
     },
 
     methods: {
-        logo(){
-            this.$router.push({name: "HomeView"});
+
+        getSubSubMenuUrl(subsubmenu) {
+            if (subsubmenu.port) {
+                return `http://192.168.0.5:${subsubmenu.porta}${subsubmenu.URL}/`;
+            } else {
+                console.error("Erro: A porta não está definida para o subsubmenu", subsubmenu);
+                return '#';
+            }
         },
 
+
+        async activateMenu(menu) {
+            this.activeMenu = menu;
+            this.menus.forEach((m) => {
+                m.active = m === menu;
+            });
+
+            const menuUrl = `http://192.168.0.5:8000/api/menu/usuario/${this.id}`;
+
+            try {
+                const menuResponse = await axios.get(menuUrl);
+
+                if (Array.isArray(menuResponse.data)) {
+                    const userPermissions = menuResponse.data.map((item) => item.nome.toLowerCase());
+                    this.$store.dispatch('updateUserPermissions', userPermissions);
+
+                    if (menu.submenus && menu.submenus.length > 0) {
+                        this.activateSubMenu(menu.submenus[0]);
+                    } else {
+                        this.showSidebar = false;
+                        this.sideBarMenus = [];
+                    }
+                } else {
+                    console.error("Erro: Não é tem array");
+                }
+            } catch (error) {
+                console.error("Erro ao obter dados do menu:", error);
+            }
+        },
+
+        isSubSubMenuEnabled(subsubmenu) {
+            const userPermissions = this.$store.getters.getUserPermissions;
+            return userPermissions.includes(subsubmenu.nome.toLowerCase());
+        },
+
+        handleSubSubMenuClick(subsubmenu) {
+            if (!this.isSubSubMenuEnabled(subsubmenu)) {
+                alert("Você não tem permissão para acessar este submenu.");
+            }
+        },
         getAllHome() {
-            // axios.get(`http://192.168.0.6:8000/api/menu/home`)
-            api.get(`/menu/home`)
+            axios.get(`http://192.168.0.6:8000/api/menu/home`)
                 .then(response => {
+
+
                     this.home = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllEstrutura() {
-            //axios.get(`http://192.168.0.6:8000/api/menu/estrutura`)
-            api.get(`/menu/estrutura`)
+            axios.get(`http://192.168.0.6:8000/api/menu/estrutura`)
                 .then(response => {
                     this.menus = response.data.data.map((p) => new Menu(p));
                 })
@@ -120,60 +162,43 @@ export default {
 
 
         getAllAdm() {
-            //axios.get(`http://192.168.0.6:8000/api/menu/estrutura/25`)
-            api.get(`/menu/estrutura/25`)
+            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/1`)
                 .then(response => {
                     this.adm = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllFab() {
-            // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/44`)
-            api.get(`/menu/estrutura/44`)
+            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/44`)
                 .then(response => {
                     this.fabrica = response.data.data.map((p) => new Menu(p));
                 })
         },
 
         getAllGestao() {
-            // axios.get(`http://192.168.0.6:8000/api/menu/estrutura/52`)
-            api.get(`/menu/estrutura/52`)
+            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/52`)
                 .then(response => {
                     this.gestao = response.data.data.map((p) => new Menu(p));
                 })
         },
 
-        activateMenu(menu) {
-
-            this.activeMenu = menu;
-            this.menus.forEach((m) => {
-                m.active = m === menu;
-            });
-
-            if (menu.submenus && menu.submenus.length > 0) {
-                this.activateSubMenu(menu.submenus[0]);
-
-
-            } else {
-                this.showSidebar = false;
-                this.sideBarMenus = [];
-            }
-
-        },
 
         logout() {
             const token = sessionStorage.getItem('token')
-            // axios.post('http://192.168.0.6:8000/api/logout', {}, {
-            api.post('/logout', {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            axios
+                .post('http://192.168.0.5:8000/api/logout', {}, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
                 .then(() => {
                     this.$router.push('/');
                     sessionStorage.removeItem('token')
                     sessionStorage.removeItem('userName')
+                    sessionStorage.removeItem('id')
                     sessionStorage.removeItem('LoggedUser')
+
+
                 })
                 .catch(error => {
                     console.error('Logout failed:', error);
@@ -191,17 +216,10 @@ export default {
                 console.error('Error ao buscar empresas', error);
                 toaster.show(`Erro buscar empresa`, { type: "error" });
             }
-        },
+        
 
-       /*  salvarLocalSelecionado() {
-            localStorage.setItem('localSelecionado', this.localSelecionado);
-            window.location.reload();
-
-        }, */
-       /*  selectLocal(selectedLocal) {
-            this.localSelecionado = selectedLocal;
-            this.salvarLocalSelecionado();
-        }, */
+      
+        }, 
          configuracoesUsuario() {
             this.$router.push({ name: "Configuracao" })
         },
@@ -210,30 +228,49 @@ export default {
             this.$router.push({name:  "AlterarSenha"})
         }
 
-
     },
 
     created() {
         this.userName = sessionStorage.getItem('userName')
+        this.id = sessionStorage.getItem('id')
+
+        this.menuUrl = `http://192.168.0.5:8000/api/menu/usuario/${this.id}`
+
+        axios.get(this.menuUrl).then(menuResponse => {
+            const menuOptions = menuResponse.data
+            console.log("Menu Acessos", menuOptions)
+        })
 
     },
 
     mounted() {
         this.getAllHome()
         this.getAllEstrutura()
-        //this.getAllAdm()
-        // this.getAllFab()
-        // this.getAllGestao()
-        this.buscaLocal();
+        this.getAllAdm()
 
-        if (localStorage.local) {
-            this.local = localStorage.local
-        }
     }
 }
 </script>
   
 <style>
+.submenu-link {
+    text-decoration: none;
+}
+
+.submenu-link:hover {
+    color: rgb(131, 131, 131) !important;
+    text-decoration: none;
+}
+
+.submenu-link:hover {
+    color: rgb(131, 131, 131) !important;
+}
+
+.submenu-disabled {
+    color: rgb(134, 132, 132) !important;
+    cursor: not-allowed;
+}
+
 .teste:hover {
     color: white !important
 }

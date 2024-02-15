@@ -87,7 +87,7 @@ const routes = [
     path: '/home',
     name: 'HomeView',
     component: HomeView,
-    beforeEnter: guardMyroute,
+    // beforeEnter: guardMyroute,
 
   },
   //Acesso
@@ -170,7 +170,7 @@ const routes = [
     name: 'ControleDeColaborador',
     component: ColaboradorRecepcaoView,
     title: 'Colaborador Recepção',
-    beforeEnter: guardMyroute
+    // beforeEnter: guardMyroute
    
   },
 

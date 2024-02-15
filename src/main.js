@@ -7,10 +7,11 @@ import VueMask from '@devindex/vue-mask'; // <-- ADD THIS LINE
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
+import store from './store'
 
-const app = createApp(App)
+const app = createApp(App).use(store)
 app.use(router)
 app.use(BootstrapVueNext)
-app.use(VueMask); 
+app.use(VueMask);
 // app.use(PrimeVue);
 app.mount('#app')
