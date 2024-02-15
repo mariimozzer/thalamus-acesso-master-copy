@@ -38,25 +38,25 @@
 
     
         <div v-if="activeMenu" class="menunovo" @mouseleave="closeContent">
-        <div v-for="submenu in activeMenu.filho" :key="submenu.id">
-            <h6 style="color: rgb(255, 255, 255)">{{ submenu.nome }}</h6>
-            <ul style="list-style-type: none;">
-                <li v-for="subsubmenu in submenu.filho" :key="subsubmenu.id">
-                    <router-link
-                        v-if="isSubSubMenuEnabled(subsubmenu)"
-                        :to="getSubSubMenuUrl(subsubmenu)"
-                        class="submenu-link"
-                        :style="{ color: 'rgb(255, 255, 255)', cursor: 'pointer' }"
-                    >
-                        {{ subsubmenu.nome }}
-                    </router-link>
-                    <span v-else class="submenu-disabled">
-                        {{ subsubmenu.nome }}
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </div>
+  <div v-for="submenu in activeMenu.filho" :key="submenu.id">
+    <h6 style="color: rgb(255, 255, 255)">{{ submenu.nome }}</h6>
+    <ul style="list-style-type: none;">
+      <li v-for="subsubmenu in submenu.filho" :key="subsubmenu.id">
+        <router-link
+          v-if="isSubSubMenuEnabled(subsubmenu)"
+          :to="`${subsubmenu.porta}${subsubmenu.url}/`"
+          class="submenu-link"
+          :style="{ color: 'rgb(255, 255, 255)', cursor: 'pointer' }"
+        >
+          {{ subsubmenu.nome }}
+        </router-link>
+        <span v-else class="submenu-disabled">
+          {{ subsubmenu.nome }}
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
     </div>
 </template>
   
@@ -96,10 +96,10 @@ export default {
     methods: {
 
         getSubSubMenuUrl(subsubmenu) {
-            if (subsubmenu.porta && subsubmenu.URL) {
-                return `/${subsubmenu.porta}/${subsubmenu.URL}/`;  
+            if (subsubmenu.port) {
+                return `${subsubmenu.porta}/${subsubmenu.url}/`;
             } else {
-                console.error("Erro: A porta ou a URL não estão definidas para o subsubmenu", subsubmenu);
+                console.error("Erro: A porta não está definida para o subsubmenu", subsubmenu);
                 return '#';
             }
         },
