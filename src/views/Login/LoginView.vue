@@ -126,10 +126,10 @@ export default {
                 const userId = user.id;
 
                 // Salvar informações no sessionStorage
-                sessionStorage.setItem('id', userId);
-                sessionStorage.setItem('userName', user.name);
-                sessionStorage.setItem('token', token);
-                sessionStorage.setItem('LoggedUser', true);
+                localStorage.setItem('id', userId);
+                localStorage.setItem('userName', user.name);
+                localStorage.setItem('token', token);
+                localStorage.setItem('LoggedUser', true);
 
                 // Atualizar permissões do usuário
                 const menuUrl = `http://192.168.0.5:8000/api/menu/usuario/${userId}`;
@@ -139,7 +139,6 @@ export default {
                 // Chamar a ação para atualizar as permissões no Vuex
                 this.$store.dispatch('updateUserPermissions', userPermissions);
 
-                // Redirecionar para a página HomeView
                 this.$router.push({ name: "HomeView" });
             } catch (error) {
                 this.email = '';

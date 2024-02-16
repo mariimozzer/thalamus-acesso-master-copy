@@ -88,7 +88,7 @@ export default {
 
 
     logout() {
-      const token = sessionStorage.getItem('token')
+      const token = localStorage.getItem('token')
       //axios.post('http://192.168.0.6:8000/api/logout', {}, {
       api.post('/logout', {}, {
           headers: {
@@ -97,9 +97,9 @@ export default {
         })
         .then(() => {
           this.$router.push('/');
-          sessionStorage.removeItem('token')
-          sessionStorage.removeItem('userName')
-          sessionStorage.removeItem('LoggedUser')
+          localStorage.removeItem('token')
+          localStorage.removeItem('userName')
+          localStorage.removeItem('LoggedUser')
 
         })
         .catch(error => {

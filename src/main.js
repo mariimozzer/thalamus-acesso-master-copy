@@ -14,7 +14,7 @@ app.use(router)
 app.use(BootstrapVueNext)
 app.use(VueMask);
 
-const isApp1 = 'http://192.168.0.5:8000/api';
+const isApp1 = true;
 const backendUrl = isApp1 ? 'http://192.168.0.5:8080/api' : 'http://192.168.0.6:8000/api';
 axios.defaults.baseURL = backendUrl;
 

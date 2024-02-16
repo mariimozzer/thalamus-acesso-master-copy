@@ -26,7 +26,7 @@ import ColaboradorRecepcaoView from "@/views/Permissão/ColaboradorRecepcaoView"
 function guardMyroute(to, from, next)
 {
  var isAuthenticated= false;
-if(sessionStorage.getItem('LoggedUser'))
+if(localStorage.getItem('LoggedUser'))
   isAuthenticated = true;
  else
   isAuthenticated= false;
