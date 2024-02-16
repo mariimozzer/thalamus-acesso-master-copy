@@ -5,10 +5,10 @@
                 <NovoMenu v-if="!$route.meta.hideMenu"></NovoMenu>
             </div>
         </header>
-        <div class="router">
+        <!-- <div class="router"> -->
             <br><br><br>
             <router-view />
-        </div>
+        <!-- </div> -->
         <Footer></Footer>
     </div>
 </template>
@@ -54,10 +54,10 @@ export default ({
     font-family: 'montserrat', sans-serif;
 }
 
-.router {
+/* .router {
     margin-left: 300px;
     margin-bottom: 100px;   
-}
+} */
 
 .footer {
     position: absolute;

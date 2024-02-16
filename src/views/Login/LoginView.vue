@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="login" class="container">
+  <form @submit.prevent="login" class="container reset-margin">
     
         <div class="box-login">
             <div style="text-align: center;">
@@ -169,6 +169,11 @@ export default {
 </script>
 
 <style scoped>
+/* .reset-margin {
+  margin-left: 0px !important;
+  margin-bottom: 0px;
+} */
+
 .botaoLogin {
     border: 1px solid;
     border-radius: 20px;
@@ -186,7 +191,6 @@ export default {
 
 .logo {
     text-align: center;
-    /* background-image: url(../../public/img/logo-preta.png); */
     color: var(--first-color);
     padding: 100;
     font-size: 22px;
@@ -195,8 +199,8 @@ export default {
 .container {
     display: flex;
     justify-content: center;
-    align-content: center;
     align-items: center;
+    height: 100vh;  
     flex-direction: column;
 }
 
@@ -228,4 +232,3 @@ export default {
     }
 }
 </style>
-  
